@@ -30,11 +30,11 @@ GEM
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mustermann (1.0.3)
-    nimbu (0.11)
+    nimbu (0.10.5)
       diffy
       json
       listen (~> 1.x)
-      nimbu-api (~> 0.4.1)
+      nimbu-api (~> 0.4)
       rack (~> 2.0.3)
       rack-streaming-proxy
       rb-fsevent (~> 0.9)
@@ -97,7 +97,7 @@ PLATFORMS
 DEPENDENCIES
   haml
   json (~> 1.8.3)
-  nimbu
+  nimbu (= 0.10.5)
 
 BUNDLED WITH
    1.16.2
