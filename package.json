@@ -2,7 +2,7 @@
   "name": "nimbu-toolbelt",
   "version": "1.0.0",
   "description": "Node.js-based toolbelt for nimbu projects",
-  "main": "index.js",
+  "main": "polyfills.js",
   "repository": "https://github.com/zenjoy/nimbu-toolbelt",
   "author": "Zenjoy BVBA",
   "license": "MIT",
