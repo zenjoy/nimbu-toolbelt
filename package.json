@@ -46,6 +46,9 @@
     "loader-utils": "^1.1.0",
     "react-svg-core": "^2.1.0"
   },
+  "scripts" : {
+    "postinstall": "bundle install"
+  },
   "files": [
     "bin",
     "config",
