@@ -51,7 +51,7 @@ const fileloaderOutputPath = (name) => {
 };
 
 function fileLoaders(options = {}) {
-  return [
+  const loaders = [
     {
       loader: fileloader,
       test: [/\.(eot|otf|woff|woff2|ttf)(\?\S*)?$/, /fonts.*\.svg(\?\S*)?$/],
@@ -75,6 +75,17 @@ function fileLoaders(options = {}) {
       },
     }
   ];
+  if(config.REACT && config.SVG_LOADER_INCLUDE) {
+    loaders.splice(0, 0, {
+      test: /\.svg$/,
+      include: config.SVG_LOADER_INCLUDE,
+      use: [
+        babelLoader(),
+        require.resolve('./svg-loader.js'),
+      ]
+    })
+  }
+  return loaders;
 }
 
 function styleLoaders(options) {
