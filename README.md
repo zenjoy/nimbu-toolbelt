@@ -68,7 +68,7 @@ The entrypoint is `src/index.scss`, but any (S)CSS you import in your javascript
 or coffeescript will also be included in the output.
 
 To import scss files from `node_modules`, use a `~` prefix. For example,
-`src/index.scss` imports bourbon as follows:
+to import bourbon that was added with `yarn add bourbon`:
 
 ```
 @import '~bourbon/core/bourbon';
