@@ -1,0 +1,9 @@
+{
+  "name": "nimbu-toolbelt",
+  "version": "1.0.0",
+  "description": "Node.js-based toolbelt for nimbu projects",
+  "main": "index.js",
+  "repository": "git@github.com:zenjoy/nimbu-toolbelt.git",
+  "author": "Zenjoy BVBA",
+  "license": "MIT"
+}
