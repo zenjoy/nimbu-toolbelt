@@ -179,7 +179,7 @@ function styleConfig(options) {
 }
 
 function htmlWebPackPlugins(entries, options = {}) {
-  const template = require.resolve('../template/webpack.liquid.ejs');
+  const template = require.resolve('../../template/webpack.liquid.ejs');
   return _.flatten(entries.map(function (name) {
     return [
       new HtmlWebpackPlugin({

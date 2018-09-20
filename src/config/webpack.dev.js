@@ -23,6 +23,7 @@ const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS });
 const loaders = utils.codeLoaders().concat(styleConfig.loaders).concat(utils.fileLoaders());
 
 const webpackConfig = merge(baseWebpackConfig, {
+  mode: 'development',
   module: {
     rules: [
       {

@@ -1,61 +1,80 @@
 {
   "name": "nimbu-toolbelt",
+  "description": "Tools for Nimbu projects",
   "version": "1.0.0",
-  "description": "Node.js-based toolbelt for nimbu projects",
-  "main": "polyfills.js",
-  "repository": "https://github.com/zenjoy/nimbu-toolbelt",
-  "author": "Zenjoy BVBA",
-  "license": "MIT",
-  "dependencies": {
-    "autoprefixer": "^8.6.3",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-root-import": "^5.1.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react-app": "^3.1.1",
-    "babel-runtime": "^6.26.0",    
-    "chalk": "^2.3.0",
-    "coffee-loader": "^0.9.0",
-    "coffeescript": "^2.1.1",
-    "css-loader": "^0.28.9",
-    "csso-webpack-plugin": "^1.0.0-beta.12",
-    "eventsource-polyfill": "^0.9.6",
-    "express": "^4.16.2",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "file-loader": "^1.1.11",
-    "friendly-errors-webpack-plugin": "^1.6.1",
-    "html-webpack-harddisk-plugin": "^0.1.0",
-    "html-webpack-plugin": "^2.30.1",
-    "http-proxy-middleware": "^0.17.4",
-    "node-sass": "^4.7.2",
-    "object-assign": "^4.1.1",
-    "opn": "^5.2.0",
-    "ora": "^1.3.0",
-    "postcss-flexbugs-fixes": "^3.3.0",
-    "postcss-loader": "^2.0.10",
-    "promise": "^8.0.1",
-    "react-dev-utils": "^5.0.0",
-    "sass-loader": "^6.0.6",
-    "script-loader": "^0.7.2",
-    "style-loader": "^0.20.1",
-    "system-sleep": "^1.3.6",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1",
-    "webpack-merge": "^4.1.1",
-    "whatwg-fetch": "^2.0.3",
-    "loader-utils": "^1.1.0",
-    "react-svg-core": "^2.1.0"
+  "author": "Zenjoy Engineering",
+  "bin": {
+    "nimbu-toolbelt": "./bin/run"
   },
-  "scripts" : {
-    "postinstall": "bundle install"
+  "bugs": "https://github.com/zenjoy/nimbu-toolbelt/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "autoprefixer": "^9.1.5",
+    "babel-plugin-root-import": "^6.1.0",
+    "babel-preset-react-app": "^3.1.2",
+    "chalk": "^2.4.1",
+    "css-loader": "^1.0.0",
+    "csso-webpack-plugin": "^1.0.0-beta.12",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.9.3",
+    "ora": "^3.0.0",
+    "postcss-flexbugs-fixes": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "promise": "^8.0.2",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
+    "tslib": "^1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.19.1",
+    "webpack-merge": "^4.1.4"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/tslint": "^3",
+    "@types/chai": "^4",
+    "@types/chalk": "^2.2.0",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "@types/ora": "^1.3.4",
+    "@types/webpack": "^4.4.12",
+    "globby": "^8",
+    "ts-node": "^7",
+    "tslint": "^5",
+    "typescript": "^3.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   },
   "files": [
-    "bin",
-    "config",
-    "scripts",
-    "template"   
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
   ],
-  "bin": {
-    "nimbu-toolbelt": "./bin/nimbu-toolbelt.js"
-  }
+  "homepage": "https://github.com/zenjoy/nimbu-toolbelt",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "nimbu-toolbelt",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "zenjoy/nimbu-toolbelt",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "posttest": "tslint -p . -t stylish",
+    "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
 }
