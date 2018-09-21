@@ -12,7 +12,7 @@ GEM
     diffy (3.2.1)
     eventmachine (1.2.7)
     excon (0.62.0)
-    faraday (0.15.2)
+    faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     haml (4.0.7)
@@ -30,11 +30,11 @@ GEM
     multi_json (1.13.1)
     multipart-post (2.0.0)
     mustermann (1.0.3)
-    nimbu (0.10.5)
+    nimbu (0.11.3)
       diffy
       json
       listen (~> 1.x)
-      nimbu-api (~> 0.4)
+      nimbu-api (~> 0.4.1)
       rack (~> 2.0.3)
       rack-streaming-proxy
       rb-fsevent (~> 0.9)
@@ -97,7 +97,7 @@ PLATFORMS
 DEPENDENCIES
   haml
   json (~> 1.8.3)
-  nimbu (= 0.10.5)
+  nimbu (~> 0.11.3)
 
 BUNDLED WITH
    1.16.2

@@ -59,30 +59,11 @@ const webpackConfig = merge(baseWebpackConfig, {
           chunks: 'all'
         }
       }
-      // minChunks: function (module) {
-      //   // This prevents stylesheet resources with the .css or .scss extension
-      //   // from being moved from their original chunk to the vendor chunk
-      //   if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
-      //     return false;
-      //   }
-      //   return module.context && (module.context.includes("node_modules") || module.context.includes('src/vendor'));
-      // }
     },
   },
   plugins: [
     ...styleConfig.plugins,
     ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry)),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: "vendor",
-    //   minChunks: function (module) {
-    //     // This prevents stylesheet resources with the .css or .scss extension
-    //     // from being moved from their original chunk to the vendor chunk
-    //     if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
-    //       return false;
-    //     }
-    //     return module.context && (module.context.includes("node_modules") || module.context.includes('src/vendor'));
-    //   }
-    // })
   ]
 });
 
