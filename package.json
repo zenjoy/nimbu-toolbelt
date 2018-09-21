@@ -60,7 +60,8 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/Gemfile",
-    "/Gemfile.lock"
+    "/Gemfile.lock",
+    "/polyfills.js"
   ],
   "homepage": "https://github.com/zenjoy/nimbu-toolbelt",
   "keywords": [
