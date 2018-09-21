@@ -61,7 +61,9 @@
     "/oclif.manifest.json",
     "/Gemfile",
     "/Gemfile.lock",
-    "/polyfills.js"
+    "/polyfills.js",
+    "/template",
+    "/README.md"
   ],
   "homepage": "https://github.com/zenjoy/nimbu-toolbelt",
   "keywords": [
