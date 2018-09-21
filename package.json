@@ -1,7 +1,7 @@
 {
   "name": "nimbu-toolbelt",
   "description": "Tools for Nimbu projects",
-  "version": "1.0.0-beta3",
+  "version": "1.0.0-beta4",
   "author": "Zenjoy Engineering",
   "bin": {
     "nimbu": "./bin/run"
@@ -12,10 +12,16 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "autoprefixer": "^9.1.5",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-root-import": "^6.1.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-react-app": "^3.1.2",
+    "babel-runtime": "^6.26.0",
     "chalk": "^2.4.1",
     "cli-ux": "^4.8.2",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.1.1",
     "css-loader": "^1.0.0",
     "csso-webpack-plugin": "^1.0.0-beta.12",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -30,12 +36,15 @@
     "promise": "^8.0.2",
     "react-dev-utils": "^5.0.2",
     "sass-loader": "^7.1.0",
+    "script-loader": "^0.7.2",
     "style-loader": "^0.23.0",
     "tslib": "^1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.19.1",
     "webpack-dev-server": "^3.1.8",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "loader-utils": "^1.1.0",
+    "react-svg-core": "^2.1.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
