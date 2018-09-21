@@ -1,10 +1,10 @@
 {
   "name": "nimbu-toolbelt",
   "description": "Tools for Nimbu projects",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "author": "Zenjoy Engineering",
   "bin": {
-    "nimbu-toolbelt": "./bin/run"
+    "nimbu": "./bin/run"
   },
   "bugs": "https://github.com/zenjoy/nimbu-toolbelt/issues",
   "dependencies": {
@@ -24,6 +24,7 @@
     "html-webpack-harddisk-plugin": "^0.2.0",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.3",
+    "node-yaml": "^3.1.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
     "promise": "^8.0.2",
@@ -69,10 +70,27 @@
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "nimbu-toolbelt",
+    "bin": "nimbu",
     "plugins": [
       "@oclif/plugin-help"
-    ]
+    ],
+    "topics": {
+      "auth": {
+        "description": "Authenticate, display token and current user"
+      },
+      "init": {
+        "description": "working directory initialization"
+      },
+      "sites": {
+        "description": "interacting with your sites (list, create)"
+      },
+      "themes": {
+        "description": "working with themes (upload / download)"
+      },
+      "browse": {
+        "description": "open the current site in your browser (simulator, admin)"
+      }
+    }
   },
   "repository": "zenjoy/nimbu-toolbelt",
   "scripts": {
