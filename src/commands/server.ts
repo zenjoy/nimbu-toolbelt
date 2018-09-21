@@ -6,23 +6,34 @@ import WebpackDevServer from '../webpack/server';
 export default class Server extends Command {
   static description = 'run the development server';
 
-  private useYarn = true;
-
-  private NIMBU_PORT = parseInt(process.env.NIMBU_PORT || '4568', 10);
-  private DEFAULT_PORT = parseInt(process.env.PORT || '4567', 10);
-  private HOST = process.env.HOST || '0.0.0.0';
-
   private nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn);
   private webpackServer: WebpackDevServer = new WebpackDevServer();
 
   static flags = {
-    nocookies: flags.boolean(),
+    nocookies: flags.boolean({
+      description: 'Leave cookies untouched i.s.o. clearing them.'
+    }),
+    port: flags.integer({
+      description: 'The port to listen on.',
+      env: 'DEFAULT_PORT',
+      default: 4567
+    }),
+    host: flags.string({
+      description: 'The hostname/ip-address to bind on.',
+      env: 'HOST',
+      default: '0.0.0.0'
+    }),
+    'nimbu-port': flags.integer({
+      description: 'The port for the ruby nimbu server to listen on.',
+      env: 'NIMBU_PORT',
+      default: 4568
+    })
   };
 
 
-  async spawnNimbuServer(nocookies: boolean) {
+  async spawnNimbuServer(port: number, nocookies: boolean) {
     this.log(chalk.red('Starting nimbu server...'));
-    await this.nimbuServer.start(this.NIMBU_PORT, { nocookies: nocookies });
+    await this.nimbuServer.start(port, { nocookies: nocookies });
   }
 
   async stopNimbuServer() {
@@ -30,9 +41,9 @@ export default class Server extends Command {
     await this.nimbuServer.stop();
   }
 
-  async startWebpackDevServer() {
+  async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number) {
     this.log(chalk.cyan('Starting the development server...\n'));
-    await this.webpackServer.start(this.HOST, this.DEFAULT_PORT, this.NIMBU_PORT, 'http')
+    await this.webpackServer.start(host, defaultPort, nimbuPort, 'http')
   }
 
   async stopWebpackDevServer() {
@@ -55,8 +66,8 @@ export default class Server extends Command {
   async run() {
     const { flags } = this.parse(Server);
 
-    await this.spawnNimbuServer(flags.nocookies);
-    await this.startWebpackDevServer();
+    await this.spawnNimbuServer(flags["nimbu-port"]!, flags.nocookies);
+    await this.startWebpackDevServer(flags.host!, flags.port!, flags["nimbu-port"]!);
     await this.waitForStopSignals();
   }
 
