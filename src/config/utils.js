@@ -36,7 +36,8 @@ function codeLoaders(options) {
     },
     {
       test: /\.js$/,
-      exclude: /node_modules/,
+      // exclude node modules, except our own polyfills
+      exclude: /node_modules(?!.*nimbu-toolbelt\/polyfills\.js)/,
       use: [
         babelLoader(),
       ],
