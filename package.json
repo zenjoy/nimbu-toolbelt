@@ -1,7 +1,7 @@
 {
   "name": "nimbu-toolbelt",
   "description": "Tools for Nimbu projects",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "author": "Zenjoy Engineering",
   "bin": {
     "nimbu": "./bin/run"
@@ -99,7 +99,7 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
     "posttest": "tslint -p . -t stylish",
-    "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "prepack": "tsc && oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md",
     "postinstall": "bundle install"
