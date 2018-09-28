@@ -1,6 +1,7 @@
 import { IConfig } from '@oclif/config';
 import Credentials from './credentials';
 import Config from './config';
+import { App } from './types';
 import fetch from 'node-fetch';
 
 export default class Client {
@@ -53,11 +54,15 @@ export default class Client {
     return this.fetch('GET', path);
   }
 
-  async list(type: string) : Promise<Array<any>> {
+  private async list(type: string) : Promise<Array<any>> {
     return this.get(`/${type}`);
   }
 
   async logout() : Promise<void> {
     return this.fetch('POST', '/auth/logout');
+  }
+
+  async listApps() : Promise<Array<App>> {
+    return this.list('apps');
   }
 }
