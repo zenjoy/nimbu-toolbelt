@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import Command from '../base';
 const openBrowser = require('react-dev-utils/openBrowser');
 
 export default class BrowseSimulator extends Command {

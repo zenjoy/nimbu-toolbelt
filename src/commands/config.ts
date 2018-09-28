@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import Command from './base';
 import chalk from 'chalk';
 import buildConfig = require('../config/config');
 import nimbuConfig from '../nimbu/config';

@@ -1,4 +1,5 @@
-import {Command, flags} from '@oclif/command'
+import Command from '../base';
+import { flags } from '@oclif/command'
 import run from '../../nimbu-gem/command';
 
 export default class ThemesPush extends Command {

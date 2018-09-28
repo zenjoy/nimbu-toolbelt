@@ -21,6 +21,10 @@ class Config {
     return this._config!;
   }
 
+  get isDefaultHost() {
+    return this.host === Config.defaultHost;
+  }
+
   get host() {
     return process.env.NIMBU_HOST || Config.defaultHost;
   }
@@ -31,6 +35,10 @@ class Config {
 
   get theme() {
     return process.env.NIMBU_THEME || this.config.theme;
+  }
+
+  get hostname() {
+    return this.host.replace(/https?:\/\//, '');
   }
 
   get adminHost() {

@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import Command from '../base';
 import Config from '../../nimbu/config';
 const openBrowser = require('react-dev-utils/openBrowser');
 

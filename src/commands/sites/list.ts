@@ -1,4 +1,4 @@
-import {Command, flags} from '@oclif/command'
+import Command from '../base';
 import run from '../../nimbu-gem/command';
 
 export default class SitesList extends Command {
