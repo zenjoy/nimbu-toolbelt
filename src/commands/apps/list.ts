@@ -26,14 +26,14 @@ export default class AppsList extends Command {
   }
 
   async printUnconfiguredApps(apps: App[]) {
-    if (apps.length > 0) {
+    if (apps && apps.length > 0) {
       this.log(chalk.greenBright('Unconfigured applications:'));
       apps.forEach(a => this.printUnconfiguredApp(a));
     }
   }
 
   async printConfiguredApps(apps: App[], configured: ConfigApp[]) {
-    if (apps.length > 0) {
+    if (apps && apps.length > 0) {
       this.log(chalk.greenBright('Configured applications:'));
       apps.forEach(a => {
         this.printConfiguredApp(a, configured.find(ca => ca.id === a.key)!);
