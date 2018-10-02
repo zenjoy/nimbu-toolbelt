@@ -1,24 +1,39 @@
-const { readSync } = require('node-yaml');
-import { resolve as resolvePath }from 'path';
+const { readSync, write } = require('node-yaml');
+import { resolve as resolvePath } from 'path';
 import paths = require('../config/paths');
 
+export interface ConfigApp {
+  name: string;
+  id: string;
+  dir: string;
+  glob: string;
+}
+
 interface ConfigFile {
-  site: string,
-  theme: string,
+  site: string;
+  theme: string;
+  apps: ConfigApp[];
 }
 
 class Config {
-
   static defaultHost = 'https://api.nimbu.io';
 
   private _config?: ConfigFile;
 
   private get config() {
-    if(!this._config) {
+    if (!this._config) {
       const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml');
-      this._config = Object.assign({ theme: 'default-theme'}, readSync(configFile));
+      this._config = Object.assign(
+        { theme: 'default-theme', apps: [] },
+        readSync(configFile)
+      );
     }
     return this._config!;
+  }
+
+  private async writeConfig() {
+    const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml');
+    write(configFile, this._config);
   }
 
   get isDefaultHost() {
@@ -45,6 +60,14 @@ class Config {
     return this.host.replace(/https?:\/\/api\./, '');
   }
 
+  get apps(): ConfigApp[] {
+    return this.config.apps;
+  }
+
+  async addApp(app: ConfigApp): Promise<void> {
+    this.config.apps.push(app);
+    this.writeConfig();
+  }
 }
 
 export default new Config();

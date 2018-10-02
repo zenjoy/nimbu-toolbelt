@@ -22,7 +22,7 @@ export default class Client {
     return this._token;
   }
 
-  private async fetch(method: string, path: string, body?: Object) : Promise<any> {
+  private async fetch(method: string, path: string, body?: any) : Promise<any> {
     const token = await this.token();
     const request = {
       method,
