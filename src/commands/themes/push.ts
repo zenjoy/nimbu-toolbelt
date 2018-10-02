@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import { flags } from '@oclif/command'
 import run from '../../nimbu-gem/command';
 

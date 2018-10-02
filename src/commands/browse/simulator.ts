@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import cli from 'cli-ux';
 
 export default class BrowseSimulator extends Command {

@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import run from '../../nimbu-gem/command';
 
 export default class ThemesList extends Command {

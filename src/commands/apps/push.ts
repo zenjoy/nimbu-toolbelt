@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import { flags } from '@oclif/command';
 import Config, { ConfigApp } from '../../nimbu/config';
 import { AppFile } from '../../nimbu/types';

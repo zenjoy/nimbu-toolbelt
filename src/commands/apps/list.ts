@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import { App } from '../../nimbu/types';
 import Config, { ConfigApp } from '../../nimbu/config';
 import { groupBy } from 'lodash';

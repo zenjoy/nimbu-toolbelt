@@ -1,4 +1,4 @@
-import Command from '../base';
+import Command from '../../command';
 import Config from '../../nimbu/config';
 import cli from 'cli-ux';
 

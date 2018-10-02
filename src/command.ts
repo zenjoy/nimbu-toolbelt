@@ -1,5 +1,5 @@
 import Command from '@oclif/command';
-import Client from '../nimbu/client';
+import Client from './nimbu/client';
 
 export default abstract class extends Command {
   protected _client?: Client;

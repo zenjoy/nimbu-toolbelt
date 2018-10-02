@@ -1,4 +1,4 @@
-import Command from './base';
+import Command from '../command';
 import webpack = require('webpack');
 import webpackConfig = require('../config/webpack.prod');
 import cli from 'cli-ux';

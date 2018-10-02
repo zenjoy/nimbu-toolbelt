@@ -1,4 +1,4 @@
-import Command from './base';
+import Command from '../command';
 import { flags } from '@oclif/command';
 import chalk from 'chalk';
 import NimbuServer from '../nimbu-gem/server';
