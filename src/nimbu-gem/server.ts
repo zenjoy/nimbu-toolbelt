@@ -46,10 +46,10 @@ export default class NimbuGemServer {
     return new Promise<void>((resolve, reject) => {
       const startListener = (data: any) => {
         if(/Listening on .*, CTRL\+C to stop/.test(data.toString())) {
-          this.process!.stdout.off('data', startListener);
+          this.process!.stdout.removeListener('data', startListener);
           resolve();
         } else if(/ERROR/.test(data.toString())) {
-          this.process!.stdout.off('data', startListener);
+          this.process!.stdout.removeListener('data', startListener);
           reject(new Error('Could not start nimbu server'));
         }
       };
