@@ -7,6 +7,7 @@ export interface ConfigApp {
   id: string;
   dir: string;
   glob: string;
+  host?: string;
 }
 
 interface ConfigFile {
@@ -61,11 +62,17 @@ class Config {
   }
 
   get apps(): ConfigApp[] {
-    return this.config.apps;
+    return this.config.apps.filter(
+      a => a.host === this.hostname || (!a.host && this.isDefaultHost)
+    );
   }
 
   async addApp(app: ConfigApp): Promise<void> {
-    this.config.apps.push(app);
+    this.config.apps.push(
+      Object.assign({}, app, {
+        host: this.hostname,
+      })
+    );
     this.writeConfig();
   }
 }
