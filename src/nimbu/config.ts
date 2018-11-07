@@ -1,6 +1,7 @@
 const { readSync, write } = require('node-yaml');
 import { resolve as resolvePath } from 'path';
 import paths = require('../config/paths');
+import projectConfig = require('../config/config');
 
 export interface ConfigApp {
   name: string;
@@ -42,15 +43,15 @@ class Config {
   }
 
   get host() {
-    return process.env.NIMBU_HOST || Config.defaultHost;
+    return process.env.NIMBU_HOST || projectConfig.NIMBU_HOST || Config.defaultHost;
   }
 
   get site() {
-    return process.env.NIMBU_SITE || this.config.site;
+    return process.env.NIMBU_SITE || projectConfig.NIMBU_SITE || this.config.site;
   }
 
   get theme() {
-    return process.env.NIMBU_THEME || this.config.theme;
+    return process.env.NIMBU_THEME || projectConfig.NIMBU_THEME || this.config.theme;
   }
 
   get hostname() {
