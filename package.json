@@ -1,7 +1,7 @@
 {
   "name": "nimbu-toolbelt",
   "description": "Tools for Nimbu projects",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "author": "Zenjoy Engineering",
   "bin": {
     "nimbu": "./bin/run"
