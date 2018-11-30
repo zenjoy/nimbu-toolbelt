@@ -75,7 +75,6 @@
   "files": [
     "/bin",
     "/lib",
-    "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/Gemfile",
     "/Gemfile.lock",
@@ -118,9 +117,9 @@
   },
   "repository": "zenjoy/nimbu-toolbelt",
   "scripts": {
-    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
-    "prepack": "tsc && oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "prepack": "tsc && oclif-dev manifest && oclif-dev readme",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md",
     "postinstall": "bundle install"
