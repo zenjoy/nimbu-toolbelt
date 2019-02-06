@@ -33,6 +33,12 @@ const webpackConfig = merge(baseWebpackConfig, {
   },
   devtool: 'cheap-module-source-map',
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify("development"),
+      },
+      DEBUG: "true",
+    }),
     ...styleConfig.plugins,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),

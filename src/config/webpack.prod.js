@@ -62,6 +62,12 @@ const webpackConfig = merge(baseWebpackConfig, {
     },
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify("production"),
+      },
+      DEBUG: "false",
+    }),
     ...styleConfig.plugins,
     ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry)),
   ]

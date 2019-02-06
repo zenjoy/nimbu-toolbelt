@@ -3,8 +3,10 @@ const paths = require('./paths.js');
 const webpack = require('webpack');
 const projectConfig = require('./config');
 
-const cssEntry = projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss';
-const jsEntry = projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js';
+const cssEntry =
+  projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss';
+const jsEntry =
+  projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js';
 
 const config = {
   entry: {
@@ -29,11 +31,6 @@ const config = {
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      },
     }),
   ],
 };
