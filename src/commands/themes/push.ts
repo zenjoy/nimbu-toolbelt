@@ -1,6 +1,6 @@
-import Command from '../../command';
+import Command from '../../command'
 import { flags } from '@oclif/command'
-import run from '../../nimbu-gem/command';
+import run from '../../nimbu-gem/command'
 
 export default class ThemesPush extends Command {
   static description = 'describe the command here'
@@ -38,18 +38,20 @@ export default class ThemesPush extends Command {
     // --force         # skip the usage check and upload anyway
     force: flags.boolean({
       description: 'skip the usage check and upload anyway'
-    }),
+    })
   }
 
   static strict = false
 
-  static args = [{
-    'name': 'files',
-    'description': "The files to push with --only"
-  }]
+  static args = [
+    {
+      name: 'files',
+      description: 'The files to push with --only'
+    }
+  ]
 
   async run() {
     // don't parse, then this.argv is the original arguments (including flags)
-    await run('themes:push', this.argv);
+    await run('themes:push', this.argv)
   }
 }

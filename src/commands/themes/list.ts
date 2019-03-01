@@ -1,5 +1,5 @@
-import Command from '../../command';
-import run from '../../nimbu-gem/command';
+import Command from '../../command'
+import run from '../../nimbu-gem/command'
 
 export default class ThemesList extends Command {
   static description = 'list all layouts, templates and assets'

@@ -11,6 +11,7 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
+    "@oclif/plugin-not-found": "^1.2.2",
     "@types/fs-extra": "^5.0.4",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.116",
@@ -37,6 +38,8 @@
     "html-webpack-plugin": "^3.2.0",
     "loader-utils": "^1.1.0",
     "lodash": "^4.17.11",
+    "netrc-parser": "^3.1.6",
+    "nimbu-client": "^1.0.0",
     "node-fetch": "^2.2.0",
     "node-sass": "^4.9.3",
     "node-yaml": "^3.1.1",
@@ -64,7 +67,13 @@
     "@types/node": "^10.12.27",
     "@types/webpack": "^4.4.12",
     "@types/webpack-dev-server": "^3.1.1",
+    "ava": "^1.2.1",
+    "chai": "^4.2.0",
+    "fancy-test": "^1.4.3",
     "globby": "^8",
+    "mocha": "^6.0.2",
+    "nock": "^10.0.6",
+    "nyc": "^13.3.0",
     "ts-node": "^7",
     "tslint": "^5",
     "typescript": "^3.0"
@@ -92,7 +101,8 @@
     "commands": "./lib/commands",
     "bin": "nimbu",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
     ],
     "topics": {
       "auth": {
@@ -117,12 +127,45 @@
   },
   "repository": "zenjoy/nimbu-toolbelt",
   "scripts": {
+    "build": "rm -rf lib && tsc",
+    "lint": "tsc -p test --noEmit && tslint -p test -t stylish",
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
     "prepack": "tsc && oclif-dev manifest && oclif-dev readme",
-    "test": "echo NO TESTS",
-    "version": "oclif-dev readme && git add README.md",
-    "postinstall": "bundle install"
+    "test": "nyc ava --timeout=5000 --verbose",
+    "watch": "ava --timeout=5000 --verbose --watch",
+    "version": "oclif-dev readme && git add README.md"
   },
-  "types": "lib/index.d.ts"
+  "types": "lib/index.d.ts",
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "sources": [
+      "**/*.{js,ts}",
+      "!lib/**/*"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
 }

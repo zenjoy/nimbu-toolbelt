@@ -1,26 +1,29 @@
-const autoprefixer = require('autoprefixer');
-const _ = require('lodash');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CssoWebpackPlugin = require('csso-webpack-plugin').default;
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const config = require('./config');
+const autoprefixer = require('autoprefixer')
+const _ = require('lodash')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CssoWebpackPlugin = require('csso-webpack-plugin').default
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const config = require('./config')
 
 function babelLoader() {
   const options = {
     cacheDirectory: true,
-    presets: ["react-app"]
+    presets: ['react-app'],
   }
   options.plugins = [
-    ["babel-plugin-root-import", {
-      "rootPathSuffix": "src"
-    }]
-  ];
-  if(config.REACT) {
-    options.plugins.push("react-hot-loader/babel")
+    [
+      'babel-plugin-root-import',
+      {
+        rootPathSuffix: 'src',
+      },
+    ],
+  ]
+  if (config.REACT) {
+    options.plugins.push('react-hot-loader/babel')
   }
   return {
     loader: 'babel-loader',
-    options
+    options,
   }
 }
 
@@ -29,27 +32,22 @@ function codeLoaders(options) {
     {
       test: /\.coffee$/,
       exclude: /node_modules/,
-      use: [
-        babelLoader(),
-        'coffee-loader',
-      ]
+      use: [babelLoader(), 'coffee-loader'],
     },
     {
       test: /\.js$/,
       // exclude node modules, except our own polyfills
       exclude: /node_modules(?!.*nimbu-toolbelt\/polyfills\.js)/,
-      use: [
-        babelLoader(),
-      ],
-    }
+      use: [babelLoader()],
+    },
   ]
 }
 
-const fileloader = require.resolve('file-loader');
-const fileloaderOutputPath = (name) => {
-  let basename = name.split('?h=')[0];
-  return `${basename}`;
-};
+const fileloader = require.resolve('file-loader')
+const fileloaderOutputPath = name => {
+  let basename = name.split('?h=')[0]
+  return `${basename}`
+}
 
 function fileLoaders(options = {}) {
   const loaders = [
@@ -60,7 +58,7 @@ function fileLoaders(options = {}) {
         name: 'fonts/[name].[ext]?h=[hash:8]',
         publicPath: options.publicPath || '/',
         outputPath: fileloaderOutputPath,
-      }
+      },
     },
     {
       loader: fileloader,
@@ -74,19 +72,16 @@ function fileLoaders(options = {}) {
         publicPath: options.publicPath || '/',
         outputPath: fileloaderOutputPath,
       },
-    }
-  ];
-  if(config.REACT && config.SVG_LOADER_INCLUDE) {
+    },
+  ]
+  if (config.REACT && config.SVG_LOADER_INCLUDE) {
     loaders.splice(0, 0, {
       test: /\.svg$/,
       include: config.SVG_LOADER_INCLUDE,
-      use: [
-        babelLoader(),
-        require.resolve('./svg-loader.js'),
-      ]
+      use: [babelLoader(), require.resolve('./svg-loader.js')],
     })
   }
-  return loaders;
+  return loaders
 }
 
 function styleLoaders(options) {
@@ -139,8 +134,8 @@ function styleConfigWithExtraction(options) {
               },
               use: styleLoaders(options),
             },
-            extractTextPluginOptions
-          )
+            extractTextPluginOptions,
+          ),
         ),
         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
       },
@@ -148,11 +143,11 @@ function styleConfigWithExtraction(options) {
     plugins: [
       // extract css into its own file
       new ExtractTextPlugin({
-        filename: 'stylesheets/[name].css'
+        filename: 'stylesheets/[name].css',
       }),
       new CssoWebpackPlugin({
         restructure: false, // Merging rules sometimes behaves incorrectly.
-      })
+      }),
     ],
   }
 }
@@ -162,36 +157,36 @@ function styleConfigWithoutExtraction(options) {
     loaders: [
       {
         test: /\.(css|scss)$/,
-        use: [
-          require.resolve('style-loader')
-        ].concat(styleLoaders(options))
-      }
+        use: [require.resolve('style-loader')].concat(styleLoaders(options)),
+      },
     ],
     plugins: [],
   }
 }
 
 function styleConfig(options) {
-  if(options.shouldExtractCSS) {
-    return styleConfigWithExtraction(options);
+  if (options.shouldExtractCSS) {
+    return styleConfigWithExtraction(options)
   } else {
-    return styleConfigWithoutExtraction(options);
+    return styleConfigWithoutExtraction(options)
   }
 }
 
 function htmlWebPackPlugins(entries, options = {}) {
-  const template = require.resolve('../../template/webpack.liquid.ejs');
-  return _.flatten(entries.map(function (name) {
-    return [
-      new HtmlWebpackPlugin({
-        filename: `snippets/webpack.liquid`,
-        template: template,
-        alwaysWriteToDisk: options.alwaysWriteToDisk,
-        inject: false,
-        chunksSortMode: 'dependency',
-      }),
-    ]
-  }));
+  const template = require.resolve('../../template/webpack.liquid.ejs')
+  return _.flatten(
+    entries.map(function(name) {
+      return [
+        new HtmlWebpackPlugin({
+          filename: `snippets/webpack.liquid`,
+          template: template,
+          alwaysWriteToDisk: options.alwaysWriteToDisk,
+          inject: false,
+          chunksSortMode: 'dependency',
+        }),
+      ]
+    }),
+  )
 }
 
 module.exports = {
@@ -199,5 +194,5 @@ module.exports = {
   styleConfig,
   codeLoaders,
   fileLoaders,
-  htmlWebPackPlugins
+  htmlWebPackPlugins,
 }

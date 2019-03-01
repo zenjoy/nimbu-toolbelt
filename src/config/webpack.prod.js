@@ -1,30 +1,32 @@
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const baseWebpackConfig = require('./webpack.base.js');
-const utils = require('./utils');
-const config = require('./config');
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const baseWebpackConfig = require('./webpack.base.js')
+const utils = require('./utils')
+const config = require('./config')
 
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
+const shouldExtractCSS = true
 
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-const shouldExtractCSS = true;
+const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
-const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS });
-
-const loaders = utils.codeLoaders().concat(styleConfig.loaders).concat(
-  utils.fileLoaders({
-    publicPath: config.CDN_ROOT || '../',
-  })
-);
+const loaders = utils
+  .codeLoaders()
+  .concat(styleConfig.loaders)
+  .concat(
+    utils.fileLoaders({
+      publicPath: config.CDN_ROOT || '../',
+    }),
+  )
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   module: {
     rules: [
       {
-        oneOf: loaders
-      }
-    ]
+        oneOf: loaders,
+      },
+    ],
   },
   optimization: {
     minimizer: [
@@ -47,30 +49,30 @@ const webpackConfig = merge(baseWebpackConfig, {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: function (module) {
+          test: function(module) {
             // This prevents stylesheet resources with the .css or .scss extension
             // from being moved from their original chunk to the vendor chunk
-            if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
-              return false;
+            if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
+              return false
             }
-            return module.context && (module.context.includes("node_modules") || module.context.includes('src/vendor'));
+            return module.context && (module.context.includes('node_modules') || module.context.includes('src/vendor'))
           },
           name: 'vendor',
-          chunks: 'all'
-        }
-      }
+          chunks: 'all',
+        },
+      },
     },
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify("production"),
+        NODE_ENV: JSON.stringify('production'),
       },
-      DEBUG: "false",
+      DEBUG: 'false',
     }),
     ...styleConfig.plugins,
     ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry)),
-  ]
-});
+  ],
+})
 
-module.exports = webpackConfig;
+module.exports = webpackConfig

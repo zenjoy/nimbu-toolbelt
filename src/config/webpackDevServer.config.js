@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
-const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
-const path = require('path');
+const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
+const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware')
+const path = require('path')
 
 // This configuration is inspired by the one from create-react-app (after ejecting)
 module.exports = function(proxy, allowedHost, host, protocol) {
@@ -20,10 +20,8 @@ module.exports = function(proxy, allowedHost, host, protocol) {
     quiet: true,
     watchOptions: {
       ignored: new RegExp(
-        `^(?!${path
-          .normalize('./src' + '/')
-          .replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
-        'g'
+        `^(?!${path.normalize('./src' + '/').replace(/[\\]+/g, '\\\\')}).+[\\\\/]node_modules[\\\\/]`,
+        'g',
       ),
     },
     https: protocol === 'https',
@@ -35,8 +33,8 @@ module.exports = function(proxy, allowedHost, host, protocol) {
     public: allowedHost,
     proxy,
     before(app) {
-      app.use(errorOverlayMiddleware());
-      app.use(noopServiceWorkerMiddleware());
+      app.use(errorOverlayMiddleware())
+      app.use(noopServiceWorkerMiddleware())
     },
-  };
-};
+  }
+}

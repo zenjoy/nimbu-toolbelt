@@ -1,11 +1,10 @@
-import Command from '../../command';
-import run from '../../nimbu-gem/command';
+import Command from '../../command'
+import run from '../../nimbu-gem/command'
 
 export default class ThemesDiff extends Command {
   static description = 'describe the command here'
 
-  static flags = {
-  }
+  static flags = {}
 
   static args = [
     {

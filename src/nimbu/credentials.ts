@@ -1,43 +1,60 @@
-import { IConfig } from '@oclif/config';
-import Config from './config';
-import { readFile, pathExists } from 'fs-extra';
-const urlencode = require('urlencode');
+import { IConfig } from '@oclif/config'
+import Config from './config'
+import { readFileSync, pathExistsSync } from 'fs-extra'
+const urlencode = require('urlencode')
+import Netrc from 'netrc-parser'
 
 export default class Credentials {
-
-  private config: IConfig;
+  private readonly config: IConfig
+  private _auth?: string
 
   constructor(config: IConfig) {
-    this.config = config;
+    this.config = config
   }
 
-  private get homeDirectory() {
-    return this.config.home;
+  private get homeDirectory(): string {
+    return this.config.home
   }
 
-  private get credentialsFile() {
-    if(Config.isDefaultHost) {
-      return `${this.homeDirectory}/.nimbu/credentials`;
+  private get credentialsFile(): string {
+    if (Config.isDefaultHost) {
+      return `${this.homeDirectory}/.nimbu/credentials`
     } else {
-      return `${this.homeDirectory}/.nimbu/credentials.${urlencode(Config.hostname)}`;
+      return `${this.homeDirectory}/.nimbu/credentials.${urlencode(
+        Config.apiHost
+      )}`
     }
   }
 
-  async token() {
-    let token;
-    const credentialsExist = await pathExists(this.credentialsFile);
-    if(credentialsExist) {
-      const credentials = (await readFile(this.credentialsFile)).toString('utf-8');
-      const match = credentials.match(/^(bearer|oauth2|token) ([\w]+)$/i);
-      if(match) {
-        token = match[2];
+  get token(): string | undefined {
+    if (!this._auth) {
+      this._auth = process.env.NIMBU_API_KEY
+      if (!this._auth) {
+        Netrc.loadSync()
+        this._auth =
+          Netrc.machines[Config.apiHost] && Netrc.machines[Config.apiHost].token
+      }
+      if (!this._auth) {
+        this._auth = this.migrateFromNimbuToken()
       }
     }
-    if(token) {
-      return token;
-    } else {
-      throw new Error('You are not logged in. Run auth:login command first.');
-    }
+    return this._auth
   }
 
+  private migrateFromNimbuToken(): string | undefined {
+    let token
+    const credentialsExist = pathExistsSync(this.credentialsFile)
+    if (credentialsExist) {
+      const credentials = readFileSync(this.credentialsFile).toString('utf-8')
+      const match = credentials.match(/^(bearer|oauth2|token) ([\w]+)$/i)
+      if (match) {
+        token = match[2]
+      }
+    }
+    if (token) {
+      Netrc.machines[Config.apiHost] = {}
+      Netrc.machines[Config.apiHost].token = token
+      return token
+    }
+  }
 }

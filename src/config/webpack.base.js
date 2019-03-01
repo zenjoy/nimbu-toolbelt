@@ -1,12 +1,10 @@
-const path = require('path');
-const paths = require('./paths.js');
-const webpack = require('webpack');
-const projectConfig = require('./config');
+const path = require('path')
+const paths = require('./paths.js')
+const webpack = require('webpack')
+const projectConfig = require('./config')
 
-const cssEntry =
-  projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss';
-const jsEntry =
-  projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js';
+const cssEntry = projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss'
+const jsEntry = projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js'
 
 const config = {
   entry: {
@@ -33,6 +31,6 @@ const config = {
       'window.jQuery': 'jquery',
     }),
   ],
-};
+}
 
-module.exports = config;
+module.exports = config

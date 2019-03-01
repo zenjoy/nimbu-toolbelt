@@ -1,3 +1,9 @@
 {
-  "extends": "@oclif/tslint"
+  "extends": "@oclif/tslint",
+  "rules": {
+    "prefer-object-spread": false,
+    "ordered-imports": false,
+    "object-curly-spacing": "always",
+    "no-http-string": false
+  }
 }

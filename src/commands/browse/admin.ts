@@ -1,12 +1,11 @@
-import Command from '../../command';
-import Config from '../../nimbu/config';
-import cli from 'cli-ux';
+import Command from '../../command'
+import Config from '../../nimbu/config'
+import cli from 'cli-ux'
 
 export default class BrowseAdmin extends Command {
-
-  static description = "open the admin area for your current site";
+  static description = 'open the admin area for your current site'
 
   async run() {
-    cli.open(`https://${Config.site}.${Config.adminHost}/admin`);
+    cli.open(`https://${Config.site}.${Config.host}/admin`)
   }
 }

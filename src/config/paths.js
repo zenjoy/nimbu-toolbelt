@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
-const projectDirectory = fs.realpathSync(process.cwd());
-const toolbeltDirectory = path.resolve(__dirname, '../..');
+const projectDirectory = fs.realpathSync(process.cwd())
+const toolbeltDirectory = path.resolve(__dirname, '../..')
 
 module.exports = {
   PROJECT_DIRECTORY: projectDirectory,

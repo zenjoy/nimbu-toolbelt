@@ -1,8 +1,10 @@
-import spawn from './process';
+import spawn from './process'
 
-export default function (command: string, args: Array<string> = []) : Promise<void> {
+export default function(
+  command: string,
+  args: Array<string> = []
+): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    const process = spawn(command, args);
-
+    const process = spawn(command, args)
   })
 }
