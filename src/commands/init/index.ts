@@ -1,7 +1,9 @@
 import Command from '../../command'
 import * as Nimbu from '../../nimbu/types'
 import { color } from '../../nimbu/color'
+import { SiteSubdomainCompletion } from '../../flags/completions'
 
+import { flags } from '@oclif/command'
 import cli from 'cli-ux'
 import { orderBy } from 'lodash'
 import inquirer from 'inquirer'
@@ -10,12 +12,41 @@ import logSymbols from 'log-symbols'
 export default class Init extends Command {
   static description = 'initialize your working directory to code a selected theme'
 
-  async run() {
-    let site = await this.askForSite()
-    let haml = await this.askForHaml()
-    let cloudCode = await this.askForCloudCode()
+  static flags = {
+    cloudcode: flags.boolean({
+      char: 'c',
+      description: 'Create CloudCode directory',
+    }),
+    haml: flags.boolean({
+      char: 'h',
+      description: 'Use HAML for the templates in this project',
+    }),
+    site: flags.string({
+      char: 's',
+      completion: SiteSubdomainCompletion,
+      description: 'The site (use the Nimbu subdomain) to link to this project.',
+      env: 'NIMBU_SITE',
+    }),
+  }
 
-    this.log(`You selected ${site.name} / ${haml} / ${cloudCode}`)
+  async run() {
+    const { flags } = this.parse(Init)
+
+    let site
+    let haml
+    let cloudcode
+
+    if (flags.site) {
+      site = flags.site
+      haml = flags.haml
+      cloudcode = flags.cloudcode
+    } else {
+      site = await this.askForSite()
+      haml = await this.askForHaml()
+      cloudcode = await this.askForCloudCode()
+    }
+
+    this.log(`You selected ${site.name} / ${haml} / ${cloudcode}`)
   }
 
   private async askForSite() {
@@ -34,20 +65,16 @@ export default class Init extends Command {
       let autocompletePrompt = require('inquirer-autocomplete-prompt')
 
       inquirer.registerPrompt('autocomplete', autocompletePrompt)
-      return inquirer
-        .prompt({
-          type: 'autocomplete',
-          name: 'site',
-          message: 'On which site would you like to work?',
-          source: async (_, input) => {
-            input = input || ''
-            return fuzzy.filter(input, choices).map(el => el.original)
-          },
-        })
-        .then(answer => {
-          let index = choices.indexOf(answer.site)
-          return sites[index]
-        })
+      let answer = await inquirer.prompt({
+        type: 'autocomplete',
+        name: 'site',
+        message: 'On which site would you like to work?',
+        source: async (_, input) => {
+          input = input || ''
+          return fuzzy.filter(input, choices).map(el => el.original)
+        },
+      })
+      return sites[choices.indexOf(answer.site)]
     } else {
       this.log(
         logSymbols.success,
@@ -59,28 +86,24 @@ export default class Init extends Command {
   }
 
   private async askForHaml() {
-    return inquirer
-      .prompt({
-        type: 'confirm',
-        name: 'haml',
-        message: 'Would you like to work with HAML?',
-        default: true,
-      })
-      .then(answer => {
-        return answer.haml
-      })
+    let answer = await inquirer.prompt({
+      type: 'confirm',
+      name: 'haml',
+      message: 'Would you like to work with HAML?',
+      default: true,
+    })
+
+    return answer.haml
   }
 
   private async askForCloudCode() {
-    return inquirer
-      .prompt({
-        type: 'confirm',
-        name: 'cloudcode',
-        message: 'Will you work with cloud code?',
-        default: true,
-      })
-      .then(answer => {
-        return answer.cloudcode
-      })
+    let answer = inquirer.prompt({
+      type: 'confirm',
+      name: 'cloudcode',
+      message: 'Will you work with cloud code?',
+      default: true,
+    })
+
+    return answer.cloudcode
   }
 }

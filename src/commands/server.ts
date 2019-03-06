@@ -31,10 +31,10 @@ export default class Server extends Command {
   //private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
   private readonly webpackServer: WebpackDevServer = new WebpackDevServer()
 
-  async spawnNimbuServer(port: number, nocookies: boolean) {
-    this.log(chalk.red('Starting nimbu server...'))
-    //await this.nimbuServer.start(port, { nocookies })
-  }
+  // async spawnNimbuServer(port: number, nocookies: boolean) {
+  //   this.log(chalk.red('Starting nimbu server...'))
+  //   //await this.nimbuServer.start(port, { nocookies })
+  // }
 
   async stopNimbuServer() {
     this.log(chalk.red('Giving nimbu server some time to stop...'))
@@ -53,7 +53,7 @@ export default class Server extends Command {
   async run() {
     const { flags } = this.parse(Server)
 
-    await this.spawnNimbuServer(flags['nimbu-port']!, flags.nocookies)
+    //await this.spawnNimbuServer(flags['nimbu-port']!, flags.nocookies)
     await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!)
     await this.waitForStopSignals()
   }
