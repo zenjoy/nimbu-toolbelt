@@ -10,6 +10,7 @@
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@oclif/errors": "^1.2.2",
     "@oclif/plugin-help": "^2",
     "@oclif/plugin-not-found": "^1.2.2",
     "@types/fs-extra": "^5.0.4",
@@ -81,6 +82,7 @@
     "nyc": "^13.3.0",
     "ts-node": "^7",
     "tslint": "^5",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.0"
   },
   "engines": {

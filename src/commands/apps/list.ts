@@ -4,7 +4,7 @@ import Config, { ConfigApp } from '../../nimbu/config'
 import { groupBy } from 'lodash'
 import chalk from 'chalk'
 
-enum Status {
+const enum Status {
   Configured = 'configured',
   Unconfigured = 'unconfigured',
 }

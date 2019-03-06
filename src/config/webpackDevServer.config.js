@@ -7,15 +7,23 @@ const path = require('path')
 // This configuration is inspired by the one from create-react-app (after ejecting)
 module.exports = function(proxy, allowedHost, host, protocol) {
   return {
-    disableHostCheck: !proxy,
-    // Enable gzip compression of generated files.
-    compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.
     clientLogLevel: 'none',
+    // Enable gzip compression of generated files.
+    compress: true,
     // Make sure everything webpack doesn't know of is proxied.
     contentBase: false,
+    disableHostCheck: !proxy,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
+    host: host,
     hot: true,
+    https: protocol === 'https',
+    overlay: false,
+    proxy,
+    public: allowedHost,
     publicPath: '/',
     quiet: true,
     watchOptions: {
@@ -24,14 +32,6 @@ module.exports = function(proxy, allowedHost, host, protocol) {
         'g',
       ),
     },
-    https: protocol === 'https',
-    host: host,
-    overlay: false,
-    historyApiFallback: {
-      disableDotRule: true,
-    },
-    public: allowedHost,
-    proxy,
     before(app) {
       app.use(errorOverlayMiddleware())
       app.use(noopServiceWorkerMiddleware())

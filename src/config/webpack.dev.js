@@ -26,6 +26,7 @@ const loaders = utils
   .concat(utils.fileLoaders())
 
 const webpackConfig = merge(baseWebpackConfig, {
+  devtool: 'cheap-module-source-map',
   mode: 'development',
   module: {
     rules: [
@@ -34,13 +35,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
     ],
   },
-  devtool: 'cheap-module-source-map',
   plugins: [
     new webpack.DefinePlugin({
+      DEBUG: 'true',
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
       },
-      DEBUG: 'true',
     }),
     ...styleConfig.plugins,
     new webpack.HotModuleReplacementPlugin(),

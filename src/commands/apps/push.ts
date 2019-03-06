@@ -51,10 +51,10 @@ export default class AppsPush extends Command {
         } else {
           throw new Error('Requested application not found.')
         }
-      } else if (Config.apps.length == 1) {
+      } else if (Config.apps.length === 1) {
         // If there is only 1 app, we allow flags.app to be empty
         this._app = Config.apps[0]
-      } else if (Config.apps.length == 0) {
+      } else if (Config.apps.length === 0) {
         throw new Error('No applications configured, please execute apps:config first.')
       } else {
         throw new Error("More than 1 application is configured, but you didn't pass the --app flag.")
@@ -105,7 +105,7 @@ export default class AppsPush extends Command {
     await this.executePush(filename, (...args) => this.createAppFile(...args))
   }
 
-  private async pushExistingFile(filename: string, existing: Nimbu.AppFile) {
+  private async pushExistingFile(filename: string) {
     await this.executePush(filename, (...args) => this.updateAppFile(...args))
   }
 
@@ -131,7 +131,7 @@ export default class AppsPush extends Command {
     const existing = code.find(f => `${this.app.dir}/${f.name}` === filename)
     cli.action.start(`  - ${filename}${existing ? '' : ' (new)'}`)
     if (existing) {
-      return this.pushExistingFile(filename, existing)
+      return this.pushExistingFile(filename)
     } else {
       return this.pushNewFile(filename)
     }

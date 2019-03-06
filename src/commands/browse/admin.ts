@@ -6,6 +6,6 @@ export default class BrowseAdmin extends Command {
   static description = 'open the admin area for your current site'
 
   async run() {
-    cli.open(`https://${Config.site}.${Config.host}/admin`)
+    await cli.open(`https://${Config.site}.${Config.host}/admin`)
   }
 }

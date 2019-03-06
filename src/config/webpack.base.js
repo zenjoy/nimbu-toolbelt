@@ -13,16 +13,13 @@ const config = {
       path.resolve(paths.PROJECT_DIRECTORY, `src/${jsEntry}`),
     ],
   },
-  output: {
-    path: paths.PROJECT_DIRECTORY,
-    filename: 'javascripts/[name].js',
-    publicPath: '/',
-  },
-  resolve: {
-    extensions: ['.js', '.coffee'],
-  },
   module: {
     strictExportPresence: true,
+  },
+  output: {
+    filename: 'javascripts/[name].js',
+    path: paths.PROJECT_DIRECTORY,
+    publicPath: '/',
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -31,6 +28,9 @@ const config = {
       'window.jQuery': 'jquery',
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.coffee'],
+  },
 }
 
 module.exports = config

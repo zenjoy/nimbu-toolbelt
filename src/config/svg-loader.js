@@ -6,9 +6,9 @@ function svgoOpts(self, content) {
     plugins: [
       {
         cleanupIDs: {
-          remove: true,
           minify: true,
           prefix: loaderUtils.interpolateName(self, '[hash]-', { content }),
+          remove: true,
         },
       },
       {

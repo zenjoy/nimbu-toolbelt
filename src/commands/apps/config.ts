@@ -20,8 +20,8 @@ export default class AppsList extends Command {
       required: true,
       default: '1',
     })
-    const picked = parseInt(answer)
-    if (!(picked !== NaN && picked > 0 && picked <= apps.length)) {
+    const picked = parseInt(answer, 10)
+    if (!(!isNaN(picked) && picked > 0 && picked <= apps.length)) {
       this.error('Invalid application chosen')
     }
     return apps[picked - 1]
@@ -44,7 +44,7 @@ export default class AppsList extends Command {
       default: '*.js',
     })
     const dirExists = await pathExists(dir)
-    if (dirExists || (await cli.confirm(`Code directory doesn't exists, are you sure want to continue?`))) {
+    if (dirExists || (await cli.confirm("Code directory doesn't exists, are you sure want to continue?"))) {
       await Config.addApp({
         name,
         id: app.key,
@@ -60,7 +60,7 @@ export default class AppsList extends Command {
       const app = await this.pickApp(this.removeConfigured(apps))
       await this.configureApp(app)
     } else {
-      this.error(`Your site doesn't have apps yet.`)
+      this.error("Your site doesn't have apps yet.")
     }
   }
 }

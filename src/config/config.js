@@ -5,8 +5,8 @@ const fs = require('fs')
 const projectPackageJson = require(path.resolve(paths.PROJECT_DIRECTORY, 'package.json'))
 
 const defaultConfig = {
-  REACT: false,
   CDN_ROOT: '../',
+  REACT: false,
 }
 
 let projectConfigPath

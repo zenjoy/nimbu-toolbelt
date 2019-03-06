@@ -8,9 +8,7 @@ export default class Config extends Command {
 
   async showBuildConfiguration() {
     this.log(chalk.red('Build configuration'))
-    for (const key in buildConfig) {
-      this.log(`${key}: ${buildConfig[key]}`)
-    }
+    Object.keys(buildConfig).forEach(key => this.log(`${key}: ${buildConfig[key]}`))
   }
 
   async showToolchainConfiguration() {
@@ -22,7 +20,7 @@ export default class Config extends Command {
   }
 
   async run() {
-    this.showBuildConfiguration()
-    this.showToolchainConfiguration()
+    await this.showBuildConfiguration()
+    await this.showToolchainConfiguration()
   }
 }

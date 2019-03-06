@@ -1,9 +1,11 @@
 {
-  "extends": "@oclif/tslint",
+  "extends": ["@oclif/tslint", "tslint-config-prettier"],
   "rules": {
-    "prefer-object-spread": false,
-    "ordered-imports": false,
+    "no-http-string": false,
     "object-curly-spacing": "always",
-    "no-http-string": false
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "prefer-object-spread": false,
+    "triple-equals": [true, "allow-null-check", "allow-undefined-check"]
   }
 }

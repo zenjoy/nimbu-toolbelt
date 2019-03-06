@@ -30,14 +30,14 @@ function babelLoader() {
 function codeLoaders(options) {
   return [
     {
-      test: /\.coffee$/,
       exclude: /node_modules/,
+      test: /\.coffee$/,
       use: [babelLoader(), 'coffee-loader'],
     },
     {
-      test: /\.js$/,
       // exclude node modules, except our own polyfills
       exclude: /node_modules(?!.*nimbu-toolbelt\/polyfills\.js)/,
+      test: /\.js$/,
       use: [babelLoader()],
     },
   ]
@@ -53,31 +53,31 @@ function fileLoaders(options = {}) {
   const loaders = [
     {
       loader: fileloader,
-      test: [/\.(eot|otf|woff|woff2|ttf)(\?\S*)?$/, /fonts.*\.svg(\?\S*)?$/],
       options: {
         name: 'fonts/[name].[ext]?h=[hash:8]',
-        publicPath: options.publicPath || '/',
         outputPath: fileloaderOutputPath,
+        publicPath: options.publicPath || '/',
       },
+      test: [/\.(eot|otf|woff|woff2|ttf)(\?\S*)?$/, /fonts.*\.svg(\?\S*)?$/],
     },
     {
-      loader: fileloader,
       // Exclude `js` files to keep "css" loader working as it injects
       // it's runtime that would otherwise processed through "file" loader.
       // Also exclude `html` and `json` extensions so they get processed
       // by webpacks internal loaders.
       exclude: [/\.js$/, /\.html$/, /\.json$/, /\.ejs$/],
+      loader: fileloader,
       options: {
         name: 'images/[name].[ext]?h=[hash:8]',
-        publicPath: options.publicPath || '/',
         outputPath: fileloaderOutputPath,
+        publicPath: options.publicPath || '/',
       },
     },
   ]
   if (config.REACT && config.SVG_LOADER_INCLUDE) {
     loaders.splice(0, 0, {
-      test: /\.svg$/,
       include: config.SVG_LOADER_INCLUDE,
+      test: /\.svg$/,
       use: [babelLoader(), require.resolve('./svg-loader.js')],
     })
   }
@@ -122,7 +122,6 @@ function styleConfigWithExtraction(options) {
   return {
     loaders: [
       {
-        test: /\.(css|scss)$/,
         loader: ExtractTextPlugin.extract(
           Object.assign(
             {
@@ -138,6 +137,7 @@ function styleConfigWithExtraction(options) {
           ),
         ),
         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+        test: /\.(css|scss)$/,
       },
     ],
     plugins: [
@@ -178,11 +178,11 @@ function htmlWebPackPlugins(entries, options = {}) {
     entries.map(function(name) {
       return [
         new HtmlWebpackPlugin({
-          filename: `snippets/webpack.liquid`,
-          template: template,
           alwaysWriteToDisk: options.alwaysWriteToDisk,
-          inject: false,
           chunksSortMode: 'dependency',
+          filename: `snippets/webpack.liquid`,
+          inject: false,
+          template: template,
         }),
       ]
     }),
@@ -190,9 +190,9 @@ function htmlWebPackPlugins(entries, options = {}) {
 }
 
 module.exports = {
-  styleLoaders,
-  styleConfig,
   codeLoaders,
   fileLoaders,
   htmlWebPackPlugins,
+  styleConfig,
+  styleLoaders,
 }

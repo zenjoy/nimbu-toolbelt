@@ -5,9 +5,9 @@ const dim = process.env.ConEmuANSI === 'ON' ? chalk.gray : chalk.dim
 
 const Colors: {
   supports: typeof supports
-  grey: (s: string) => string
-  dim: (s: string) => string
-  cmd: (s: string) => string
+  grey(s: string): string
+  dim(s: string): string
+  cmd(s: string): string
 } = {
   supports,
   grey: dim,
