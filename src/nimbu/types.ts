@@ -32,3 +32,11 @@ export interface Authorization {
   expires_in?: number
   expired_at?: string
 }
+
+export interface Site {
+  id: string
+  url: string
+  name: string
+  domain: string
+  subdomain: string
+}
