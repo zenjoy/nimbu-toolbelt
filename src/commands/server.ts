@@ -1,7 +1,7 @@
 import Command from '../command'
 import { flags } from '@oclif/command'
 import chalk from 'chalk'
-import NimbuServer from '../nimbu-gem/server'
+//import NimbuServer from '../nimbu-gem/server'
 import WebpackDevServer from '../webpack/server'
 
 export default class Server extends Command {
@@ -28,17 +28,17 @@ export default class Server extends Command {
     }),
   }
 
-  private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
+  //private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
   private readonly webpackServer: WebpackDevServer = new WebpackDevServer()
 
   async spawnNimbuServer(port: number, nocookies: boolean) {
     this.log(chalk.red('Starting nimbu server...'))
-    await this.nimbuServer.start(port, { nocookies })
+    //await this.nimbuServer.start(port, { nocookies })
   }
 
   async stopNimbuServer() {
     this.log(chalk.red('Giving nimbu server some time to stop...'))
-    await this.nimbuServer.stop()
+    //await this.nimbuServer.stop()
   }
 
   async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number) {
@@ -62,9 +62,9 @@ export default class Server extends Command {
     if (this.webpackServer.isRunning()) {
       await this.stopWebpackDevServer()
     }
-    if (this.nimbuServer.isRunning()) {
-      await this.stopNimbuServer()
-    }
+    // if (this.nimbuServer.isRunning()) {
+    //   await this.stopNimbuServer()
+    // }
   }
 
   private waitForStopSignals(): Promise<void> {

@@ -35,6 +35,11 @@ class Config {
   get apiUrl(): string {
     return this.host.startsWith('http') ? this.host : `https://api.${this.host}`
   }
+
+  get secureHost(): boolean {
+    return this.apiUrl.startsWith('https')
+  }
+
   get apiHost(): string {
     if (this.host.startsWith('http')) {
       const u = url.parse(this.host)

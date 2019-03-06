@@ -38,5 +38,6 @@ export interface Site {
   url: string
   name: string
   domain: string
+  domain_url: string
   subdomain: string
 }
