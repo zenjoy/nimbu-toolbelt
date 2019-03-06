@@ -56,3 +56,23 @@ test.serial('makes an HTTP request with NIMBU_HOST', async t => {
   t.deepEqual(result, [{ name: 'mychannel' }])
   t.true(api.isDone())
 })
+
+test.serial('can fetch all pages', async t => {
+  let api1 = nock('https://api.nimbu.io')
+    .get('/channels')
+    .reply(200, [{ name: 'foo' }], {
+      Link: '<https://api.nimbu.io/channels?page=2>; rel="next", <https://api.nimbu.io/channels?page=2>; rel="last"',
+    })
+
+  let api2 = nock('https://api.nimbu.io')
+    .get('/channels')
+    .query({ page: 2 })
+    .reply(200, [{ name: 'bar' }], {
+      Link: '<https://api.nimbu.io/channels?page=1>; rel="prev", <https://api.nimbu.io/channels?page=1>; rel="first"',
+    })
+
+  const cmd = new Command([], t.context.config)
+  const result = await cmd.nimbu.get('/channels', { fetchAll: true })
+  t.deepEqual(result, [{ name: 'foo' }, { name: 'bar' }])
+  t.true(api1.isDone() && api2.isDone())
+})
