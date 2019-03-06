@@ -1,5 +1,7 @@
-nimbu-toolbelt
-==============
+# nimbu-toolbelt
+
+[![Build Status](https://travis-ci.org/nimbu/nimbu-toolbelt.png?branch=master)](https://travis-ci.org/nimbu/nimbu-toolbelt)
+[![codecov](https://codecov.io/gh/nimbu/nimbu-toolbelt/branch/master/graph/badge.svg)](https://codecov.io/gh/nimbu/nimbu-toolbelt)
 
 Toolbelt for Nimbu projects
 
@@ -9,11 +11,12 @@ Toolbelt for Nimbu projects
 [![License](https://img.shields.io/npm/l/nimbu-toolbelt.svg)](https://github.com/zenjoy/nimbu-toolbelt/blob/master/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-* [Features](#features)
-<!-- tocstop -->
- 
+
+- [Usage](#usage)
+- [Commands](#commands)
+- [Features](#features)
+  <!-- tocstop -->
+
 # Usage
 
 ## Prerequisites
@@ -61,24 +64,37 @@ webpack generated. This should be included and used in the layout of your theme.
 Make sure that include is there and that you push the snippet to nimbu!
 
 # Commands
+
 <!-- commands -->
-* [`nimbu apps:config`](#nimbu-appsconfig)
-* [`nimbu apps:list`](#nimbu-appslist)
-* [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
-* [`nimbu auth:login`](#nimbu-authlogin)
-* [`nimbu auth:logout`](#nimbu-authlogout)
-* [`nimbu auth:token`](#nimbu-authtoken)
-* [`nimbu browse:admin`](#nimbu-browseadmin)
-* [`nimbu browse:simulator`](#nimbu-browsesimulator)
-* [`nimbu build`](#nimbu-build)
-* [`nimbu config`](#nimbu-config)
-* [`nimbu help [COMMAND]`](#nimbu-help-command)
-* [`nimbu init`](#nimbu-init)
-* [`nimbu server`](#nimbu-server)
-* [`nimbu sites:list`](#nimbu-siteslist)
-* [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
-* [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
-* [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
+
+- [nimbu-toolbelt](#nimbu-toolbelt)
+- [Usage](#usage)
+  - [Prerequisites](#prerequisites)
+  - [Getting started](#getting-started)
+  - [Development server](#development-server)
+  - [Pushing to nimbu](#pushing-to-nimbu)
+- [Commands](#commands)
+  - [`nimbu apps:config`](#nimbu-appsconfig)
+  - [`nimbu apps:list`](#nimbu-appslist)
+  - [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
+  - [`nimbu auth:login`](#nimbu-authlogin)
+  - [`nimbu auth:logout`](#nimbu-authlogout)
+  - [`nimbu auth:token`](#nimbu-authtoken)
+  - [`nimbu browse:admin`](#nimbu-browseadmin)
+  - [`nimbu browse:simulator`](#nimbu-browsesimulator)
+  - [`nimbu build`](#nimbu-build)
+  - [`nimbu config`](#nimbu-config)
+  - [`nimbu help [COMMAND]`](#nimbu-help-command)
+  - [`nimbu init`](#nimbu-init)
+  - [`nimbu server`](#nimbu-server)
+  - [`nimbu sites:list`](#nimbu-siteslist)
+  - [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
+  - [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
+  - [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
+- [Features](#features)
+  - [Coffeescript/Javascript](#coffeescriptjavascript)
+  - [(S)CSS](#scss)
+  - [Using the webpack output in your layout](#using-the-webpack-output-in-your-layout)
 
 ## `nimbu apps:config`
 
@@ -302,6 +318,7 @@ OPTIONS
 ```
 
 _See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/themes/push.ts)_
+
 <!-- commandsstop -->
 
 # Features
@@ -318,7 +335,7 @@ The javascripts pipeline supports:
   [create react app supports](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#supported-language-features-and-polyfills)
 
 There is one entrypoint `src/index.js` that gets compiled into `javascripts/app.js` and
-  `javascripts/vendor.js` (split automatically).
+`javascripts/vendor.js` (split automatically).
 
 ## (S)CSS
 
