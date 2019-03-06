@@ -1,5 +1,5 @@
 import Command from '../../command'
-import { App } from '../../nimbu/types'
+import * as Nimbu from '../../nimbu/types'
 import Config, { ConfigApp } from '../../nimbu/config'
 import { groupBy } from 'lodash'
 import chalk from 'chalk'
@@ -12,7 +12,7 @@ enum Status {
 export default class AppsList extends Command {
   static description = 'List the applications registered in Nimbu'
 
-  printConfiguredApp(app: App, configured: ConfigApp) {
+  printConfiguredApp(app: Nimbu.App, configured: ConfigApp) {
     this.log(chalk.bold(`- ${configured.name}`))
     this.log(`  - id: ${configured.id}`)
     this.log(`  - name in nimbu: ${app.name}`)
@@ -20,19 +20,19 @@ export default class AppsList extends Command {
     this.log(`  - code glob: ${configured.glob}`)
   }
 
-  printUnconfiguredApp(app: App) {
+  printUnconfiguredApp(app: Nimbu.App) {
     this.log(`- ${app.name}:`)
     this.log(`  - id: ${app.key}`)
   }
 
-  async printUnconfiguredApps(apps: App[]) {
+  async printUnconfiguredApps(apps: Nimbu.App[]) {
     if (apps && apps.length > 0) {
       this.log(chalk.greenBright('Unconfigured applications:'))
       apps.forEach(a => this.printUnconfiguredApp(a))
     }
   }
 
-  async printConfiguredApps(apps: App[], configured: ConfigApp[]) {
+  async printConfiguredApps(apps: Nimbu.App[], configured: ConfigApp[]) {
     if (apps && apps.length > 0) {
       this.log(chalk.greenBright('Configured applications:'))
       apps.forEach(a => {
@@ -41,7 +41,7 @@ export default class AppsList extends Command {
     }
   }
 
-  async printApps(apps: App[]): Promise<void> {
+  async printApps(apps: Nimbu.App[]): Promise<void> {
     const configuredApps = Config.apps
     const grouped = groupBy(apps, a => {
       if (configuredApps.find(ca => ca.id === a.key)) {
@@ -55,7 +55,7 @@ export default class AppsList extends Command {
   }
 
   async run() {
-    const apps = await this.nimbu.listApps()
+    const apps = await this.nimbu.get<Array<Nimbu.App>>('/apps')
     if (apps.length > 0) {
       await this.printApps(apps)
     } else {

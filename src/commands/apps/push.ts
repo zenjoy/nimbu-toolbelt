@@ -1,17 +1,22 @@
 import Command from '../../command'
 import { flags } from '@oclif/command'
 import Config, { ConfigApp } from '../../nimbu/config'
-import { AppFile } from '../../nimbu/types'
-import * as glob from 'glob'
-import { promisify } from 'util'
+import * as Nimbu from '../../nimbu/types'
+import glob from 'glob'
 import cli from 'cli-ux'
 import chalk from 'chalk'
 import { resolve as resolvePath } from 'path'
 import { readFile } from 'fs-extra'
 
-// async function findMatchingFiles(dir: string, pattern: string): Promise<string[]> {
-//   return promisify(glob)(`${dir}/${pattern}`)
-// }
+const promiseGlob = function(pattern: string, options: glob.IOptions = {}): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    glob(pattern, options, (err, files) => (err === null ? resolve(files) : reject(err)))
+  })
+}
+
+async function findMatchingFiles(dir: string, pattern: string): Promise<string[]> {
+  return promiseGlob(`${dir}/${pattern}`)
+}
 
 export default class AppsPush extends Command {
   static description = 'Push your cloud code files to nimbu'
@@ -34,7 +39,7 @@ export default class AppsPush extends Command {
 
   private _app?: ConfigApp
   private _files?: string[]
-  private _code?: AppFile[]
+  private _code?: Nimbu.AppFile[]
 
   get app(): ConfigApp {
     if (!this._app) {
@@ -64,21 +69,31 @@ export default class AppsPush extends Command {
       if (argv.length > 0) {
         this._files = argv.slice()
       } else {
-        //FIXME: dit werkt precies niet met typescript
-        //this._files = await findMatchingFiles(this.app.dir, this.app.glob)
+        this._files = await findMatchingFiles(this.app.dir, this.app.glob)
       }
     }
     return this._files!
   }
 
-  async code(): Promise<AppFile[]> {
+  async code(): Promise<Nimbu.AppFile[]> {
     if (!this._code) {
-      this._code = await this.nimbu.getAppFiles(this.app.id)
+      this._code = await this.nimbu.get<Nimbu.AppFile[]>(`/apps/${this.app.id}/code`)
     }
     return this._code
   }
 
-  private async executePush(filename: string, executor: (app: string, name: string, code: string) => Promise<AppFile>) {
+  async run() {
+    const files = await this.files()
+    this.log(`Pushing code for app ${this.app.name}:`)
+    for (const file of files) {
+      await this.pushFile(file)
+    }
+  }
+
+  private async executePush(
+    filename: string,
+    executor: (app: string, name: string, code: string) => Promise<Nimbu.AppFile>,
+  ) {
     const name = filename.replace(`${this.app.dir}/`, '')
     const resolved = resolvePath(filename)
     const code = await readFile(resolved)
@@ -87,11 +102,28 @@ export default class AppsPush extends Command {
   }
 
   private async pushNewFile(filename: string) {
-    await this.executePush(filename, (...args) => this.nimbu.createAppFile(...args))
+    await this.executePush(filename, (...args) => this.createAppFile(...args))
   }
 
-  private async pushExistingFile(filename: string, existing: AppFile) {
-    await this.executePush(filename, (...args) => this.nimbu.updateAppFile(...args))
+  private async pushExistingFile(filename: string, existing: Nimbu.AppFile) {
+    await this.executePush(filename, (...args) => this.updateAppFile(...args))
+  }
+
+  private async createAppFile(app: string, name: string, code: string): Promise<Nimbu.AppFile> {
+    return this.nimbu.post<Nimbu.AppFile>(`/apps/${app}/code`, {
+      body: {
+        name,
+        code,
+      },
+    })
+  }
+
+  private async updateAppFile(app: string, name: string, code: string): Promise<Nimbu.AppFile> {
+    return this.nimbu.put<Nimbu.AppFile>(`/apps/${app}/code/${name}`, {
+      body: {
+        code,
+      },
+    })
   }
 
   private async pushFile(filename: string) {
@@ -102,14 +134,6 @@ export default class AppsPush extends Command {
       return this.pushExistingFile(filename, existing)
     } else {
       return this.pushNewFile(filename)
-    }
-  }
-
-  async run() {
-    const files = await this.files()
-    this.log(`Pushing code for app ${this.app.name}:`)
-    for (const file of files) {
-      await this.pushFile(file)
     }
   }
 }

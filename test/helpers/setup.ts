@@ -1,24 +1,28 @@
 import anyTest, { TestInterface } from 'ava'
 import * as Config from '@oclif/config'
 import nock from 'nock'
+import { stdout, stderr } from 'stdout-stderr'
 
-let env = process.env
+let env = Object.assign({}, process.env)
 const test = anyTest as TestInterface<{ config: Config.IConfig }>
 
-test.before(() => {
+test.serial.before(() => {
   nock.disableNetConnect()
 })
 
 test.beforeEach(async t => {
+  process.env = Object.assign({}, { DEBUG: process.env.DEBUG })
   t.context = { config: await Config.load() }
 })
 
-test.afterEach(() => {
+test.afterEach.always(() => {
   process.env = env
+  stdout.stop()
+  stderr.stop()
 })
 
-test.after(() => {
+test.after.always(() => {
   nock.enableNetConnect()
 })
 
-export default test
+export { test, stdout, stderr }

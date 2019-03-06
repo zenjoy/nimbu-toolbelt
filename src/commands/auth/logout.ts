@@ -1,11 +1,13 @@
 import Command from '../../command'
-import run from '../../nimbu-gem/command'
 
-export default class AuthLogout extends Command {
-  static description = 'clear local authentication credentials'
+import ux from 'cli-ux'
+
+export default class Logout extends Command {
+  static description = 'clears local login credentials and invalidates API session'
+  static aliases = ['logout']
 
   async run() {
+    ux.action.start('Logging out')
     await this.nimbu.logout()
-    await run('auth:logout')
   }
 }

@@ -9,8 +9,4 @@ export default abstract class extends Command {
     this._client = new Client(this.config)
     return this._client
   }
-
-  async catch(err: Error) {
-    this.error(err.message)
-  }
 }

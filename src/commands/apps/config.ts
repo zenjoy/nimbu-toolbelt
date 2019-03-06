@@ -1,5 +1,5 @@
 import Command from '../../command'
-import { App } from '../../nimbu/types'
+import * as Nimbu from '../../nimbu/types'
 import cli from 'cli-ux'
 import Config from '../../nimbu/config'
 import { pathExists } from 'fs-extra'
@@ -7,12 +7,12 @@ import { pathExists } from 'fs-extra'
 export default class AppsList extends Command {
   static description = 'Add an app to the local configuration'
 
-  removeConfigured(apps: App[]): App[] {
+  removeConfigured(apps: Nimbu.App[]): Nimbu.App[] {
     const configuredIds = Config.apps.map(a => a.id)
     return apps.filter(a => !configuredIds.includes(a.key))
   }
 
-  async pickApp(apps: App[]): Promise<App> {
+  async pickApp(apps: Nimbu.App[]): Promise<Nimbu.App> {
     apps.forEach((a, i) => {
       this.log(`[${i + 1}] ${a.name}`)
     })
@@ -27,7 +27,7 @@ export default class AppsList extends Command {
     return apps[picked - 1]
   }
 
-  async configureApp(app: App): Promise<void> {
+  async configureApp(app: Nimbu.App): Promise<void> {
     const name = await cli.prompt(
       'Give this app a local name. Make it short and (white)spaceless! You might have to type it in apps:push commands.',
       {
@@ -55,7 +55,7 @@ export default class AppsList extends Command {
   }
 
   async run() {
-    const apps = await this.nimbu.listApps()
+    const apps = await this.nimbu.get<Array<Nimbu.App>>('/apps')
     if (apps.length > 0) {
       const app = await this.pickApp(this.removeConfigured(apps))
       await this.configureApp(app)

@@ -1,5 +1,5 @@
 import nock from 'nock'
-import test from '../helpers/setup'
+import { test } from '../helpers/setup'
 
 import { default as CommandBase } from '../../src/command'
 
