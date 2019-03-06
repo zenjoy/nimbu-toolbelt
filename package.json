@@ -117,7 +117,8 @@
     "bin": "nimbu",
     "plugins": [
       "@oclif/plugin-help",
-      "@oclif/plugin-not-found"
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-autocomplete"
     ],
     "topics": {
       "auth": {
