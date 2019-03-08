@@ -16,10 +16,12 @@ export default class Init extends Command {
     cloudcode: flags.boolean({
       char: 'c',
       description: 'Create CloudCode directory',
+      default: false,
     }),
     haml: flags.boolean({
       char: 'h',
       description: 'Use HAML for the templates in this project',
+      default: false,
     }),
     site: flags.string({
       char: 's',
@@ -32,21 +34,22 @@ export default class Init extends Command {
   async run() {
     const { flags } = this.parse(Init)
 
-    let site
+    let subdomain
     let haml
     let cloudcode
 
     if (flags.site) {
-      site = flags.site
+      subdomain = flags.site
       haml = flags.haml
       cloudcode = flags.cloudcode
     } else {
-      site = await this.askForSite()
+      let site = await this.askForSite()
+      subdomain = site.subdomain
       haml = await this.askForHaml()
       cloudcode = await this.askForCloudCode()
     }
 
-    this.log(`You selected ${site.name} / ${haml} / ${cloudcode}`)
+    await this.createDirectories(cloudcode, haml)
   }
 
   private async askForSite() {
@@ -105,5 +108,29 @@ export default class Init extends Command {
     })
 
     return answer.cloudcode
+  }
+
+  private async createDirectories(useCloudCode = false, useHaml = false) {
+    const assets = ['stylesheets', 'javascripts', 'images']
+    const templates = ['layouts', 'templates', 'snippets']
+
+    let dirs = [...templates, ...assets]
+
+    if (useHaml) {
+      templates.forEach(t => {
+        dirs.push(`haml/${t}`)
+      })
+    }
+
+    if (useCloudCode) {
+      dirs.push('cloudcode')
+    }
+
+    this.log('Initializing directories:')
+
+    //this.log(`Current directory: ${process.cwd()}`)
+    dirs.forEach(d => {
+      this.log(`- ${d}`)
+    })
   }
 }

@@ -26,9 +26,11 @@ export const SiteCompletion: flags.ICompletion = {
 }
 
 export const SiteSubdomainCompletion: flags.ICompletion = {
-  cacheDuration: day,
-  options: async ctx => {
-    let sites = await fetchFromNimbu('sites', ctx, 'subdomain')
-    return sites
+  skipCache: true,
+  options: async _ => {
+    return ['a', 'b', 'c']
+
+    // let sites = await fetchFromNimbu('sites', ctx, 'subdomain')
+    // return sites
   },
 }
