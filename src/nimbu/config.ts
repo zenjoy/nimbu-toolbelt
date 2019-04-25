@@ -24,17 +24,14 @@ class Config {
 
   private get config() {
     if (!this._config) {
-      const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml');
-      this._config = Object.assign(
-        { theme: 'default-theme', apps: [] },
-        readSync(configFile)
-      );
+      const configFile = resolvePath(paths.NIMBU_DIRECTORY, 'nimbu.yml');
+      this._config = Object.assign({ theme: 'default-theme', apps: [] }, readSync(configFile));
     }
     return this._config!;
   }
 
   private async writeConfig() {
-    const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml');
+    const configFile = resolvePath(paths.NIMBU_DIRECTORY, 'nimbu.yml');
     write(configFile, this._config);
   }
 
