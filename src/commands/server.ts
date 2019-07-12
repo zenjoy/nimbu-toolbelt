@@ -1,7 +1,7 @@
 import Command from '../command'
 import { flags } from '@oclif/command'
 import chalk from 'chalk'
-//import NimbuServer from '../nimbu-gem/server'
+import NimbuServer from '../nimbu-gem/server'
 import WebpackDevServer from '../webpack/server'
 
 export default class Server extends Command {
@@ -28,17 +28,17 @@ export default class Server extends Command {
     }),
   }
 
-  //private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
+  private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
   private readonly webpackServer: WebpackDevServer = new WebpackDevServer()
 
-  // async spawnNimbuServer(port: number, nocookies: boolean) {
-  //   this.log(chalk.red('Starting nimbu server...'))
-  //   //await this.nimbuServer.start(port, { nocookies })
-  // }
+  async spawnNimbuServer(port: number, nocookies: boolean) {
+    this.log(chalk.red('Starting nimbu server...'))
+    await this.nimbuServer.start(port, { nocookies })
+  }
 
   async stopNimbuServer() {
     this.log(chalk.red('Giving nimbu server some time to stop...'))
-    //await this.nimbuServer.stop()
+    await this.nimbuServer.stop()
   }
 
   async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number) {
@@ -53,7 +53,7 @@ export default class Server extends Command {
   async run() {
     const { flags } = this.parse(Server)
 
-    //await this.spawnNimbuServer(flags['nimbu-port']!, flags.nocookies)
+    await this.spawnNimbuServer(flags['nimbu-port']!, flags.nocookies)
     await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!)
     await this.waitForStopSignals()
   }
@@ -62,13 +62,13 @@ export default class Server extends Command {
     if (this.webpackServer.isRunning()) {
       await this.stopWebpackDevServer()
     }
-    // if (this.nimbuServer.isRunning()) {
-    //   await this.stopNimbuServer()
-    // }
+    if (this.nimbuServer.isRunning()) {
+      await this.stopNimbuServer()
+    }
   }
 
   private waitForStopSignals(): Promise<void> {
-    return new Promise<void>((resolve, _) => {
+    return new Promise<void>((resolve, _reject) => {
       ;(['SIGINT', 'SIGTERM'] as Array<NodeJS.Signals>).forEach(sig => {
         process.on(sig, async () => {
           this.log(chalk.cyan('Shutting down ...'))

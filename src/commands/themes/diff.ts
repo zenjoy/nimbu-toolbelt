@@ -1,4 +1,5 @@
 import Command from '../../command'
+import proxy from '../../nimbu-gem/command'
 
 export default class ThemesDiff extends Command {
   static description = 'describe the command here'
@@ -14,6 +15,6 @@ export default class ThemesDiff extends Command {
 
   async run() {
     // don't parse, then this.argv is the original arguments (including flags)
-    //await run('themes:diff', this.argv)
+    await proxy('themes:diff', this.argv)
   }
 }

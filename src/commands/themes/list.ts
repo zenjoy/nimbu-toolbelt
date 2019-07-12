@@ -1,4 +1,5 @@
 import Command from '../../command'
+import proxy from '../../nimbu-gem/command'
 
 export default class ThemesList extends Command {
   static description = 'list all layouts, templates and assets'
@@ -12,5 +13,6 @@ export default class ThemesList extends Command {
 
   async run() {
     // don't parse, then this.argv is the original arguments (including flags)
+    await proxy('themes:list', this.argv)
   }
 }

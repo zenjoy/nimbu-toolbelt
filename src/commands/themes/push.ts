@@ -1,5 +1,6 @@
 import Command from '../../command'
 import { flags } from '@oclif/command'
+import proxy from '../../nimbu-gem/command'
 
 export default class ThemesPush extends Command {
   static description = 'describe the command here'
@@ -51,5 +52,6 @@ export default class ThemesPush extends Command {
 
   async run() {
     // don't parse, then this.argv is the original arguments (including flags)
+    await proxy('themes:push', this.argv)
   }
 }
