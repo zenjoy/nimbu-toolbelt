@@ -66,17 +66,19 @@ Make sure that include is there and that you push the snippet to nimbu!
 # Commands
 
 <!-- commands -->
+<<<<<<< HEAD
 
 - [nimbu-toolbelt](#nimbu-toolbelt)
-- [Usage](#usage)
-  - [Prerequisites](#prerequisites)
-  - [Getting started](#getting-started)
-  - [Development server](#development-server)
-  - [Pushing to nimbu](#pushing-to-nimbu)
-- [Commands](#commands)
+- [Usage](#Usage)
+  - [Prerequisites](#Prerequisites)
+  - [Getting started](#Getting-started)
+  - [Development server](#Development-server)
+  - [Pushing to nimbu](#Pushing-to-nimbu)
+- [Commands](#Commands)
   - [`nimbu apps:config`](#nimbu-appsconfig)
   - [`nimbu apps:list`](#nimbu-appslist)
-  - [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
+  - [`nimbu apps:push [FILES]`](#nimbu-appspush-FILES)
+  - [`nimbu apps:transpile SOURCE TARGET`](#nimbu-appstranspile-SOURCE-TARGET)
   - [`nimbu auth:login`](#nimbu-authlogin)
   - [`nimbu auth:logout`](#nimbu-authlogout)
   - [`nimbu auth:token`](#nimbu-authtoken)
@@ -84,17 +86,17 @@ Make sure that include is there and that you push the snippet to nimbu!
   - [`nimbu browse:simulator`](#nimbu-browsesimulator)
   - [`nimbu build`](#nimbu-build)
   - [`nimbu config`](#nimbu-config)
-  - [`nimbu help [COMMAND]`](#nimbu-help-command)
+  - [`nimbu help [COMMAND]`](#nimbu-help-COMMAND)
   - [`nimbu init`](#nimbu-init)
   - [`nimbu server`](#nimbu-server)
   - [`nimbu sites:list`](#nimbu-siteslist)
-  - [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
-  - [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
-  - [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
-- [Features](#features)
-  - [Coffeescript/Javascript](#coffeescriptjavascript)
-  - [(S)CSS](#scss)
-  - [Using the webpack output in your layout](#using-the-webpack-output-in-your-layout)
+  - [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-THEME)
+  - [`nimbu themes:list [THEME]`](#nimbu-themeslist-THEME)
+  - [`nimbu themes:push [FILES]`](#nimbu-themespush-FILES)
+- [Features](#Features)
+  - [Coffeescript/Javascript](#CoffeescriptJavascript)
+  - [(S)CSS](#SCSS)
+  - [Using the webpack output in your layout](#Using-the-webpack-output-in-your-layout)
 
 ## `nimbu apps:config`
 
@@ -105,7 +107,7 @@ USAGE
   $ nimbu apps:config
 ```
 
-_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/apps/config.ts)_
+_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/config.ts)_
 
 ## `nimbu apps:list`
 
@@ -116,7 +118,7 @@ USAGE
   $ nimbu apps:list
 ```
 
-_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/apps/list.ts)_
+_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/list.ts)_
 
 ## `nimbu apps:push [FILES]`
 
@@ -133,7 +135,18 @@ OPTIONS
   -a, --app=app  The (local) name of the application to push to (see apps:list and apps:config).
 ```
 
-_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/apps/push.ts)_
+_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/push.ts)_
+
+## `nimbu apps:transpile SOURCE TARGET`
+
+Transpile a file from ES6 to ES5 for compatiblity with Nimbu Cloud applications
+
+```
+USAGE
+  $ nimbu apps:transpile SOURCE TARGET
+```
+
+_See code: [src/commands/apps/transpile.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/transpile.ts)_
 
 ## `nimbu auth:login`
 
@@ -144,7 +157,7 @@ USAGE
   $ nimbu auth:login
 ```
 
-_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/auth/login.ts)_
+_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/login.ts)_
 
 ## `nimbu auth:logout`
 
@@ -155,7 +168,7 @@ USAGE
   $ nimbu auth:logout
 ```
 
-_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/auth/logout.ts)_
+_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/logout.ts)_
 
 ## `nimbu auth:token`
 
@@ -166,7 +179,7 @@ USAGE
   $ nimbu auth:token
 ```
 
-_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/auth/token.ts)_
+_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/token.ts)_
 
 ## `nimbu browse:admin`
 
@@ -177,7 +190,7 @@ USAGE
   $ nimbu browse:admin
 ```
 
-_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/browse/admin.ts)_
+_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/browse/admin.ts)_
 
 ## `nimbu browse:simulator`
 
@@ -188,7 +201,7 @@ USAGE
   $ nimbu browse:simulator
 ```
 
-_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/browse/simulator.ts)_
+_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/browse/simulator.ts)_
 
 ## `nimbu build`
 
@@ -199,7 +212,7 @@ USAGE
   $ nimbu build
 ```
 
-_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/build.ts)_
 
 ## `nimbu config`
 
@@ -210,7 +223,7 @@ USAGE
   $ nimbu config
 ```
 
-_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/config.ts)_
 
 ## `nimbu help [COMMAND]`
 
@@ -227,7 +240,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.2/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
 
 ## `nimbu init`
 
@@ -238,7 +251,7 @@ USAGE
   $ nimbu init
 ```
 
-_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/init/index.ts)_
+_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/init/index.ts)_
 
 ## `nimbu server`
 
@@ -255,7 +268,7 @@ OPTIONS
   --port=port              [default: 4567] The port to listen on.
 ```
 
-_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/server.ts)_
+_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/server.ts)_
 
 ## `nimbu sites:list`
 
@@ -266,7 +279,7 @@ USAGE
   $ nimbu sites:list
 ```
 
-_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/sites/list.ts)_
+_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/sites/list.ts)_
 
 ## `nimbu themes:diff [THEME]`
 
@@ -280,7 +293,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/themes/diff.ts)_
+_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/diff.ts)_
 
 ## `nimbu themes:list [THEME]`
 
@@ -294,7 +307,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/themes/list.ts)_
+_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/list.ts)_
 
 ## `nimbu themes:push [FILES]`
 
@@ -317,8 +330,7 @@ OPTIONS
   --only         only push the files given on the command line
 ```
 
-_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.2.5/src/commands/themes/push.ts)_
-
+_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/push.ts)_
 <!-- commandsstop -->
 
 # Features
