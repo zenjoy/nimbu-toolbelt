@@ -1,43 +1,31 @@
 import * as Config from '@oclif/config'
-import anyTest, { TestInterface } from 'ava'
-import nock from 'nock'
+import base, { expect } from 'fancy-test'
 
 import Command from '../src/command'
 import * as flags from '../src/flags'
 
-const test = anyTest as TestInterface<{ config: Promise<Config.IConfig> }>
-
-test.before(() => {
-  nock.disableNetConnect()
-})
-
-test.beforeEach(t => {
-  t.context = { config: Config.load() }
-})
-
-test.after(() => {
-  nock.enableNetConnect()
-})
+const test = base.add('config', () => Config.load())
 
 class MyCommand extends Command {
   async run() {}
 }
 
-test('can set the current site', async t => {
-  return class SiteCommand extends Command {
-    static flags = {
-      site: flags.site(),
-    }
+describe('cli base command', () => {
+  it('has a flag to set the site', async () => {
+    return class SiteCommand extends Command {
+      static flags = {
+        site: flags.site(),
+      }
 
-    async run() {
-      const { flags } = this.parse(SiteCommand)
-      t.true(flags.site === 'mysite')
-    }
-  }.run(['--site=mysite'])
-})
+      async run() {
+        const { flags } = this.parse(SiteCommand)
+        expect(flags.site).to.equal('mysite')
+      }
+    }.run(['--site=mysite'])
+  })
 
-test('has a nimbu api client', async t => {
-  const cmd = new MyCommand([], await t.context.config)
-
-  t.truthy(cmd.nimbu)
+  test.it('has a nimbu API client', ctx => {
+    let cmd = new MyCommand([], ctx.config)
+    expect(cmd.nimbu).to.be.ok
+  })
 })

@@ -8,6 +8,7 @@ import cli from 'cli-ux'
 import { orderBy } from 'lodash'
 import inquirer from 'inquirer'
 import logSymbols from 'log-symbols'
+import fs from 'fs-extra'
 
 export default class Init extends Command {
   static description = 'initialize your working directory to code a selected theme'
@@ -50,6 +51,7 @@ export default class Init extends Command {
     }
 
     await this.createDirectories(cloudcode, haml)
+    await this.createConfig(subdomain)
   }
 
   private async askForSite() {
@@ -100,7 +102,7 @@ export default class Init extends Command {
   }
 
   private async askForCloudCode() {
-    let answer = inquirer.prompt({
+    let answer = await inquirer.prompt({
       type: 'confirm',
       name: 'cloudcode',
       message: 'Will you work with cloud code?',
@@ -126,11 +128,39 @@ export default class Init extends Command {
       dirs.push('cloudcode')
     }
 
-    this.log('Initializing directories:')
-
-    //this.log(`Current directory: ${process.cwd()}`)
-    dirs.forEach(d => {
+    this.log('\nInitializing directories:')
+    const currentDir = process.cwd()
+    dirs.sort().forEach(async d => {
       this.log(`- ${d}`)
+      try {
+        await fs.mkdirp(currentDir + '/' + d)
+        // tslint:disable-next-line: no-unused
+      } catch (error) {
+        // do nothing
+      }
     })
+
+    this.log('\nDone.')
+  }
+
+  private async createConfig(subdomain) {
+    const currentDir = process.cwd()
+    const filename = currentDir + '/nimbu.yml'
+    const content = `theme: default-theme\nsite: ${subdomain}`
+
+    if (fs.existsSync(filename)) {
+      let answer = await inquirer.prompt({
+        type: 'confirm',
+        name: 'overwrite',
+        message: 'A nimbu.yml file already exists. Would you like to overwrite?',
+        default: false,
+      })
+
+      if (!answer.overwrite) {
+        return
+      }
+    }
+
+    await fs.writeFile(filename, content)
   }
 }

@@ -1,35 +1,26 @@
-import test from 'ava'
+import test, { expect } from 'fancy-test'
+
 import config from '../../src/nimbu/config'
 
-let env = process.env
-test.beforeEach(() => {
-  process.env = {}
-})
-test.afterEach(() => {
-  process.env = env
-})
+describe('cli client configuration', () => {
+  test.it('sets vars by default', () => {
+    expect(config.host).to.equal('nimbu.io')
+    expect(config.apiHost).to.equal('api.nimbu.io')
+    expect(config.apiUrl).to.equal('https://api.nimbu.io')
+    expect(config.secureHost).to.be.true
+  })
 
-test('sets vars by default', t => {
-  t.true(config.host === 'nimbu.io')
-  t.true(config.apiHost === 'api.nimbu.io')
-  t.true(config.apiUrl === 'https://api.nimbu.io')
-  t.true(config.secureHost)
-})
+  test.env({ NIMBU_HOST: 'customhost.com' }, { clear: true }).it('respects NIMBU_HOST', () => {
+    expect(config.host).to.equal('customhost.com')
+    expect(config.apiHost).to.equal('api.customhost.com')
+    expect(config.apiUrl).to.equal('https://api.customhost.com')
+    expect(config.secureHost).to.be.true
+  })
 
-test('respects NIMBU_HOST', t => {
-  process.env.NIMBU_HOST = 'customhost.com'
-
-  t.true(config.host === 'customhost.com')
-  t.true(config.apiHost === 'api.customhost.com')
-  t.true(config.apiUrl === 'https://api.customhost.com')
-  t.true(config.secureHost)
-})
-
-test('respects NIMBU_HOST as url', t => {
-  process.env.NIMBU_HOST = 'http://customhost'
-
-  t.true(config.host === 'http://customhost')
-  t.true(config.apiHost === 'customhost')
-  t.true(config.apiUrl === 'http://customhost')
-  t.false(config.secureHost)
+  test.env({ NIMBU_HOST: 'http://customhost' }, { clear: true }).it('respects NIMBU_HOST as url', () => {
+    expect(config.host).to.equal('http://customhost')
+    expect(config.apiHost).to.equal('customhost')
+    expect(config.apiUrl).to.equal('http://customhost')
+    expect(config.secureHost).to.be.false
+  })
 })
