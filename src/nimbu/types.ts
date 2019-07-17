@@ -16,9 +16,10 @@ export interface User {
   email: string
   name: string
   url: string
+  username: string
 }
 
-export interface Authorization {
+export interface Token {
   app: App
   created_at: string
   updated_at: string

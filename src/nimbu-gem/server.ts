@@ -1,4 +1,5 @@
 import { ChildProcess } from 'child_process'
+import Client from '../nimbu/client'
 import spawn from './process'
 
 export interface NimbuGemServerOptions {
@@ -9,10 +10,12 @@ export default class NimbuGemServer {
   private process?: ChildProcess
   private readonly logger?: (message: string) => void
   private readonly errorLogger?: (message: string) => void
+  private readonly nimbu: Client
 
-  constructor(logger?: (message: string) => void, errorLogger?: (message: string) => void) {
+  constructor(nimbuClient: Client, logger?: (message: string) => void, errorLogger?: (message: string) => void) {
     this.logger = logger
     this.errorLogger = errorLogger
+    this.nimbu = nimbuClient
   }
 
   isRunning(): boolean {
@@ -21,12 +24,20 @@ export default class NimbuGemServer {
 
   async start(port: number, options?: NimbuGemServerOptions): Promise<void> {
     const args = ['--haml', '--host', '127.0.0.1', '--port', `${port}`]
+
     if (options && options.nocookies) {
       args.push('--nocookies')
     }
-    this.process = spawn('server', args, ['inherit', 'pipe', 'pipe'])
+
+    await this.nimbu.validateLogin()
+    if (this.nimbu.token === undefined) {
+      return Promise.reject(new Error('Not authenticated'))
+    }
+
+    this.process = spawn(this.nimbu.token, 'server', args, ['inherit', 'pipe', 'pipe'])
     this.process.stdout.on('data', this.handleStdout)
     this.process.stderr.on('data', this.handleStderr)
+
     return new Promise<void>((resolve, reject) => {
       const startListener = (data: any) => {
         if (/Listening on .*, CTRL\+C to stop/.test(data.toString())) {

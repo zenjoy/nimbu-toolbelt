@@ -28,7 +28,7 @@ export default class Server extends Command {
     }),
   }
 
-  private readonly nimbuServer: NimbuServer = new NimbuServer(this.log, this.warn)
+  private readonly nimbuServer: NimbuServer = new NimbuServer(this.nimbu, this.log, this.warn)
   private readonly webpackServer: WebpackDevServer = new WebpackDevServer()
 
   async spawnNimbuServer(port: number, nocookies: boolean) {

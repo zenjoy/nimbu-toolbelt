@@ -6,6 +6,7 @@ import ux from 'cli-ux'
 
 import { Credentials } from './credentials'
 import Config from './config'
+import { User } from './types'
 
 export namespace Client {
   export interface Options {
@@ -81,6 +82,18 @@ export default class Client {
 
   login(options: Credentials.Options = {}) {
     return this.credentials.login(options)
+  }
+
+  async validateLogin(): Promise<boolean> {
+    try {
+      // if this returns a 401, it will try to reauthenticate
+      await this.get<User>('/user')
+
+      return true
+    } catch {
+      ux.warn('Sorry, you need to be authenticated to continue.')
+      return false
+    }
   }
 
   async logout() {

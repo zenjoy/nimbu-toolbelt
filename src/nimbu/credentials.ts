@@ -19,6 +19,7 @@ export namespace Credentials {
 }
 
 interface NetrcEntry {
+  login: string
   token: string
 }
 
@@ -45,11 +46,13 @@ export class Credentials {
   }
 
   get token(): string | undefined {
+    const host = Config.apiHost
+
     if (!this._auth) {
       this._auth = process.env.NIMBU_API_KEY
       if (!this._auth) {
         Netrc.loadSync()
-        this._auth = Netrc.machines[Config.apiHost] && Netrc.machines[Config.apiHost].token
+        this._auth = Netrc.machines[host] && Netrc.machines[host].token
       }
       if (!this._auth) {
         this._auth = this.migrateFromNimbuToken()
@@ -59,6 +62,7 @@ export class Credentials {
   }
 
   async login(opts: Credentials.Options = {}): Promise<void> {
+    const host = Config.apiHost
     let loggedIn = false
     try {
       // timeout after 10 minutes
@@ -73,14 +77,13 @@ export class Credentials {
       }
 
       await Netrc.load()
-
-      const previousToken = Netrc.machines['api.nimbu.io']
+      const previousToken = Netrc.machines[host]
       try {
         if (previousToken && previousToken.token) await this.logout(previousToken.token)
       } catch (err) {
         ux.warn(err)
       }
-      let auth = await this.interactive(previousToken && previousToken.token, opts.expiresIn)
+      let auth = await this.interactive(previousToken && previousToken.login, opts.expiresIn)
       await this.saveToken(auth)
     } catch (err) {
       throw new APIError(err)
@@ -119,20 +122,17 @@ export class Credentials {
     opts: { expiresIn?: number; secondFactor?: string } = {},
   ): Promise<NetrcEntry> {
     let auth = [username, password].join(':')
-
-    let clientOptions = {
-      auth,
-      host: Config.apiUrl,
-      userAgent: this.config.userAgent,
-    }
-
     let headers = {}
 
     if (opts.secondFactor) headers['X-Nimbu-Two-Factor'] = opts.secondFactor
 
-    let client = new Nimbu(clientOptions)
+    let client = new Nimbu({
+      auth,
+      host: Config.apiUrl,
+      userAgent: this.config.userAgent,
+    })
 
-    const result = await client.post('/auth/login', {
+    let { token } = await client.post('/auth/login', {
       headers,
       body: {
         description: `Nimbu CLI login from ${hostname}`,
@@ -140,15 +140,19 @@ export class Credentials {
       },
     })
 
-    return { token: result.token! }
+    return { token, login: username }
   }
 
   private async saveToken(entry: NetrcEntry) {
     const host = Config.apiHost
     if (!Netrc.machines[host]) Netrc.machines[host] = {}
+
     Netrc.machines[host].token = entry.token
+    Netrc.machines[host].login = entry.login
+
     delete Netrc.machines[host].method
     delete Netrc.machines[host].org
+
     if (Netrc.machines._tokens) {
       ;(Netrc.machines._tokens as any).forEach((token: any) => {
         if (host === token.host) {
@@ -156,11 +160,13 @@ export class Credentials {
         }
       })
     }
+
     await Netrc.save()
   }
 
   private migrateFromNimbuToken(): string | undefined {
     let token
+
     const credentialsExist = pathExistsSync(this.credentialsFile)
     if (credentialsExist) {
       const credentials = readFileSync(this.credentialsFile).toString('utf-8')
@@ -172,6 +178,7 @@ export class Credentials {
     if (token) {
       Netrc.machines[Config.apiHost] = {}
       Netrc.machines[Config.apiHost].token = token
+      Netrc.saveSync()
       return token
     }
   }

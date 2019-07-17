@@ -5,7 +5,7 @@ describe('auth:token', () => {
     .env({ NIMBU_API_KEY: 'foobar' }, { clear: true })
     .nock('https://api.nimbu.io', api =>
       api
-        .get('/authorizations/api')
+        .get('/tokens')
         // return some tokens
         .reply(200, [{ token: 'waldo' }, { token: 'foobar', expires_in: 60 }, {}]),
     )
