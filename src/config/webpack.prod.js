@@ -36,13 +36,13 @@ const webpackConfig = merge(baseWebpackConfig, {
           compress: {
             comparisons: false,
             drop_console: true,
-            warnings: false,
           },
           mangle: true,
           output: {
             ascii_only: true,
             comments: false,
           },
+          warnings: false,
         },
       }),
     ],

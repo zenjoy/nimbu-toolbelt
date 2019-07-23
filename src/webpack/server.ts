@@ -20,13 +20,13 @@ export default class WebpackDevServer {
     }
     const appName = require(path.resolve(paths.PROJECT_DIRECTORY, 'package.json')).name
     const urls = prepareUrls(protocol, host, port)
-    const compiler = createCompiler(
+    const compiler = createCompiler({
       webpack,
       config,
       appName,
       urls,
-      true, // useYarn
-    )
+      useYarn: true // useYarn
+    })
     const proxyConfig = {
       '*': { target: `http://localhost:${nimbuPort}` },
     }

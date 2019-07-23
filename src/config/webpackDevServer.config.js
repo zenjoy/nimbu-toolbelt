@@ -1,5 +1,7 @@
 'use strict'
 
+process.traceDeprecation = true
+
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware')
 const path = require('path')

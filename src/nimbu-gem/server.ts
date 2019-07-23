@@ -35,20 +35,20 @@ export default class NimbuGemServer {
     }
 
     this.process = spawn(this.nimbu.token, 'server', args, ['inherit', 'pipe', 'pipe'])
-    this.process.stdout.on('data', this.handleStdout)
-    this.process.stderr.on('data', this.handleStderr)
+    this.process.stdout!.on('data', this.handleStdout)
+    this.process.stderr!.on('data', this.handleStderr)
 
     return new Promise<void>((resolve, reject) => {
       const startListener = (data: any) => {
         if (/Listening on .*, CTRL\+C to stop/.test(data.toString())) {
-          this.process!.stdout.removeListener('data', startListener)
+          this.process!.stdout!.removeListener('data', startListener)
           resolve()
         } else if (/ERROR/.test(data.toString())) {
-          this.process!.stdout.removeListener('data', startListener)
+          this.process!.stdout!.removeListener('data', startListener)
           reject(new Error('Could not start nimbu server'))
         }
       }
-      this.process!.stdout.on('data', startListener)
+      this.process!.stdout!.on('data', startListener)
     })
   }
 
