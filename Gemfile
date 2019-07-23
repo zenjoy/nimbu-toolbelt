@@ -1,6 +1,6 @@
 # A sample Gemfile
 source "https://rubygems.org"
 
-gem "nimbu", "~> 0.11.6"
+gem "nimbu", "~> 0.11.7"
 gem 'haml'
 gem 'json', '~> 1.8.3'
