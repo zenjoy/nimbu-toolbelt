@@ -11,11 +11,11 @@ Toolbelt for Nimbu projects
 [![License](https://img.shields.io/npm/l/nimbu-toolbelt.svg)](https://github.com/zenjoy/nimbu-toolbelt/blob/master/package.json)
 
 <!-- toc -->
-
-- [Usage](#usage)
-- [Commands](#commands)
-- [Features](#features)
-  <!-- tocstop -->
+* [nimbu-toolbelt](#nimbu-toolbelt)
+* [Usage](#usage)
+* [Commands](#commands)
+* [Features](#features)
+<!-- tocstop -->
 
 # Usage
 
@@ -66,37 +66,26 @@ Make sure that include is there and that you push the snippet to nimbu!
 # Commands
 
 <!-- commands -->
-<<<<<<< HEAD
-
-- [nimbu-toolbelt](#nimbu-toolbelt)
-- [Usage](#Usage)
-  - [Prerequisites](#Prerequisites)
-  - [Getting started](#Getting-started)
-  - [Development server](#Development-server)
-  - [Pushing to nimbu](#Pushing-to-nimbu)
-- [Commands](#Commands)
-  - [`nimbu apps:config`](#nimbu-appsconfig)
-  - [`nimbu apps:list`](#nimbu-appslist)
-  - [`nimbu apps:push [FILES]`](#nimbu-appspush-FILES)
-  - [`nimbu apps:transpile SOURCE TARGET`](#nimbu-appstranspile-SOURCE-TARGET)
-  - [`nimbu auth:login`](#nimbu-authlogin)
-  - [`nimbu auth:logout`](#nimbu-authlogout)
-  - [`nimbu auth:token`](#nimbu-authtoken)
-  - [`nimbu browse:admin`](#nimbu-browseadmin)
-  - [`nimbu browse:simulator`](#nimbu-browsesimulator)
-  - [`nimbu build`](#nimbu-build)
-  - [`nimbu config`](#nimbu-config)
-  - [`nimbu help [COMMAND]`](#nimbu-help-COMMAND)
-  - [`nimbu init`](#nimbu-init)
-  - [`nimbu server`](#nimbu-server)
-  - [`nimbu sites:list`](#nimbu-siteslist)
-  - [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-THEME)
-  - [`nimbu themes:list [THEME]`](#nimbu-themeslist-THEME)
-  - [`nimbu themes:push [FILES]`](#nimbu-themespush-FILES)
-- [Features](#Features)
-  - [Coffeescript/Javascript](#CoffeescriptJavascript)
-  - [(S)CSS](#SCSS)
-  - [Using the webpack output in your layout](#Using-the-webpack-output-in-your-layout)
+* [`nimbu apps:config`](#nimbu-appsconfig)
+* [`nimbu apps:list`](#nimbu-appslist)
+* [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
+* [`nimbu apps:transpile SOURCE TARGET`](#nimbu-appstranspile-source-target)
+* [`nimbu auth:login`](#nimbu-authlogin)
+* [`nimbu auth:logout`](#nimbu-authlogout)
+* [`nimbu auth:token`](#nimbu-authtoken)
+* [`nimbu auth:whoami`](#nimbu-authwhoami)
+* [`nimbu autocomplete [SHELL]`](#nimbu-autocomplete-shell)
+* [`nimbu browse:admin`](#nimbu-browseadmin)
+* [`nimbu browse:simulator`](#nimbu-browsesimulator)
+* [`nimbu build`](#nimbu-build)
+* [`nimbu config`](#nimbu-config)
+* [`nimbu help [COMMAND]`](#nimbu-help-command)
+* [`nimbu init`](#nimbu-init)
+* [`nimbu server`](#nimbu-server)
+* [`nimbu sites:list`](#nimbu-siteslist)
+* [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
+* [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
+* [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
 
 ## `nimbu apps:config`
 
@@ -107,7 +96,7 @@ USAGE
   $ nimbu apps:config
 ```
 
-_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/config.ts)_
+_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/apps/config.ts)_
 
 ## `nimbu apps:list`
 
@@ -118,7 +107,7 @@ USAGE
   $ nimbu apps:list
 ```
 
-_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/list.ts)_
+_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/apps/list.ts)_
 
 ## `nimbu apps:push [FILES]`
 
@@ -135,7 +124,7 @@ OPTIONS
   -a, --app=app  The (local) name of the application to push to (see apps:list and apps:config).
 ```
 
-_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/push.ts)_
+_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/apps/push.ts)_
 
 ## `nimbu apps:transpile SOURCE TARGET`
 
@@ -146,40 +135,93 @@ USAGE
   $ nimbu apps:transpile SOURCE TARGET
 ```
 
-_See code: [src/commands/apps/transpile.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/apps/transpile.ts)_
+_See code: [src/commands/apps/transpile.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/apps/transpile.ts)_
 
 ## `nimbu auth:login`
 
-log in with your nimbu credentials
+login with your nimbu credentials
 
 ```
 USAGE
   $ nimbu auth:login
+
+OPTIONS
+  -e, --expires-in=expires-in  duration of token in seconds (default 1 year)
+
+ALIASES
+  $ nimbu login
 ```
 
-_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/login.ts)_
+_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/auth/login.ts)_
 
 ## `nimbu auth:logout`
 
-clear local authentication credentials
+clears local login credentials and invalidates API session
 
 ```
 USAGE
   $ nimbu auth:logout
+
+ALIASES
+  $ nimbu logout
 ```
 
-_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/logout.ts)_
+_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/auth/logout.ts)_
 
 ## `nimbu auth:token`
 
-display your api token
+outputs current CLI authentication token.
 
 ```
 USAGE
   $ nimbu auth:token
+
+OPTIONS
+  -h, --help  show CLI help
+
+DESCRIPTION
+  By default, the CLI auth token is only valid for 1 year. To generate a long-lived token, use nimbu 
+  authorizations:create
 ```
 
-_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/auth/token.ts)_
+_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/auth/token.ts)_
+
+## `nimbu auth:whoami`
+
+display the current logged in user
+
+```
+USAGE
+  $ nimbu auth:whoami
+
+ALIASES
+  $ nimbu whoami
+```
+
+_See code: [src/commands/auth/whoami.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/auth/whoami.ts)_
+
+## `nimbu autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ nimbu autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ nimbu autocomplete
+  $ nimbu autocomplete bash
+  $ nimbu autocomplete zsh
+  $ nimbu autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.1.1/src/commands/autocomplete/index.ts)_
 
 ## `nimbu browse:admin`
 
@@ -190,7 +232,7 @@ USAGE
   $ nimbu browse:admin
 ```
 
-_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/browse/admin.ts)_
+_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/browse/admin.ts)_
 
 ## `nimbu browse:simulator`
 
@@ -201,7 +243,7 @@ USAGE
   $ nimbu browse:simulator
 ```
 
-_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/browse/simulator.ts)_
+_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/browse/simulator.ts)_
 
 ## `nimbu build`
 
@@ -212,7 +254,7 @@ USAGE
   $ nimbu build
 ```
 
-_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/build.ts)_
 
 ## `nimbu config`
 
@@ -223,7 +265,7 @@ USAGE
   $ nimbu config
 ```
 
-_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/config.ts)_
 
 ## `nimbu help [COMMAND]`
 
@@ -240,7 +282,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
 
 ## `nimbu init`
 
@@ -249,9 +291,14 @@ initialize your working directory to code a selected theme
 ```
 USAGE
   $ nimbu init
+
+OPTIONS
+  -c, --cloudcode  Create CloudCode directory
+  -h, --haml       Use HAML for the templates in this project
+  -s, --site=site  The site (use the Nimbu subdomain) to link to this project.
 ```
 
-_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/init/index.ts)_
+_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/init/index.ts)_
 
 ## `nimbu server`
 
@@ -268,7 +315,7 @@ OPTIONS
   --port=port              [default: 4567] The port to listen on.
 ```
 
-_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/server.ts)_
+_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/server.ts)_
 
 ## `nimbu sites:list`
 
@@ -277,9 +324,15 @@ list sites you can edit
 ```
 USAGE
   $ nimbu sites:list
+
+OPTIONS
+  -s, --subdomain  show Nimbu subdomain for each site
+
+ALIASES
+  $ nimbu sites
 ```
 
-_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/sites/list.ts)_
+_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/sites/list.ts)_
 
 ## `nimbu themes:diff [THEME]`
 
@@ -293,7 +346,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/diff.ts)_
+_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/themes/diff.ts)_
 
 ## `nimbu themes:list [THEME]`
 
@@ -307,7 +360,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/list.ts)_
+_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/themes/list.ts)_
 
 ## `nimbu themes:push [FILES]`
 
@@ -330,7 +383,7 @@ OPTIONS
   --only         only push the files given on the command line
 ```
 
-_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.4.2/src/commands/themes/push.ts)_
+_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v1.5.0-beta.0/src/commands/themes/push.ts)_
 <!-- commandsstop -->
 
 # Features
