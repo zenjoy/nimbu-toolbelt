@@ -2,6 +2,7 @@ import Command from '../../command'
 import Config from '../../nimbu/config'
 
 import { flags } from '@oclif/command'
+import ux from 'cli-ux'
 import chalk from 'chalk'
 import through from 'through'
 import inquirer from 'inquirer'
@@ -29,8 +30,8 @@ export default class CopyChannels extends Command {
 
     let fromChannel: string
     let toChannel: string
-    let fromSite: string
-    let toSite: string
+    let fromSite: string | undefined
+    let toSite: string | undefined
 
     let fromParts = flags.from.split('/')
     if (fromParts.length > 1) {
@@ -47,6 +48,16 @@ export default class CopyChannels extends Command {
     } else {
       toSite = Config.site
       toChannel = toParts[0]
+    }
+
+    if (fromSite === undefined) {
+      ux.error('You need to specify the source site.')
+      return
+    }
+
+    if (toSite === undefined) {
+      ux.error('You need to specify the destination site.')
+      return
     }
 
     let fetchTitle = `Fetching channel ${chalk.bold(fromChannel)} from site ${chalk.bold(fromSite)}`
