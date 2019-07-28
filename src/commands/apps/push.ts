@@ -74,10 +74,14 @@ export default class AppsPush extends Command {
   }
 
   async run() {
-    const files = await this.files()
-    this.log(`Pushing code for app ${this.app.name}:`)
-    for (const file of files) {
-      await this.pushFile(file)
+    try {
+      const files = await this.files()
+      this.log(`Pushing code for app ${this.app.name}:`)
+      for (const file of files) {
+        await this.pushFile(file)
+      }
+    } catch (error) {
+      cli.error(error.message)
     }
   }
 
