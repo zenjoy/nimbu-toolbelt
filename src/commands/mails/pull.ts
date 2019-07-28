@@ -6,7 +6,7 @@ import fs from 'fs-extra'
 import ux from 'cli-ux'
 import yaml from 'js-yaml'
 
-export default class MailsPull extends Command {
+export default class PullMails extends Command {
   static description = 'download all notification templates'
 
   async run() {

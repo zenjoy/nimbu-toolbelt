@@ -10,7 +10,7 @@ import path from 'path'
 import fm from 'front-matter'
 import logSymbols from 'log-symbols'
 
-export default class MailsPush extends Command {
+export default class PushMails extends Command {
   static description = 'upload all notification templates'
 
   async run() {

@@ -70,6 +70,7 @@
     "style-loader": "^0.23.0",
     "supports-color": "^6.1.0",
     "supports-hyperlinks": "^1.0.1",
+    "through": "^2.3.8",
     "tslib": "^1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "urlencode": "^1.1.0",
