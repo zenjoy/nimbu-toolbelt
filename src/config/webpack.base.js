@@ -6,11 +6,12 @@ const projectConfig = require('./config')
 const cssEntry = projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss'
 const jsEntry = projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js'
 
+// the order for entries is important: first load javascript, next load the css - as you probably want to cascadingly override stuff from libraries
 const config = {
   entry: {
     app: [
-      path.resolve(paths.NIMBU_DIRECTORY, `src/${cssEntry}`),
       path.resolve(paths.NIMBU_DIRECTORY, `src/${jsEntry}`),
+      path.resolve(paths.NIMBU_DIRECTORY, `src/${cssEntry}`),
     ],
   },
   module: {

@@ -15,6 +15,7 @@ const hostname = os.hostname()
 export namespace Credentials {
   export interface Options {
     expiresIn?: number
+    autoLogout?: boolean
   }
 }
 
@@ -61,7 +62,7 @@ export class Credentials {
     return this._auth
   }
 
-  async login(opts: Credentials.Options = {}): Promise<void> {
+  async login(opts: Credentials.Options = { autoLogout: true }): Promise<void> {
     const host = Config.apiHost
     let loggedIn = false
     try {
@@ -79,7 +80,12 @@ export class Credentials {
       await Netrc.load()
       const previousToken = Netrc.machines[host]
       try {
-        if (previousToken && previousToken.token) await this.logout(previousToken.token)
+        if (previousToken && previousToken.token && opts.autoLogout) {
+          await this.logout(previousToken.token)
+
+          delete Netrc.machines[host]
+          Netrc.saveSync()
+        }
       } catch (err) {
         ux.warn(err)
       }
@@ -95,7 +101,7 @@ export class Credentials {
   async logout(token = this.nimbu.token) {
     if (!token) return debug('currently not logged in')
 
-    return this.nimbu.post('/auth/logout')
+    return this.nimbu.post('/auth/logout', { retryAuth: false })
   }
 
   private async interactive(login?: string, expiresIn?: number): Promise<NetrcEntry> {

@@ -2,21 +2,12 @@ import Command from '../../command'
 import { flags } from '@oclif/command'
 import Config, { ConfigApp } from '../../nimbu/config'
 import * as Nimbu from '../../nimbu/types'
-import glob from 'glob'
+import { findMatchingFiles } from '../../utils/files'
+
 import cli from 'cli-ux'
 import chalk from 'chalk'
 import { resolve as resolvePath } from 'path'
 import { readFile } from 'fs-extra'
-
-const promiseGlob = function(pattern: string, options: glob.IOptions = {}): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    glob(pattern, options, (err, files) => (err === null ? resolve(files) : reject(err)))
-  })
-}
-
-async function findMatchingFiles(dir: string, pattern: string): Promise<string[]> {
-  return promiseGlob(`${dir}/${pattern}`)
-}
 
 export default class AppsPush extends Command {
   static description = 'Push your cloud code files to nimbu'

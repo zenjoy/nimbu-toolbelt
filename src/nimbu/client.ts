@@ -155,7 +155,9 @@ export default class Client {
     return new Nimbu({
       token: this.credentials.token,
       host: Config.apiUrl,
+      site: Config.site,
       userAgent: this.config.userAgent,
+      clientVersion: this.config.version,
     })
   }
 }

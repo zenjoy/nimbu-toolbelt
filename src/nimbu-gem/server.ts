@@ -66,15 +66,20 @@ export default class NimbuGemServer {
     })
   }
 
+  private removeLastNewLine(data: string): string {
+    const pos = data.lastIndexOf('\n')
+    return data.substring(0, pos) + data.substring(pos + 1)
+  }
+
   private readonly handleStdout = (data: any): void => {
     if (this.logger) {
-      this.logger(data.toString())
+      this.logger(this.removeLastNewLine(data.toString()))
     }
   }
 
   private readonly handleStderr = (data: any): void => {
     if (this.errorLogger) {
-      this.errorLogger(data.toString())
+      this.errorLogger(this.removeLastNewLine(data.toString()))
     }
   }
 }

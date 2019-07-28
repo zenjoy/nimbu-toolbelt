@@ -1,4 +1,5 @@
 const { readSync, write } = require('node-yaml')
+import { pathExistsSync } from 'fs-extra'
 import { resolve as resolvePath } from 'path'
 import * as url from 'url'
 import paths = require('../config/paths')
@@ -13,9 +14,9 @@ export interface ConfigApp {
 }
 
 interface ConfigFile {
-  site: string
-  theme: string
-  apps: ConfigApp[]
+  site?: string
+  theme?: string
+  apps?: ConfigApp[]
 }
 
 class Config {
@@ -62,16 +63,22 @@ class Config {
 
   // Nimbu Cloud Code Config
   get apps(): ConfigApp[] {
-    return this.config.apps.filter(a => a.host === this.apiHost || (!a.host && this.isDefaultHost))
+    if (this.config.apps !== undefined) {
+      return this.config.apps.filter(a => a.host === this.apiHost || (!a.host && this.isDefaultHost))
+    } else {
+      return []
+    }
   }
 
   async addApp(app: ConfigApp): Promise<void> {
-    this.config.apps.push(
-      Object.assign({}, app, {
-        host: this.hostname,
-      }),
-    )
-    await this.writeConfig()
+    if (this.config.apps !== undefined) {
+      this.config.apps.push(
+        Object.assign({}, app, {
+          host: this.hostname,
+        }),
+      )
+      await this.writeConfig()
+    }
   }
 
   // Nimbu Site Configuration
@@ -85,6 +92,53 @@ class Config {
 
   get projectSite(): string | undefined {
     return projectConfig.NIMBU_SITE
+  }
+
+  get projectPath(): string {
+    return resolvePath(paths.PROJECT_DIRECTORY)
+  }
+
+  get possibleLocales(): string[] {
+    return [
+      'en',
+      'nl',
+      'fr',
+      'de',
+      'es',
+      'it',
+      'ar',
+      'ja',
+      'zh',
+      'pt',
+      'ru',
+      'sv',
+      'cs',
+      'bg',
+      'et',
+      'fi',
+      'ga',
+      'el',
+      'hr',
+      'hu',
+      'is',
+      'ko',
+      'lv',
+      'lb',
+      'pl',
+      'sr',
+      'da',
+      'gl',
+      'eu',
+      'ca',
+      'hi',
+      'lt',
+      'no',
+      'fa',
+      'ro',
+      'tr',
+      'th',
+      'sl',
+    ]
   }
 
   // Nimbu Theme Configuration
@@ -103,7 +157,11 @@ class Config {
   private get config() {
     if (!this._config) {
       const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml')
-      this._config = Object.assign({ theme: 'default-theme', apps: [] }, readSync(configFile))
+      if (pathExistsSync(configFile)) {
+        this._config = Object.assign({ theme: 'default-theme', apps: [] }, readSync(configFile))
+      } else {
+        this._config = {}
+      }
     }
     return this._config!
   }

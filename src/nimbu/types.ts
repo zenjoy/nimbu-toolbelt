@@ -42,3 +42,26 @@ export interface Site {
   domain_url: string
   subdomain: string
 }
+
+export interface NotificationTranslation {
+  subject: string
+  text: string
+  html?: string
+}
+
+export interface Notification {
+  id: string
+  url: string
+  created_at: string
+  updated_at: string
+  slug: string
+  html_enabled: boolean
+  subject: string
+  text: string
+  html?: string
+  description: string
+  name: string
+  translations?: {
+    [locale: string]: NotificationTranslation
+  }
+}
