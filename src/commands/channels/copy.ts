@@ -2,7 +2,6 @@ import Command from '../../command'
 import Config from '../../nimbu/config'
 
 import { flags } from '@oclif/command'
-import ux from 'cli-ux'
 import chalk from 'chalk'
 import through from 'through'
 import inquirer from 'inquirer'
