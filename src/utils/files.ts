@@ -25,8 +25,8 @@ export function download(url, path, callback) {
     const file = fs.createWriteStream(path)
     const request = http.get(uri.href!).on('response', function(res) {
       const len = parseInt(res.headers['content-length'], 10)
-      let bytes: number = 0
-      let percent: number = 0
+      let bytes = 0
+      let percent = 0
       res
         .on('data', function(chunk) {
           file.write(chunk)

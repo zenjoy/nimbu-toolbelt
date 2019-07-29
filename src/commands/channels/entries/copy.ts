@@ -89,12 +89,13 @@ export default class CopyChannels extends Command {
       },
       {
         title: downloadTitle,
-        task: (ctx, task) => this.downloadAttachments(ctx, task),
+        skip: ctx => ctx.fileFields.length === 0 && ctx.galleryFields.length === 0,
+        task: ctx => this.downloadAttachments(ctx),
       },
       {
         title: createTitle,
         skip: ctx => ctx.entries.length === 0,
-        task: (ctx, task) => this.createEntries(ctx, task),
+        task: ctx => this.createEntries(ctx),
       },
     ])
 
@@ -143,12 +144,12 @@ export default class CopyChannels extends Command {
     let baseUrl = `/channels/${ctx.fromChannel}/entries`
     let queryParts: string[] = []
     let queryFromCtx: string | undefined = ctx.query
-    if (queryFromCtx != null && queryFromCtx.trim() !== '') {
+    if (queryFromCtx !== undefined && queryFromCtx.trim() !== '') {
       queryParts.push(queryFromCtx.trim())
     }
     let perPageFromCtx: string | undefined = ctx.per_page
     let perPage = 30
-    if (perPageFromCtx != null && parseInt(perPageFromCtx, 10) > 0) {
+    if (perPageFromCtx !== undefined && parseInt(perPageFromCtx, 10) > 0) {
       perPage = parseInt(perPageFromCtx, 10)
       queryParts.push(`per_page=${perPage}`)
     }
@@ -189,7 +190,7 @@ export default class CopyChannels extends Command {
     })
   }
 
-  private async downloadAttachments(ctx: any, task: any) {
+  private async downloadAttachments(ctx: any) {
     return new Observable(observer => {
       ;(async (observer, ctx) => {
         let i = 1
@@ -249,7 +250,7 @@ export default class CopyChannels extends Command {
     }
   }
 
-  private async createEntries(ctx: any, task: any) {
+  private async createEntries(ctx: any) {
     return new Observable(observer => {
       ;(async (observer, ctx) => {
         let i = 1
