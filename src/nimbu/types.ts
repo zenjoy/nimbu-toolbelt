@@ -1,7 +1,5 @@
-export interface App {
-  name: string
-  key: string
-  url?: string
+export interface CountResult {
+  count: number
 }
 
 export interface AppFile {
