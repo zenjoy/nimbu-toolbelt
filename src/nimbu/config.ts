@@ -1,78 +1,175 @@
-const { readSync, write } = require('node-yaml');
-import { resolve as resolvePath } from 'path';
-import paths = require('../config/paths');
-import projectConfig = require('../config/config');
+const { readSync, write } = require('node-yaml')
+import { pathExistsSync } from 'fs-extra'
+import { resolve as resolvePath } from 'path'
+import * as url from 'url'
+import paths = require('../config/paths')
+import projectConfig = require('../config/config')
 
 export interface ConfigApp {
-  name: string;
-  id: string;
-  dir: string;
-  glob: string;
-  host?: string;
+  name: string
+  id: string
+  dir: string
+  glob: string
+  host?: string
 }
 
 interface ConfigFile {
-  site: string;
-  theme: string;
-  apps: ConfigApp[];
+  site?: string
+  theme?: string
+  apps?: ConfigApp[]
 }
 
 class Config {
-  static defaultHost = 'https://api.nimbu.io';
+  static defaultHost = 'nimbu.io'
 
-  private _config?: ConfigFile;
+  private _config?: ConfigFile
 
-  private get config() {
-    if (!this._config) {
-      const configFile = resolvePath(paths.NIMBU_DIRECTORY, 'nimbu.yml');
-      this._config = Object.assign({ theme: 'default-theme', apps: [] }, readSync(configFile));
-    }
-    return this._config!;
-  }
-
-  private async writeConfig() {
-    const configFile = resolvePath(paths.NIMBU_DIRECTORY, 'nimbu.yml');
-    write(configFile, this._config);
-  }
-
+  // API Configuration
   get isDefaultHost() {
-    return this.host === Config.defaultHost;
+    return this.host === Config.defaultHost || this.host === this.apiUrl
   }
 
-  get host() {
-    return process.env.NIMBU_HOST || projectConfig.NIMBU_HOST || Config.defaultHost;
+  get host(): string {
+    return this.envHost || this.projectHost || Config.defaultHost
   }
 
-  get site() {
-    return process.env.NIMBU_SITE || projectConfig.NIMBU_SITE || this.config.site;
+  get apiUrl(): string {
+    return this.host.startsWith('http') ? this.host : `https://api.${this.host}`
   }
 
-  get theme() {
-    return process.env.NIMBU_THEME || projectConfig.NIMBU_THEME || this.config.theme;
+  get secureHost(): boolean {
+    return this.apiUrl.startsWith('https')
+  }
+
+  get apiHost(): string {
+    if (this.host.startsWith('http')) {
+      const u = url.parse(this.host)
+      if (u.host) return u.host
+    }
+    return `api.${this.host}`
+  }
+
+  get envHost(): string | undefined {
+    return process.env.NIMBU_HOST
+  }
+
+  get projectHost(): string | undefined {
+    return projectConfig.NIMBU_HOST
   }
 
   get hostname() {
-    return this.host.replace(/https?:\/\//, '');
+    return this.host.replace(/https?:\/\//, '')
   }
 
-  get adminHost() {
-    return this.host.replace(/https?:\/\/api\./, '');
-  }
-
+  // Nimbu Cloud Code Config
   get apps(): ConfigApp[] {
-    return this.config.apps.filter(
-      a => a.host === this.hostname || (!a.host && this.isDefaultHost)
-    );
+    if (this.config.apps !== undefined) {
+      return this.config.apps.filter(a => a.host === this.apiHost || (!a.host && this.isDefaultHost))
+    } else {
+      return []
+    }
   }
 
   async addApp(app: ConfigApp): Promise<void> {
-    this.config.apps.push(
-      Object.assign({}, app, {
-        host: this.hostname,
-      })
-    );
-    this.writeConfig();
+    if (this.config.apps !== undefined) {
+      this.config.apps.push(
+        Object.assign({}, app, {
+          host: this.hostname,
+        }),
+      )
+      await this.writeConfig()
+    }
+  }
+
+  // Nimbu Site Configuration
+  get site() {
+    return this.envSite || this.projectSite || this.config.site
+  }
+
+  get envSite(): string | undefined {
+    return process.env.NIMBU_SITE
+  }
+
+  get projectSite(): string | undefined {
+    return projectConfig.NIMBU_SITE
+  }
+
+  get projectPath(): string {
+    return resolvePath(paths.PROJECT_DIRECTORY)
+  }
+
+  get possibleLocales(): string[] {
+    return [
+      'en',
+      'nl',
+      'fr',
+      'de',
+      'es',
+      'it',
+      'ar',
+      'ja',
+      'zh',
+      'pt',
+      'ru',
+      'sv',
+      'cs',
+      'bg',
+      'et',
+      'fi',
+      'ga',
+      'el',
+      'hr',
+      'hu',
+      'is',
+      'ko',
+      'lv',
+      'lb',
+      'pl',
+      'sr',
+      'da',
+      'gl',
+      'eu',
+      'ca',
+      'hi',
+      'lt',
+      'no',
+      'fa',
+      'ro',
+      'tr',
+      'th',
+      'sl',
+    ]
+  }
+
+  // Nimbu Theme Configuration
+  get theme() {
+    return this.envTheme || this.projectTheme || this.config.theme
+  }
+
+  get envTheme(): string | undefined {
+    return process.env.NIMBU_THEME
+  }
+
+  get projectTheme(): string | undefined {
+    return projectConfig.NIMBU_THEME
+  }
+
+  private get config() {
+    if (!this._config) {
+      const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml')
+      if (pathExistsSync(configFile)) {
+        this._config = Object.assign({ theme: 'default-theme', apps: [] }, readSync(configFile))
+      } else {
+        this._config = {}
+      }
+    }
+    return this._config!
+  }
+
+  private async writeConfig() {
+    const configFile = resolvePath(paths.PROJECT_DIRECTORY, 'nimbu.yml')
+    write(configFile, this._config)
   }
 }
 
-export default new Config();
+export default new Config()

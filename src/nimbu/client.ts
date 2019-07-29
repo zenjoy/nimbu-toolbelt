@@ -1,98 +1,163 @@
-import { IConfig } from '@oclif/config';
-import Credentials from './credentials';
-import Config from './config';
-import { App, AppFile } from './types';
-import fetch from 'node-fetch';
+import { IConfig } from '@oclif/config'
+import { CLIError } from '@oclif/errors'
+import Netrc from 'netrc-parser'
+import Nimbu from 'nimbu-client'
+import ux from 'cli-ux'
+
+import { Credentials } from './credentials'
+import Config from './config'
+import { User } from './types'
+
+export namespace Client {
+  export interface Options {
+    retryAuth?: boolean
+    fetchAll?: boolean
+    headers?: any
+    body?: object
+    auth?: string
+  }
+}
+
+export interface IAPIErrorOptions {
+  resource?: string
+  site?: { id: string; name: string }
+  message?: string
+  code?: number
+  errors?: string[]
+}
+
+interface HTTPError extends Error {
+  body?: any
+  statusCode?: number
+}
+
+export class APIError extends CLIError {
+  http: HTTPError
+  body: IAPIErrorOptions
+
+  constructor(error: HTTPError) {
+    if (!error) throw new Error('invalid error')
+    let options: IAPIErrorOptions = error.body
+    if (!options || options instanceof String || !options.message) throw error
+
+    let info: string[] = []
+    if (options.code) {
+      info.push(`Error Code: ${options.code}`)
+    }
+    if (options.site && options.site.name) {
+      info.push(`Site: ${options.site.name}`)
+    }
+    if (options.errors) {
+      info.push(`Error Information: ${options.errors.join(', ')}`)
+    }
+
+    if (info.length > 0) {
+      super([options.message, ''].concat(info).join('\n'))
+    } else {
+      super(options.message)
+    }
+
+    this.http = error
+    this.body = options
+  }
+}
 
 export default class Client {
-  private config: IConfig;
-  private credentials: Credentials;
-  private _token?: string;
+  private readonly credentials: Credentials
+  private client: typeof Nimbu
 
-  constructor(config: IConfig) {
-    this.config = config;
-    this.credentials = new Credentials(config);
+  constructor(protected config: IConfig) {
+    this.config = config
+    this.credentials = new Credentials(config, this)
+    this.client = this.createClient()
   }
 
-  private async token() {
-    if (!this._token) {
-      this._token = await this.credentials.token();
+  refreshClient() {
+    this.client = this.createClient()
+  }
+
+  get token(): string | undefined {
+    return this.credentials.token
+  }
+
+  login(options: Credentials.Options = {}) {
+    return this.credentials.login(options)
+  }
+
+  async validateLogin(): Promise<boolean> {
+    try {
+      // if this returns a 401, it will try to reauthenticate
+      await this.get<User>('/user')
+
+      return true
+    } catch {
+      ux.warn('Sorry, you need to be authenticated to continue.')
+      return false
     }
-    return this._token;
   }
 
-  private async fetch(method: string, path: string, body?: any): Promise<any> {
-    const token = await this.token();
-    const request = {
-      method,
-      headers: {
-        Authorization: token,
-        'X-Nimbu-Client-Version': this.config.version,
-        'User-Agent': this.config.userAgent,
-        'X-Nimbu-Site': Config.site,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    };
-    return fetch(`${Config.host}${path}`, request).then(response => {
-      if (response.ok) {
-        if (response.status === 204) {
-          // No content -> don't try to parse
-          return undefined;
-        } else {
-          return response.json();
-        }
-      } else {
-        throw new Error('An error occured while talking to the nimbu api.');
+  async logout() {
+    try {
+      await this.credentials.logout()
+    } catch (err) {
+      ux.warn(err)
+    }
+    delete Netrc.machines[Config.apiHost]
+    await Netrc.save()
+  }
+
+  get<T>(path: string, options: Client.Options = {}) {
+    return this.request<T>('GET', path, options)
+  }
+
+  post<T>(path: string, options: Client.Options = {}) {
+    return this.request<T>('POST', path, options)
+  }
+
+  put<T>(path: string, options: Client.Options = {}) {
+    return this.request<T>('PUT', path, options)
+  }
+
+  patch<T>(path: string, options: Client.Options = {}) {
+    return this.request<T>('PATCH', path, options)
+  }
+
+  delete<T>(path: string, options: Client.Options = {}) {
+    return this.request<T>('DELETE', path, options)
+  }
+
+  async request<T>(method: string, path: string, options: Client.Options = {}, retries = 3): Promise<T> {
+    retries--
+
+    try {
+      let result = (await this.client.request<T>(Object.assign({}, options, { method, path }))) as T
+      return result
+    } catch (error) {
+      if (!error.statusCode) {
+        // this is no regular http client error
+        throw error
       }
-    });
+      if (retries > 0) {
+        if (options.retryAuth !== false && error.statusCode === 401) {
+          await this.login()
+          if (!options.headers) {
+            options.headers = {}
+          }
+          options.headers.authorization = `Bearer ${this.token}`
+          return this.request<T>(method, path, options, retries)
+        }
+      }
+      throw new APIError(error)
+    }
   }
 
-  private async get(path: string): Promise<any> {
-    return this.fetch('GET', path);
-  }
-
-  private async post(path: string, body: any): Promise<any> {
-    return this.fetch('POST', path, body);
-  }
-
-  private async put(path: string, body: any): Promise<any> {
-    return this.fetch('PUT', path, body);
-  }
-
-  private async list(type: string): Promise<Array<any>> {
-    return this.get(`/${type}`);
-  }
-
-  async logout(): Promise<void> {
-    return this.fetch('POST', '/auth/logout');
-  }
-
-  async listApps(): Promise<Array<App>> {
-    return this.list('apps');
-  }
-
-  async getAppFiles(id: string): Promise<AppFile[]> {
-    return this.get(`/apps/${id}/code`);
-  }
-
-  async createAppFile(
-    app: string,
-    name: string,
-    code: string
-  ): Promise<AppFile> {
-    return this.post(`/apps/${app}/code`, {
-      name,
-      code,
-    });
-  }
-
-  async updateAppFile(
-    app: string,
-    name: string,
-    code: string
-  ): Promise<AppFile> {
-    return this.put(`/apps/${app}/code/${name}`, { code });
+  private createClient(): Nimbu {
+    return new Nimbu({
+      token: this.credentials.token,
+      host: Config.apiUrl,
+      site: Config.site,
+      userAgent: this.config.userAgent,
+      clientVersion: this.config.version,
+    })
   }
 }

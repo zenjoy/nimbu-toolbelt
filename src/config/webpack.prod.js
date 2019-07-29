@@ -1,14 +1,14 @@
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const baseWebpackConfig = require('./webpack.base.js');
-const utils = require('./utils');
-const config = require('./config');
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const baseWebpackConfig = require('./webpack.base.js')
+const utils = require('./utils')
+const config = require('./config')
 
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-const shouldExtractCSS = true;
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
+const shouldExtractCSS = true
 
-const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS });
+const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
 const loaders = utils
   .codeLoaders()
@@ -16,8 +16,8 @@ const loaders = utils
   .concat(
     utils.fileLoaders({
       publicPath: config.CDN_ROOT || '../',
-    })
-  );
+    }),
+  )
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -31,6 +31,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
+        sourceMap: shouldUseSourceMap,
         uglifyOptions: {
           compress: {
             comparisons: false,
@@ -38,43 +39,40 @@ const webpackConfig = merge(baseWebpackConfig, {
           },
           mangle: true,
           output: {
-            comments: false,
             ascii_only: true,
+            comments: false,
           },
+          warnings: false,
         },
-        sourceMap: shouldUseSourceMap,
       }),
     ],
     splitChunks: {
       cacheGroups: {
         vendor: {
+          chunks: 'all',
+          name: 'vendor',
           test: function(module) {
             // This prevents stylesheet resources with the .css or .scss extension
             // from being moved from their original chunk to the vendor chunk
             if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
-              return false;
+              return false
             }
-            return (
-              module.context &&
-              (module.context.includes('node_modules') || module.context.includes('src/vendor'))
-            );
+            return module.context && (module.context.includes('node_modules') || module.context.includes('src/vendor'))
           },
-          name: 'vendor',
-          chunks: 'all',
         },
       },
     },
   },
   plugins: [
     new webpack.DefinePlugin({
+      DEBUG: 'false',
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
       },
-      DEBUG: 'false',
     }),
     ...styleConfig.plugins,
     ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry)),
   ],
-});
+})
 
-module.exports = webpackConfig;
+module.exports = webpackConfig

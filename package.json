@@ -1,7 +1,7 @@
 {
   "name": "nimbu-toolbelt",
   "description": "Tools for Nimbu projects",
-  "version": "1.4.3",
+  "version": "1.5.0-beta.4",
   "author": "Zenjoy Engineering",
   "bin": {
     "nimbu": "./bin/run"
@@ -13,8 +13,11 @@
     "@babel/runtime-corejs2": "^7.0.0",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
+    "@oclif/errors": "^1.2.2",
+    "@oclif/plugin-autocomplete": "^0.1.0",
     "@oclif/plugin-help": "^2",
-    "@types/fs-extra": "^5.0.4",
+    "@oclif/plugin-not-found": "^1.2.2",
+    "@types/fs-extra": "^5.0.5",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.116",
     "@types/node-fetch": "^2.1.2",
@@ -23,52 +26,87 @@
     "babel-plugin-root-import": "^6.1.0",
     "babel-preset-react-app": "^7.0.2",
     "chalk": "^2.4.1",
-    "cli-ux": "^4.8.2",
+    "cli-ux": "^5.2.0",
     "coffee-loader": "^0.9.0",
     "coffeescript": "^2.1.1",
     "css-loader": "^1.0.0",
     "csso-webpack-plugin": "^1.0.0-beta.12",
+    "date-fns": "^2.0.0-alpha.27",
+    "debug": "^4.1.1",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^2.0.0",
+    "find-up": "^3.0.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
-    "fs-extra": "^7.0.0",
+    "front-matter": "^3.0.2",
+    "fs-extra": "^7.0.1",
+    "fuzzy": "^0.1.3",
     "glob": "^7.1.3",
+    "graceful-fs": "^4.1.15",
     "html-webpack-harddisk-plugin": "^0.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "hyperlinker": "^1.0.0",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "js-yaml": "^3.13.1",
+    "listr": "^0.14.3",
     "loader-utils": "^1.1.0",
     "lodash": "^4.17.11",
+    "log-symbols": "^3.0.0",
+    "make-dir": "^2.1.0",
+    "netrc-parser": "^3.1.6",
+    "nimbu-client": "^1.0.4",
     "node-fetch": "^2.2.0",
     "node-sass": "^4.9.3",
     "node-yaml": "^3.1.1",
+    "os": "^0.1.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
     "promise": "^8.0.2",
-    "react-dev-utils": "^5.0.2",
+    "react-dev-utils": "^9.0.1",
     "react-svg-core": "^3.0.3",
+    "rxjs": "^6.5.2",
     "sass-loader": "^7.1.0",
     "script-loader": "^0.7.2",
     "style-loader": "^0.23.0",
+    "supports-color": "^6.1.0",
+    "supports-hyperlinks": "^1.0.1",
+    "through": "^2.3.8",
     "tslib": "^1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "urlencode": "^1.1.0",
-    "webpack": "^4.19.1",
-    "webpack-dev-server": "^3.1.8",
-    "webpack-merge": "^4.1.4"
+    "webpack": "^4.37.0",
+    "webpack-dev-server": "^3.7.2",
+    "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "@oclif/tslint": "^3",
-    "@types/babel__core": "^7.1.0",
-    "@types/chai": "^4",
+    "@oclif/dev-cli": "^1.22.0",
+    "@oclif/test": "^1.2.4",
+    "@oclif/tslint": "^3.1.1",
+    "@types/babel__core": "^7.1.2",
+    "@types/chai": "^4.1.7",
     "@types/chalk": "^2.2.0",
-    "@types/mocha": "^5",
-    "@types/node": "^10.12.27",
-    "@types/webpack": "^4.4.12",
-    "@types/webpack-dev-server": "^3.1.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.8",
+    "@types/webpack": "^4.32.0",
+    "@types/webpack-dev-server": "^3.1.7",
+    "ava": "^1.2.1",
+    "chai": "^4.2.0",
+    "chai-match": "^1.1.1",
+    "codecov": "^3.2.0",
+    "fancy-test": "^1.4.3",
+    "fs-monkey": "^0.3.3",
     "globby": "^8",
-    "ts-node": "^7",
+    "isbinaryfile": "^4.0.0",
+    "memfs": "^2.15.2",
+    "mocha": "^6.0.2",
+    "mock-fs": "^4.8.0",
+    "nock": "^10.0.6",
+    "nyc": "^13.3.0",
+    "ts-node": "^8.0.3",
     "tslint": "^5",
-    "typescript": "^3.0"
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.0",
+    "unionfs": "^4.2.0"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -93,11 +131,13 @@
     "commands": "./lib/commands",
     "bin": "nimbu",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-autocomplete"
     ],
     "topics": {
       "auth": {
-        "description": "Authenticate, display token and current user"
+        "description": "authenticate, display token and current user"
       },
       "init": {
         "description": "working directory initialization"
@@ -113,17 +153,53 @@
       },
       "apps": {
         "description": "manage (cloud code) applications"
+      },
+      "mails": {
+        "description": "manage your notification templates"
       }
     }
   },
   "repository": "zenjoy/nimbu-toolbelt",
   "scripts": {
+    "build": "rm -rf lib && tsc",
+    "lint": "tsc -p test --noEmit && tslint -p test -t stylish",
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p . -t stylish",
+    "postinstall": "bundle install",
     "prepack": "tsc && oclif-dev manifest && oclif-dev readme",
-    "test": "echo NO TESTS",
-    "version": "oclif-dev readme && git add README.md",
-    "postinstall": "bundle install"
+    "test": "TS_NODE_FILES=false TS_NODE_TRANSPILE_ONLY=true mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
   },
-  "types": "lib/index.d.ts"
+  "types": "lib/index.d.ts",
+  "mocha": {
+    "diff": true,
+    "recursive": true,
+    "extension": [
+      "ts"
+    ],
+    "opts": "./test/mocha.opts",
+    "package": "./package.json",
+    "reporter": "spec",
+    "slow": 75,
+    "timeout": 5000,
+    "ui": "bdd"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
 }
