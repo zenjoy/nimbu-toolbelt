@@ -8,6 +8,7 @@ import ux from 'cli-ux'
 import chalk from 'chalk'
 import { Observable } from 'rxjs'
 import fs from 'fs-extra'
+import clonedeep from 'lodash.clonedeep'
 
 export default class CopyChannels extends Command {
   static description = 'copy channel entries from one to another'
@@ -77,6 +78,7 @@ export default class CopyChannels extends Command {
     let queryTitle = `Querying entries from channel ${chalk.bold(fromChannel)}`
     let downloadTitle = `Downloading attachments from channel ${chalk.bold(fromChannel)}`
     let createTitle = `Creating entries in channel ${chalk.bold(toChannel)} for site ${chalk.bold(toSite)}`
+    let updateTitle = `Updating self-references for new entries in channel ${chalk.bold(toChannel)}`
 
     const tasks = new Listr([
       {
@@ -89,13 +91,19 @@ export default class CopyChannels extends Command {
       },
       {
         title: downloadTitle,
-        skip: ctx => ctx.fileFields.length === 0 && ctx.galleryFields.length === 0,
+        enabled: ctx =>
+          (ctx.fileFields && ctx.fileFields.length > 0) || (ctx.galleryFields && ctx.galleryFields.length > 0),
         task: ctx => this.downloadAttachments(ctx),
       },
       {
         title: createTitle,
         skip: ctx => ctx.entries.length === 0,
         task: ctx => this.createEntries(ctx),
+      },
+      {
+        title: updateTitle,
+        enabled: ctx => ctx.selfReferences && ctx.selfReferences.length > 0,
+        task: ctx => this.updateEntries(ctx),
       },
     ])
 
@@ -110,7 +118,7 @@ export default class CopyChannels extends Command {
         upsert: flags.upsert,
       })
       .catch(error => {
-        ux.error(error)
+        //ux.error(error)
       })
   }
 
@@ -125,6 +133,9 @@ export default class CopyChannels extends Command {
       ctx.galleryFields = ctx.channel.customizations.filter(f => f.type === 'gallery')
       ctx.selectFields = ctx.channel.customizations.filter(f => f.type === 'select')
       ctx.multiSelectFields = ctx.channel.customizations.filter(f => f.type === 'multi_select')
+      ctx.selfReferences = ctx.channel.customizations.filter(
+        f => (f.type === 'belongs_to' || f.type === 'belongs_to_many') && f.reference === ctx.channel.slug,
+      )
     } catch (error) {
       if (error.body != null && error.body.code === 101) {
         throw new Error(`could not find channel ${chalk.bold(ctx.fromChannel)}`)
@@ -142,7 +153,7 @@ export default class CopyChannels extends Command {
 
     // first count the entries
     let baseUrl = `/channels/${ctx.fromChannel}/entries`
-    let queryParts: string[] = []
+    let queryParts: string[] = ['include_slugs=1']
     let queryFromCtx: string | undefined = ctx.query
     if (queryFromCtx !== undefined && queryFromCtx.trim() !== '') {
       queryParts.push(queryFromCtx.trim())
@@ -256,7 +267,9 @@ export default class CopyChannels extends Command {
         let i = 1
         let nbEntries = ctx.entries.length
 
-        for (let entry of ctx.entries) {
+        for (let original of ctx.entries) {
+          let entry = clonedeep(original)
+
           for (let field of ctx.fileFields) {
             let file = entry[field.name]
             if (file != null) {
@@ -295,6 +308,13 @@ export default class CopyChannels extends Command {
             }
           }
 
+          // remove self references first, as we'll try to update this in a second pass
+          for (let field of ctx.selfReferences) {
+            if (entry[field.name] != null) {
+              delete entry[field.name]
+            }
+          }
+
           observer.next(`[${i}/${nbEntries}] creating entry "${chalk.bold(entry.title_field_value)}"`)
 
           let options: any = {}
@@ -304,9 +324,67 @@ export default class CopyChannels extends Command {
           options.body = entry
 
           try {
-            await this.nimbu.post(`/channels/${ctx.toChannel}/entries`, options)
+            let created: any = await this.nimbu.post(`/channels/${ctx.toChannel}/entries`, options)
+
+            // store id for second pass in case of self-references
+            original.id = created.id
           } catch (error) {
-            observer.error(error)
+            observer.error(
+              new Error(
+                `[${i}/${nbEntries}] creating entry #${entry.id} failed: ${error.body.message} => ${JSON.stringify(
+                  error.body.errors,
+                )}`,
+              ),
+            )
+          }
+
+          i++
+        }
+
+        observer.complete()
+      })(observer, ctx).catch(error => {
+        throw error
+      })
+    })
+  }
+
+  private async updateEntries(ctx: any) {
+    return new Observable(observer => {
+      ;(async (observer, ctx) => {
+        let i = 1
+        let nbEntries = ctx.entries.length
+
+        for (let entry of ctx.entries) {
+          let data: any = {}
+          let anySelfReferenceValues = false
+
+          for (let field of ctx.selfReferences) {
+            if (entry[field.name] != null) {
+              anySelfReferenceValues = true
+              data[field.name] = entry[field.name]
+            }
+          }
+
+          if (anySelfReferenceValues) {
+            observer.next(`[${i}/${nbEntries}] updating entry "${chalk.bold(entry.title_field_value)}" (#${entry.id})`)
+
+            let options: any = {}
+            if (ctx.toSite != null) {
+              options.site = ctx.toSite
+            }
+            options.body = data
+
+            try {
+              await this.nimbu.patch(`/channels/${ctx.toChannel}/entries/${entry.id}`, options)
+            } catch (error) {
+              observer.error(
+                new Error(
+                  `[${i}/${nbEntries}] updating entry #${entry.id} failed: ${error.body.message} => ${JSON.stringify(
+                    error.body.errors,
+                  )}`,
+                ),
+              )
+            }
           }
 
           i++

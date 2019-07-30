@@ -176,7 +176,7 @@ export default class CopyChannels extends Command {
       prompt({
         type: 'confirm',
         name: 'overwrite',
-        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Overwrite?`,
+        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Overwrite config?`,
         default: false,
       })
         .then(answer => {
