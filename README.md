@@ -5,7 +5,6 @@
 
 Toolbelt for Nimbu projects
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/nimbu-toolbelt.svg)](https://npmjs.org/package/nimbu-toolbelt)
 [![Downloads/week](https://img.shields.io/npm/dw/nimbu-toolbelt.svg)](https://npmjs.org/package/nimbu-toolbelt)
 [![License](https://img.shields.io/npm/l/nimbu-toolbelt.svg)](https://github.com/zenjoy/nimbu-toolbelt/blob/master/package.json)
@@ -66,29 +65,40 @@ Make sure that include is there and that you push the snippet to nimbu!
 # Commands
 
 <!-- commands -->
-* [`nimbu apps:config`](#nimbu-appsconfig)
-* [`nimbu apps:list`](#nimbu-appslist)
-* [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
-* [`nimbu apps:transpile SOURCE TARGET`](#nimbu-appstranspile-source-target)
-* [`nimbu auth:login`](#nimbu-authlogin)
-* [`nimbu auth:logout`](#nimbu-authlogout)
-* [`nimbu auth:token`](#nimbu-authtoken)
-* [`nimbu auth:whoami`](#nimbu-authwhoami)
-* [`nimbu autocomplete [SHELL]`](#nimbu-autocomplete-shell)
-* [`nimbu browse:admin`](#nimbu-browseadmin)
-* [`nimbu browse:simulator`](#nimbu-browsesimulator)
-* [`nimbu build`](#nimbu-build)
-* [`nimbu channels:copy`](#nimbu-channelscopy)
-* [`nimbu config`](#nimbu-config)
-* [`nimbu help [COMMAND]`](#nimbu-help-command)
-* [`nimbu init`](#nimbu-init)
-* [`nimbu mails:pull`](#nimbu-mailspull)
-* [`nimbu mails:push`](#nimbu-mailspush)
-* [`nimbu server`](#nimbu-server)
-* [`nimbu sites:list`](#nimbu-siteslist)
-* [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
-* [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
-* [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
+- [nimbu-toolbelt](#nimbu-toolbelt)
+- [Usage](#usage)
+  - [Prerequisites](#prerequisites)
+  - [Getting started](#getting-started)
+  - [Development server](#development-server)
+  - [Pushing to nimbu](#pushing-to-nimbu)
+- [Commands](#commands)
+  - [`nimbu apps:config`](#nimbu-appsconfig)
+  - [`nimbu apps:list`](#nimbu-appslist)
+  - [`nimbu apps:push [FILES]`](#nimbu-appspush-files)
+  - [`nimbu apps:transpile SOURCE TARGET`](#nimbu-appstranspile-source-target)
+  - [`nimbu auth:login`](#nimbu-authlogin)
+  - [`nimbu auth:logout`](#nimbu-authlogout)
+  - [`nimbu auth:token`](#nimbu-authtoken)
+  - [`nimbu auth:whoami`](#nimbu-authwhoami)
+  - [`nimbu autocomplete [SHELL]`](#nimbu-autocomplete-shell)
+  - [`nimbu browse:admin`](#nimbu-browseadmin)
+  - [`nimbu browse:simulator`](#nimbu-browsesimulator)
+  - [`nimbu build`](#nimbu-build)
+  - [`nimbu channels:copy`](#nimbu-channelscopy)
+  - [`nimbu config`](#nimbu-config)
+  - [`nimbu help [COMMAND]`](#nimbu-help-command)
+  - [`nimbu init`](#nimbu-init)
+  - [`nimbu mails:pull`](#nimbu-mailspull)
+  - [`nimbu mails:push`](#nimbu-mailspush)
+  - [`nimbu server`](#nimbu-server)
+  - [`nimbu sites:list`](#nimbu-siteslist)
+  - [`nimbu themes:diff [THEME]`](#nimbu-themesdiff-theme)
+  - [`nimbu themes:list [THEME]`](#nimbu-themeslist-theme)
+  - [`nimbu themes:push [FILES]`](#nimbu-themespush-files)
+- [Features](#features)
+  - [Coffeescript/Javascript](#coffeescriptjavascript)
+  - [(S)CSS](#scss)
+  - [Using the webpack output in your layout](#using-the-webpack-output-in-your-layout)
 
 ## `nimbu apps:config`
 
@@ -183,7 +193,7 @@ OPTIONS
   -h, --help  show CLI help
 
 DESCRIPTION
-  By default, the CLI auth token is only valid for 1 year. To generate a long-lived token, use nimbu 
+  By default, the CLI auth token is only valid for 1 year. To generate a long-lived token, use nimbu
   authorizations:create
 ```
 
