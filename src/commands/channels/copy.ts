@@ -8,7 +8,7 @@ import through from 'through'
 import inquirer from 'inquirer'
 import { Observable } from 'rxjs'
 
-export default class CopyChannels extends Command {
+export default class CopyChannelEntries extends Command {
   static description = 'copy channel configuration from one to another'
 
   static flags = {
@@ -26,7 +26,7 @@ export default class CopyChannels extends Command {
 
   async run() {
     const Listr = require('listr')
-    const { flags } = this.parse(CopyChannels)
+    const { flags } = this.parse(CopyChannelEntries)
 
     let fromChannel: string
     let toChannel: string
@@ -70,7 +70,7 @@ export default class CopyChannels extends Command {
       },
       {
         title: upsertTitle,
-        enabled: ctx => ctx.channel !== undefined,
+        enabled: ctx => ctx.channel != null,
         task: (ctx, task) => this.copy(ctx, task),
       },
     ])
@@ -87,13 +87,13 @@ export default class CopyChannels extends Command {
 
   private async fetch(ctx: any) {
     let options: any = {}
-    if (ctx.fromSite !== undefined) {
+    if (ctx.fromSite != null) {
       options.site = ctx.fromSite
     }
     try {
       ctx.channel = await this.nimbu.get(`/channels/${ctx.fromChannel}`, options)
     } catch (error) {
-      if (error.body !== undefined && error.body.code === 101) {
+      if (error.body != null && error.body.code === 101) {
         throw new Error(`could not find channel ${chalk.bold(ctx.fromChannel)}`)
       } else {
         throw new Error(error.message)
@@ -103,7 +103,7 @@ export default class CopyChannels extends Command {
 
   private async copy(ctx: any, task: any) {
     let options: any = {}
-    if (ctx.toSite !== undefined) {
+    if (ctx.toSite != null) {
       options.site = ctx.toSite
     }
 
@@ -118,7 +118,7 @@ export default class CopyChannels extends Command {
       }
     }
 
-    if (targetChannel !== undefined) {
+    if (targetChannel != null) {
       return this.askOverwrite(ctx, task)
     } else {
       return this.create(ctx, task)
@@ -127,7 +127,7 @@ export default class CopyChannels extends Command {
 
   private async create(ctx: any, task: any) {
     let options: any = {}
-    if (ctx.toSite !== undefined) {
+    if (ctx.toSite != null) {
       options.site = ctx.toSite
     }
 
@@ -141,7 +141,7 @@ export default class CopyChannels extends Command {
 
   private async update(ctx: any, task: any) {
     let options: any = {}
-    if (ctx.toSite !== undefined) {
+    if (ctx.toSite != null) {
       options.site = ctx.toSite
     }
 
@@ -176,7 +176,7 @@ export default class CopyChannels extends Command {
       prompt({
         type: 'confirm',
         name: 'overwrite',
-        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Overwrite?`,
+        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Update?`,
         default: false,
       })
         .then(answer => {
