@@ -2,6 +2,12 @@ export interface CountResult {
   count: number
 }
 
+export interface App {
+  name: string
+  key: string
+  url?: string
+}
+
 export interface AppFile {
   name: string
   created_at: string
