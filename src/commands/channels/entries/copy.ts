@@ -117,9 +117,7 @@ export default class CopyChannels extends Command {
         per_page: flags.per_page,
         upsert: flags.upsert,
       })
-      .catch(error => {
-        //ux.error(error)
-      })
+      .catch(() => {})
   }
 
   private async fetchChannel(ctx: any) {

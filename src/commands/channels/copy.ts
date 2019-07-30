@@ -8,7 +8,7 @@ import through from 'through'
 import inquirer from 'inquirer'
 import { Observable } from 'rxjs'
 
-export default class CopyChannels extends Command {
+export default class CopyChannelEntries extends Command {
   static description = 'copy channel configuration from one to another'
 
   static flags = {
@@ -26,7 +26,7 @@ export default class CopyChannels extends Command {
 
   async run() {
     const Listr = require('listr')
-    const { flags } = this.parse(CopyChannels)
+    const { flags } = this.parse(CopyChannelEntries)
 
     let fromChannel: string
     let toChannel: string
@@ -176,7 +176,7 @@ export default class CopyChannels extends Command {
       prompt({
         type: 'confirm',
         name: 'overwrite',
-        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Overwrite config?`,
+        message: `channel ${chalk.bold(ctx.toChannel)} already exists. Update?`,
         default: false,
       })
         .then(answer => {
