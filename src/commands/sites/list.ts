@@ -20,7 +20,7 @@ export default class SitesList extends Command {
     const supports = require('supports-hyperlinks')
     const hyperlinker = require('hyperlinker')
     const protocol = Config.secureHost ? 'https://' : 'http://'
-    const adminDomain = Config.hostname.replace(/^api\./, '')
+    const adminDomain = Config.apiHost.replace(/^api\./, '')
 
     cli.action.start('Please wait while we get the list of sites...')
     let sites = await this.nimbu.get<Nimbu.Site[]>('/sites', { fetchAll: true })

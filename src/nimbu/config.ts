@@ -74,7 +74,7 @@ class Config {
     if (this.config.apps !== undefined) {
       this.config.apps.push(
         Object.assign({}, app, {
-          host: this.hostname,
+          host: this.apiHost,
         }),
       )
       await this.writeConfig()
