@@ -1,6 +1,7 @@
 import Command from '../command'
 import webpack = require('webpack')
-import webpackConfig = require('../config/webpack.prod')
+import defaultWebpackConfig = require('../config/webpack.prod')
+import projectWebpack = require('../config/webpack.project')
 import cli from 'cli-ux'
 import chalk from 'chalk'
 
@@ -23,6 +24,7 @@ export default class Build extends Command {
     process.env.NODE_ENV = 'production'
 
     cli.action.start('building for production')
+    const webpackConfig = projectWebpack.customize(defaultWebpackConfig)
     const stats = await this.webpack(webpackConfig)
     cli.action.stop()
     this.log(
@@ -31,15 +33,15 @@ export default class Build extends Command {
         modules: false,
         children: false,
         chunks: false,
-        chunkModules: false
-      }) + '\n\n'
+        chunkModules: false,
+      }) + '\n\n',
     )
     this.log(chalk.cyan('  Build complete.\n'))
     this.log(
       chalk.yellow(
         '  Tip: built files are meant to be served over an HTTP server.\n' +
-          "  Opening index.html over file:// won't work.\n"
-      )
+          "  Opening index.html over file:// won't work.\n",
+      ),
     )
   }
 }

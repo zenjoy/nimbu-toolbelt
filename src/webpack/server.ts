@@ -2,7 +2,8 @@ import webpack = require('webpack')
 import DevServer = require('webpack-dev-server')
 import path = require('path')
 import paths = require('../config/paths')
-import config = require('../config/webpack.dev.js')
+import defaultConfig = require('../config/webpack.dev.js')
+import projectWebpack = require('../config/webpack.project.js')
 
 const { choosePort, createCompiler, prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const createDevServerConfig = require('../config/webpackDevServer.config.js')
@@ -20,12 +21,13 @@ export default class WebpackDevServer {
     }
     const appName = require(path.resolve(paths.PROJECT_DIRECTORY, 'package.json')).name
     const urls = prepareUrls(protocol, host, port)
+    const config = projectWebpack.customize(defaultConfig)
     const compiler = createCompiler({
       webpack,
       config,
       appName,
       urls,
-      useYarn: true // useYarn
+      useYarn: true, // useYarn
     })
     const proxyConfig = {
       '*': { target: `http://localhost:${nimbuPort}` },
