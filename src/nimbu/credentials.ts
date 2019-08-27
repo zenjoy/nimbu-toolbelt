@@ -113,7 +113,7 @@ export class Credentials {
     try {
       auth = await this.createOAuthToken(login!, password, { expiresIn })
     } catch (err) {
-      if (!err.body || err.body.code !== 'two_factor') throw err
+      if (!err.body || err.body.code !== 210) throw err
       let secondFactor = await ux.prompt('Two-factor code', { type: 'mask' })
       auth = await this.createOAuthToken(login!, password, { expiresIn, secondFactor })
     }
