@@ -48,6 +48,22 @@ const webpackConfig = merge(baseWebpackConfig, {
     ],
     splitChunks: {
       cacheGroups: {
+        polyfills: {
+          chunks: 'all',
+          name: 'polyfills',
+          test: function(module) {
+            // This prevents stylesheet resources with the .css or .scss extension
+            // from being moved from their original chunk to the vendor chunk
+            if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
+              return false
+            }
+            return (
+              module.context &&
+              (module.context.includes('node_modules/core-js') ||
+                module.context.includes('node_modules/regenerator-runtime'))
+            )
+          },
+        },
         vendor: {
           chunks: 'all',
           name: 'vendor',
@@ -64,22 +80,6 @@ const webpackConfig = merge(baseWebpackConfig, {
                 module.context.includes('node_modules/core-js') ||
                 module.context.includes('node_modules/regenerator-runtime')
               )
-            )
-          },
-        },
-        polyfills: {
-          chunks: 'all',
-          name: 'polyfills',
-          test: function(module) {
-            // This prevents stylesheet resources with the .css or .scss extension
-            // from being moved from their original chunk to the vendor chunk
-            if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
-              return false
-            }
-            return (
-              module.context &&
-              (module.context.includes('node_modules/core-js') ||
-                module.context.includes('node_modules/regenerator-runtime'))
             )
           },
         },

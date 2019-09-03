@@ -16,6 +16,7 @@ const netrc = require('netrc-parser').default
 netrc.loadSync = function(this: typeof netrc) {
   netrc.machines = {
     'api.nimbu.io': { token },
+    'api.nimbu.dev': { token },
   }
 }
 
