@@ -24,7 +24,7 @@ export function download(url, path, callback) {
     }
     const file = fs.createWriteStream(path)
     const request = http.get(uri.href!).on('response', function(res) {
-      const len = parseInt(res.headers['content-length'], 10)
+      const len = parseInt(res.headers['content-length'] || '0', 10)
       let bytes = 0
       let percent = 0
       res
