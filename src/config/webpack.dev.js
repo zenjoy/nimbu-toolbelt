@@ -13,7 +13,7 @@ const shouldExtractCSS = process.env.EXTRACT_CSS === 'true'
 Object.keys(baseWebpackConfig.entry).forEach(function(name) {
   let extras = [require.resolve('webpack-dev-server/client') + '?/', require.resolve('webpack/hot/dev-server')]
   if (config.REACT) {
-    extras.splice(0, 0, require.resolve('core-js/modules/es6.symbol'))
+    extras.splice(0, 0, require.resolve('core-js/modules/es.symbol'))
   }
   baseWebpackConfig.entry[name] = extras.concat(baseWebpackConfig.entry[name])
 })
