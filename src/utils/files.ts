@@ -1,5 +1,6 @@
 import { parse } from 'url'
-import http from 'https'
+import http from 'http'
+import https from 'https'
 import fs from 'fs-extra'
 import { basename } from 'path'
 import glob from 'glob'
@@ -23,7 +24,8 @@ export function download(url, path, callback) {
       path = basename(uri.path!)
     }
     const file = fs.createWriteStream(path)
-    const request = http.get(uri.href!).on('response', function(res) {
+    const client = url.indexOf('https://') !== -1 ? https : http
+    const request = client.get(uri.href!).on('response', function(res) {
       const len = parseInt(res.headers['content-length'] || '0', 10)
       let bytes = 0
       let percent = 0

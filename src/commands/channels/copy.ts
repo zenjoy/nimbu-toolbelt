@@ -149,8 +149,15 @@ export default class CopyChannelEntries extends Command {
     options.body = ctx.channel
 
     task.title = `Updating channel ${chalk.bold(ctx.toChannel)} in site ${chalk.bold(ctx.toSite)}`
-
-    return this.nimbu.patch(`/channels/${ctx.toChannel}?replace=1`, options)
+    try {
+      return this.nimbu.patch(`/channels/${ctx.toChannel}?replace=1`, options)
+    } catch (error) {
+      if (error.body === undefined || error.body.code !== 101) {
+        throw new Error(JSON.stringify(error.message))
+      } else {
+        throw new Error(JSON.stringify(error))
+      }
+    }
   }
 
   private askOverwrite(ctx: any, task: any) {

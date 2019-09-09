@@ -13,6 +13,9 @@ export namespace Client {
     retryAuth?: boolean
     fetchAll?: boolean
     headers?: any
+    formData?: any
+    site?: string
+    host?: string
     body?: object
     auth?: string
   }
@@ -48,7 +51,7 @@ export class APIError extends CLIError {
       info.push(`Site: ${options.site.name}`)
     }
     if (options.errors) {
-      info.push(`Error Information: ${options.errors.join(', ')}`)
+      info.push(`Error Information: ${JSON.stringify(options.errors)}`)
     }
 
     if (info.length > 0) {
