@@ -13,7 +13,7 @@ describe('auth:whoami', () => {
     .stderr()
     .command(['auth:whoami'])
     .it('should show the current user when logged in', ctx => {
-      expect(ctx.stdout).to.equal('jeff@example.com (Jeff)\n')
+      expect(ctx.stdout).to.equal('Logged in as jeff@example.com (Jeff)\n')
       expect(ctx.stderr).to.match(new RegExp('Warning: NIMBU_API_KEY is set'))
     })
 

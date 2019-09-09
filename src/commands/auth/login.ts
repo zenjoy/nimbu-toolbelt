@@ -1,7 +1,7 @@
 import Command from '../../command'
 import * as Nimbu from '../../nimbu/types'
-
 import { color } from '../../nimbu/color'
+
 import { flags } from '@oclif/command'
 
 export default class Login extends Command {

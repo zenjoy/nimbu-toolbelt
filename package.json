@@ -162,7 +162,19 @@
         "description": "manage your notification templates"
       },
       "channels": {
-        "description": "manage your channels"
+        "description": "working with channels"
+      },
+      "products": {
+        "description": "working with products"
+      },
+      "customers": {
+        "description": "working with customers"
+      },
+      "notifications": {
+        "description": "working with notifications"
+      },
+      "translations": {
+        "description": "working with translations"
       }
     }
   },

@@ -21,7 +21,7 @@ export namespace Credentials {
 
 interface NetrcEntry {
   login: string
-  token: string
+  password: string
 }
 
 export class Credentials {
@@ -53,7 +53,14 @@ export class Credentials {
       this._auth = process.env.NIMBU_API_KEY
       if (!this._auth) {
         Netrc.loadSync()
-        this._auth = Netrc.machines[host] && Netrc.machines[host].token
+
+        if (Netrc.machines[host] && Netrc.machines[host].token !== undefined) {
+          Netrc.machines[host].password = Netrc.machines[host].token
+          delete Netrc.machines[host].token
+          Netrc.saveSync()
+        }
+
+        this._auth = Netrc.machines[host] && Netrc.machines[host].password
       }
       if (!this._auth) {
         this._auth = this.migrateFromNimbuToken()
@@ -80,8 +87,8 @@ export class Credentials {
       await Netrc.load()
       const previousToken = Netrc.machines[host]
       try {
-        if (previousToken && previousToken.token && opts.autoLogout) {
-          await this.logout(previousToken.token)
+        if (previousToken && previousToken.password && opts.autoLogout) {
+          await this.logout(previousToken.password)
 
           delete Netrc.machines[host]
           Netrc.saveSync()
@@ -117,7 +124,7 @@ export class Credentials {
       let secondFactor = await ux.prompt('Two-factor code', { type: 'mask' })
       auth = await this.createOAuthToken(login!, password, { expiresIn, secondFactor })
     }
-    this._auth = auth.token
+    this._auth = auth.password
     this.nimbu.refreshClient()
     return auth
   }
@@ -146,15 +153,15 @@ export class Credentials {
       },
     })
 
-    return { token, login: username }
+    return { login: username, password: token }
   }
 
   private async saveToken(entry: NetrcEntry) {
     const host = Config.apiHost
     if (!Netrc.machines[host]) Netrc.machines[host] = {}
 
-    Netrc.machines[host].token = entry.token
     Netrc.machines[host].login = entry.login
+    Netrc.machines[host].password = entry.password
 
     delete Netrc.machines[host].method
     delete Netrc.machines[host].org
@@ -183,7 +190,7 @@ export class Credentials {
     }
     if (token) {
       Netrc.machines[Config.apiHost] = {}
-      Netrc.machines[Config.apiHost].token = token
+      Netrc.machines[Config.apiHost].password = token
       Netrc.saveSync()
       return token
     }
