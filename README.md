@@ -78,6 +78,7 @@ Make sure that include is there and that you push the snippet to nimbu!
 * [`nimbu browse:simulator`](#nimbu-browsesimulator)
 * [`nimbu build`](#nimbu-build)
 * [`nimbu channels:copy`](#nimbu-channelscopy)
+* [`nimbu channels:diff`](#nimbu-channelsdiff)
 * [`nimbu channels:entries:copy`](#nimbu-channelsentriescopy)
 * [`nimbu config`](#nimbu-config)
 * [`nimbu customers:config:copy`](#nimbu-customersconfigcopy)
@@ -105,7 +106,7 @@ USAGE
   $ nimbu apps:config
 ```
 
-_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/apps/config.ts)_
+_See code: [src/commands/apps/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/apps/config.ts)_
 
 ## `nimbu apps:list`
 
@@ -116,7 +117,7 @@ USAGE
   $ nimbu apps:list
 ```
 
-_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/apps/list.ts)_
+_See code: [src/commands/apps/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/apps/list.ts)_
 
 ## `nimbu apps:push [FILES]`
 
@@ -133,7 +134,7 @@ OPTIONS
   -a, --app=app  The (local) name of the application to push to (see apps:list and apps:config).
 ```
 
-_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/apps/push.ts)_
+_See code: [src/commands/apps/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/apps/push.ts)_
 
 ## `nimbu apps:transpile SOURCE TARGET`
 
@@ -144,7 +145,7 @@ USAGE
   $ nimbu apps:transpile SOURCE TARGET
 ```
 
-_See code: [src/commands/apps/transpile.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/apps/transpile.ts)_
+_See code: [src/commands/apps/transpile.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/apps/transpile.ts)_
 
 ## `nimbu auth:login`
 
@@ -161,7 +162,7 @@ ALIASES
   $ nimbu login
 ```
 
-_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/auth/login.ts)_
+_See code: [src/commands/auth/login.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/auth/login.ts)_
 
 ## `nimbu auth:logout`
 
@@ -175,7 +176,7 @@ ALIASES
   $ nimbu logout
 ```
 
-_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/auth/logout.ts)_
+_See code: [src/commands/auth/logout.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/auth/logout.ts)_
 
 ## `nimbu auth:token`
 
@@ -193,7 +194,7 @@ DESCRIPTION
   authorizations:create
 ```
 
-_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/auth/token.ts)_
+_See code: [src/commands/auth/token.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/auth/token.ts)_
 
 ## `nimbu auth:whoami`
 
@@ -207,7 +208,7 @@ ALIASES
   $ nimbu whoami
 ```
 
-_See code: [src/commands/auth/whoami.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/auth/whoami.ts)_
+_See code: [src/commands/auth/whoami.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/auth/whoami.ts)_
 
 ## `nimbu autocomplete [SHELL]`
 
@@ -241,7 +242,7 @@ USAGE
   $ nimbu browse:admin
 ```
 
-_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/browse/admin.ts)_
+_See code: [src/commands/browse/admin.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/browse/admin.ts)_
 
 ## `nimbu browse:simulator`
 
@@ -252,7 +253,7 @@ USAGE
   $ nimbu browse:simulator
 ```
 
-_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/browse/simulator.ts)_
+_See code: [src/commands/browse/simulator.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/browse/simulator.ts)_
 
 ## `nimbu build`
 
@@ -263,7 +264,7 @@ USAGE
   $ nimbu build
 ```
 
-_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/build.ts)_
 
 ## `nimbu channels:copy`
 
@@ -278,7 +279,22 @@ OPTIONS
   -t, --to=to      (required) slug of the target channel
 ```
 
-_See code: [src/commands/channels/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/channels/copy.ts)_
+_See code: [src/commands/channels/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/channels/copy.ts)_
+
+## `nimbu channels:diff`
+
+check differences between channel settings from one to another
+
+```
+USAGE
+  $ nimbu channels:diff
+
+OPTIONS
+  -f, --from=from  (required) slug of the source channel
+  -t, --to=to      (required) slug of the target channel
+```
+
+_See code: [src/commands/channels/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/channels/diff.ts)_
 
 ## `nimbu channels:entries:copy`
 
@@ -296,7 +312,7 @@ OPTIONS
   -u, --upsert=upsert      name of parameter to use for matching existing documents
 ```
 
-_See code: [src/commands/channels/entries/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/channels/entries/copy.ts)_
+_See code: [src/commands/channels/entries/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/channels/entries/copy.ts)_
 
 ## `nimbu config`
 
@@ -307,7 +323,7 @@ USAGE
   $ nimbu config
 ```
 
-_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/config.ts)_
+_See code: [src/commands/config.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/config.ts)_
 
 ## `nimbu customers:config:copy`
 
@@ -322,7 +338,7 @@ OPTIONS
   -t, --to=to      subdomain of the destination site
 ```
 
-_See code: [src/commands/customers/config/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/customers/config/copy.ts)_
+_See code: [src/commands/customers/config/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/customers/config/copy.ts)_
 
 ## `nimbu help [COMMAND]`
 
@@ -355,7 +371,7 @@ OPTIONS
   -s, --site=site  The site (use the Nimbu subdomain) to link to this project.
 ```
 
-_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/init/index.ts)_
+_See code: [src/commands/init/index.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/init/index.ts)_
 
 ## `nimbu mails:pull`
 
@@ -366,7 +382,7 @@ USAGE
   $ nimbu mails:pull
 ```
 
-_See code: [src/commands/mails/pull.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/mails/pull.ts)_
+_See code: [src/commands/mails/pull.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/mails/pull.ts)_
 
 ## `nimbu mails:push`
 
@@ -377,7 +393,7 @@ USAGE
   $ nimbu mails:push
 ```
 
-_See code: [src/commands/mails/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/mails/push.ts)_
+_See code: [src/commands/mails/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/mails/push.ts)_
 
 ## `nimbu menus:copy [SLUG]`
 
@@ -395,7 +411,7 @@ OPTIONS
   -t, --to=to      subdomain of the destination site
 ```
 
-_See code: [src/commands/menus/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/menus/copy.ts)_
+_See code: [src/commands/menus/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/menus/copy.ts)_
 
 ## `nimbu pages:copy [FULLPATH]`
 
@@ -415,7 +431,7 @@ OPTIONS
   --toHost=toHost      [default: https://api.nimbu.io] hostname of target Nimbu API
 ```
 
-_See code: [src/commands/pages/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/pages/copy.ts)_
+_See code: [src/commands/pages/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/pages/copy.ts)_
 
 ## `nimbu products:config:copy`
 
@@ -430,7 +446,7 @@ OPTIONS
   -t, --to=to      subdomain of the destination site
 ```
 
-_See code: [src/commands/products/config/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/products/config/copy.ts)_
+_See code: [src/commands/products/config/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/products/config/copy.ts)_
 
 ## `nimbu server`
 
@@ -447,7 +463,7 @@ OPTIONS
   --port=port              [default: 4567] The port to listen on.
 ```
 
-_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/server.ts)_
+_See code: [src/commands/server.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/server.ts)_
 
 ## `nimbu sites:list`
 
@@ -464,7 +480,7 @@ ALIASES
   $ nimbu sites
 ```
 
-_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/sites/list.ts)_
+_See code: [src/commands/sites/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/sites/list.ts)_
 
 ## `nimbu themes:copy`
 
@@ -481,7 +497,7 @@ OPTIONS
   --toHost=toHost      [default: https://api.nimbu.io] hostname of target Nimbu API
 ```
 
-_See code: [src/commands/themes/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/themes/copy.ts)_
+_See code: [src/commands/themes/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/themes/copy.ts)_
 
 ## `nimbu themes:diff [THEME]`
 
@@ -495,7 +511,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/themes/diff.ts)_
+_See code: [src/commands/themes/diff.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/themes/diff.ts)_
 
 ## `nimbu themes:list [THEME]`
 
@@ -509,7 +525,7 @@ ARGUMENTS
   THEME  The name of the theme to list
 ```
 
-_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/themes/list.ts)_
+_See code: [src/commands/themes/list.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/themes/list.ts)_
 
 ## `nimbu themes:push [FILES]`
 
@@ -532,7 +548,7 @@ OPTIONS
   --only         only push the files given on the command line
 ```
 
-_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/themes/push.ts)_
+_See code: [src/commands/themes/push.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/themes/push.ts)_
 
 ## `nimbu translations:copy [QUERY]`
 
@@ -552,7 +568,7 @@ OPTIONS
   --toHost=toHost      [default: https://api.nimbu.io] hostname of target Nimbu API
 ```
 
-_See code: [src/commands/translations/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.1/src/commands/translations/copy.ts)_
+_See code: [src/commands/translations/copy.ts](https://github.com/zenjoy/nimbu-toolbelt/blob/v2.1.2/src/commands/translations/copy.ts)_
 <!-- commandsstop -->
 
 # Features
