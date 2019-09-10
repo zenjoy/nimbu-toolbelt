@@ -1,5 +1,6 @@
 import Command from '../../command'
 import Config from '../../nimbu/config'
+import { convertChangesToTree, addFieldNames, cleanUpIds } from '../../utils/diff'
 
 import { flags } from '@oclif/command'
 import ux from 'cli-ux'
@@ -82,7 +83,7 @@ export default class DiffChannels extends Command {
     ux.action.stop()
 
     for (let channel of channelSummaries) {
-      ux.action.start(`Comparing channel ${chalk.bold(channel.slug)}`)
+      ux.action.start(`Comparing channel ${chalk.green(chalk.bold(channel.slug))}`)
 
       let detailedFrom: any
       let detailedTo: any
@@ -111,29 +112,100 @@ export default class DiffChannels extends Command {
         this.cleanUpBeforeDiff(detailedFrom)
         this.cleanUpBeforeDiff(detailedTo)
 
-        let diff = detailedDiff(detailedFrom, detailedTo)
-        ux.log(pretty(diff))
+        let fromCustomizations = detailedFrom.customizations
+        let toCustomizations = detailedTo.customizations
+        delete detailedFrom.customizations
+        delete detailedTo.customizations
+
+        let diff: any = detailedDiff(fromCustomizations, toCustomizations)
+        let otherDiff: any = detailedDiff(detailedFrom, detailedTo)
+        let anyDifferences = false
+
+        addFieldNames(diff, fromCustomizations, toCustomizations)
+
+        ux.log('')
+        if (diff.added != null && Object.keys(diff.added).length > 0) {
+          anyDifferences = true
+          ux.log(`Following fields or field attributes are present in ${chalk.bold(toSite)}, but not ${fromSite}:`)
+          convertChangesToTree(diff.added).display()
+        }
+
+        if (diff.deleted != null && Object.keys(diff.deleted).length > 0) {
+          anyDifferences = true
+          ux.log(`Following fields or field attributes are present in ${chalk.bold(fromSite)}, but not ${toSite}:`)
+          convertChangesToTree(diff.deleted).display()
+        }
+
+        if (diff.updated != null && Object.keys(diff.updated).length > 0) {
+          anyDifferences = true
+          ux.log(`Following fields or field attributes have differences:`)
+          convertChangesToTree(diff.updated).display()
+        }
+
+        ux.log('')
+        if (otherDiff.added != null && Object.keys(otherDiff.added).length > 0) {
+          anyDifferences = true
+          ux.log(`Following channel attributes are present in ${chalk.bold(toSite)}, but not ${fromSite}:`)
+          convertChangesToTree(otherDiff.added).display()
+        }
+
+        if (otherDiff.deleted != null && Object.keys(otherDiff.deleted).length > 0) {
+          anyDifferences = true
+          ux.log(`Following channel attributes are present in ${chalk.bold(fromSite)}, but not ${toSite}:`)
+          convertChangesToTree(otherDiff.deleted).display()
+        }
+
+        if (otherDiff.updated != null && Object.keys(otherDiff.updated).length > 0) {
+          anyDifferences = true
+          ux.log(`Following channel attributes have differences:`)
+          convertChangesToTree(otherDiff.updated).display()
+        }
+
+        if (!anyDifferences) {
+          ux.log(`There are no differences.`)
+        }
       }
+
+      ux.info(chalk.dim('===========================================================================\n'))
     }
+  }
+
+  private extractCustomizations(diff) {
+    let fieldDiff: any = {}
+    let otherDiff: any = {}
+
+    if (diff.added != null && diff.added.customizations != null) {
+      fieldDiff.added = diff.added.customizations
+      delete diff.added.customizations
+      otherDiff.added = diff.added
+    }
+
+    if (diff.deleted != null && diff.deleted.customizations != null) {
+      fieldDiff.deleted = diff.deleted.customizations
+      delete diff.deleted.customizations
+      otherDiff.deleted = diff.deleted
+    }
+
+    if (diff.updated != null && diff.updated.customizations != null) {
+      fieldDiff.updated = diff.updated.customizations
+      delete diff.updated.customizations
+      otherDiff.updated = diff.updated
+    }
+
+    return { fieldDiff, otherDiff }
   }
 
   private cleanUpBeforeDiff(data) {
-    this.cleanUpIds(data)
+    cleanUpIds(data)
 
     for (let field of data.customizations) {
-      this.cleanUpIds(field)
+      cleanUpIds(field)
 
       if (field.select_options != null) {
         for (let option of field.select_options) {
-          this.cleanUpIds(option)
+          cleanUpIds(option)
         }
       }
     }
-  }
-
-  private cleanUpIds(data) {
-    delete data.id
-    delete data.created_at
-    delete data.updated_at
   }
 }

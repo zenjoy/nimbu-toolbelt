@@ -9,7 +9,7 @@ import inquirer from 'inquirer'
 import { Observable } from 'rxjs'
 
 export default class CopyProductsConfig extends Command {
-  static description = 'copy channel configuration from one to another'
+  static description = 'copy product customizations from one to another'
 
   static flags = {
     from: flags.string({
