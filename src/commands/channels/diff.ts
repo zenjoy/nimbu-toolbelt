@@ -6,7 +6,6 @@ import { flags } from '@oclif/command'
 import ux from 'cli-ux'
 import chalk from 'chalk'
 import { detailedDiff } from 'deep-object-diff'
-import { pretty } from 'js-object-pretty-print'
 
 export default class DiffChannels extends Command {
   static description = 'check differences between channel settings from one to another'
