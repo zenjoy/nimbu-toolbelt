@@ -24,11 +24,10 @@ export default class DiffChannels extends Command {
   }
 
   async run() {
-    const Listr = require('listr')
     const { flags } = this.parse(DiffChannels)
 
     let fromChannel: string
-    let toChannel: string
+    //let toChannel: string
     let fromSite: string | undefined
     let toSite: string | undefined
 
@@ -43,10 +42,10 @@ export default class DiffChannels extends Command {
     let toParts = flags.to.split('/')
     if (toParts.length > 1) {
       toSite = toParts[0]
-      toChannel = toParts[1]
+      //toChannel = toParts[1]
     } else {
       toSite = Config.site
-      toChannel = toParts[0]
+      //toChannel = toParts[0]
     }
 
     if (fromSite === undefined) {
@@ -62,10 +61,10 @@ export default class DiffChannels extends Command {
     let query = ''
     let description = ''
 
-    if (fromChannel != '*' && fromChannel.indexOf('*') === -1) {
+    if (fromChannel !== '*' && fromChannel.indexOf('*') === -1) {
       query = `?slug=${fromChannel}`
       description = `channel ${chalk.bold(fromChannel)}`
-    } else if (fromChannel != '*' && fromChannel.indexOf('*') !== -1) {
+    } else if (fromChannel !== '*' && fromChannel.indexOf('*') !== -1) {
       query = `?slug.start=${fromChannel}`
       description = `channel where slug starts with ${chalk.bold(fromChannel.replace('*', '..'))}`
     } else {
