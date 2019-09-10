@@ -8,7 +8,7 @@ import through from 'through'
 import inquirer from 'inquirer'
 import { Observable } from 'rxjs'
 
-export default class CopyChannelEntries extends Command {
+export default class CopyChannels extends Command {
   static description = 'copy channel configuration from one to another'
 
   static flags = {
@@ -26,7 +26,7 @@ export default class CopyChannelEntries extends Command {
 
   async run() {
     const Listr = require('listr')
-    const { flags } = this.parse(CopyChannelEntries)
+    const { flags } = this.parse(CopyChannels)
 
     let fromChannel: string
     let toChannel: string
