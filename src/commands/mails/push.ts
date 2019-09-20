@@ -13,9 +13,18 @@ import logSymbols from 'log-symbols'
 export default class PushMails extends Command {
   static description = 'upload all notification templates'
 
+  static args = [
+    {
+      name: 'name',
+      required: false,
+      description: 'name of mail template to be pushed',
+    },
+  ]
+
   async run() {
     await this.nimbu.validateLogin()
 
+    const { args } = this.parse(PushMails)
     const mailsPath = Config.projectPath + '/content/notifications/'
 
     if (!fs.existsSync(mailsPath)) {
@@ -39,6 +48,9 @@ export default class PushMails extends Command {
 
     for (let filename of notifications) {
       let slug = path.basename(filename, '.txt')
+      if (args.name != null && slug !== args.name) {
+        continue
+      }
       ux.action.start(` - ${slug} `)
       let raw = await fs.readFile(filename)
       let content: any = fm(raw.toString('utf-8'))
@@ -104,7 +116,11 @@ export default class PushMails extends Command {
         body.translations = translationData
       }
 
-      await this.nimbu.post('/notifications', { body })
+      try {
+        await this.nimbu.post('/notifications', { body })
+      } catch (error) {
+        ux.action.stop(chalk.red(`${logSymbols.error} ${error.message}`))
+      }
 
       ux.action.stop(chalk.green(`${logSymbols.success} done!`))
     }
