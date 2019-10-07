@@ -51,7 +51,7 @@ GEM
       rack (>= 1.4)
       servolux (~> 0.10)
     rb-fsevent (0.10.3)
-    rubyzip (1.2.3)
+    rubyzip (2.0.0)
     servolux (0.13.0)
     sinatra (2.0.5)
       mustermann (~> 1.0)
