@@ -3,6 +3,7 @@ import Command from '../../command'
 import Config from '../../nimbu/config'
 import { findMatchingFiles } from '../../utils/files'
 
+import { flags } from '@oclif/command'
 import fs from 'fs-extra'
 import ux from 'cli-ux'
 import chalk from 'chalk'
@@ -13,18 +14,18 @@ import logSymbols from 'log-symbols'
 export default class PushMails extends Command {
   static description = 'upload all notification templates'
 
-  static args = [
-    {
-      name: 'name',
-      required: false,
-      description: 'name of mail template to be pushed',
-    },
-  ]
+  static flags = {
+    only: flags.string({
+      char: 'o',
+      description: 'the names of the templates to push online',
+      multiple: true,
+    }),
+  }
 
   async run() {
     await this.nimbu.validateLogin()
 
-    const { args } = this.parse(PushMails)
+    const { flags } = this.parse(PushMails)
     const mailsPath = Config.projectPath + '/content/notifications/'
 
     if (!fs.existsSync(mailsPath)) {
@@ -48,12 +49,18 @@ export default class PushMails extends Command {
 
     for (let filename of notifications) {
       let slug = path.basename(filename, '.txt')
-      if (args.name != null && slug !== args.name) {
+      if (flags.only !== undefined && flags.only.length > 0 && flags.only.indexOf(slug) === -1) {
         continue
       }
       ux.action.start(` - ${slug} `)
       let raw = await fs.readFile(filename)
-      let content: any = fm(raw.toString('utf-8'))
+      let content: any
+      try {
+        content = fm(raw.toString('utf-8'))
+      } catch (error) {
+        ux.action.stop(chalk.red(`${logSymbols.error} ${error}`))
+        break
+      }
 
       if (content.attributes.name == undefined) {
         ux.action.stop(chalk.red(`${logSymbols.error} name is missing!`))
