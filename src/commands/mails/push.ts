@@ -19,6 +19,7 @@ export default class PushMails extends Command {
       char: 'o',
       description: 'the names of the templates to push online',
       multiple: true,
+      required: false,
     }),
   }
 
@@ -49,7 +50,7 @@ export default class PushMails extends Command {
 
     for (let filename of notifications) {
       let slug = path.basename(filename, '.txt')
-      if (flags.only !== undefined && flags.only.length > 0 && flags.only.indexOf(slug) === -1) {
+      if (flags.only && flags.only.length > 0 && flags.only.indexOf(slug) === -1) {
         continue
       }
       ux.action.start(` - ${slug} `)
