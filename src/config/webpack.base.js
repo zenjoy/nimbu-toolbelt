@@ -30,7 +30,7 @@ const config = {
     }),
   ],
   resolve: {
-    extensions: ['.js', '.coffee'],
+    extensions: ['.js', '.jsx', '.coffee', '.ts', '.tsx'],
   },
 }
 

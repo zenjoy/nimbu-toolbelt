@@ -5,6 +5,14 @@ const CssoWebpackPlugin = require('csso-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const config = require('./config')
 
+let tsLoader
+
+try {
+  tsLoader = require.resolve('ts-loader')
+} catch (err) {
+  // ILB
+}
+
 function babelLoader() {
   const options = {
     cacheDirectory: true,
@@ -28,7 +36,7 @@ function babelLoader() {
 }
 
 function codeLoaders(options) {
-  return [
+  const loaders = [
     {
       exclude: /node_modules/,
       test: /\.coffee$/,
@@ -37,10 +45,18 @@ function codeLoaders(options) {
     {
       // exclude node modules, except our own polyfills
       exclude: /node_modules(?!.*nimbu-toolbelt\/polyfills\.js)/,
-      test: /\.js$/,
+      test: /\.jsx?$/,
       use: [babelLoader()],
     },
   ]
+  if (tsLoader != null) {
+    loaders.push({
+      exclude: /node_modules/,
+      test: /\.tsx?$/,
+      use: [babelLoader(), tsLoader],
+    })
+  }
+  return loaders
 }
 
 const fileloader = require.resolve('file-loader')
