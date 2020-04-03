@@ -618,6 +618,7 @@ The javascripts pipeline supports:
   ([Breaking changes from 1.x](http://coffeescript.org/#breaking-changes))
 - ES6 syntax with all features and polyfills that
   [create react app supports](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#supported-language-features-and-polyfills)
+- Optional TypeScript: run `yarn add --dev typescript ts-loader` to enable it
 
 There is one entrypoint `src/index.js` that gets compiled into `javascripts/app.js` and
 `javascripts/vendor.js` (split automatically).
