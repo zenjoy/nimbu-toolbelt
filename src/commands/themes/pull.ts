@@ -92,6 +92,8 @@ export default class PullThemes extends Command {
             cleanup()
           } else {
             let targetFile = Config.projectPath + '/' + type + '/' + itemWithCode.name
+            let targetPath = pathFinder.dirname(targetFile)
+            await fs.mkdirp(targetPath)
             await fs.writeFile(targetFile, itemWithCode.code)
           }
           crntIndex++
