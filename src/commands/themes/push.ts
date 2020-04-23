@@ -3,7 +3,7 @@ import { flags } from '@oclif/command'
 import proxy from '../../nimbu-gem/command'
 
 export default class ThemesPush extends Command {
-  static description = 'describe the command here'
+  static description = 'push the theme code online'
 
   static flags = {
     // --liquid, --liquid-only   # only push template code

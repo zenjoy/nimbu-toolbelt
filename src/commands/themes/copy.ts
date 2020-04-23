@@ -66,14 +66,14 @@ export default class CopyThemes extends Command {
     for (let type of types) {
       taskList.push({
         title: `Downloading ${type} from theme ${chalk.bold(fromTheme)} in site ${chalk.bold(fromSite)}`,
-        task: ctx => this.fetchType(type, ctx),
-        enabled: ctx => ctx[type] != null || types.indexOf(type) === ctx.currentStep,
+        task: (ctx) => this.fetchType(type, ctx),
+        enabled: (ctx) => ctx[type] != null || types.indexOf(type) === ctx.currentStep,
       })
       taskList.push({
         title: `Uploading ${type} to theme ${chalk.bold(toTheme)} to site ${chalk.bold(toSite)}`,
-        task: ctx => this.uploadType(type, ctx),
-        skip: ctx => ctx[type].length === 0,
-        enabled: ctx => ctx[type] != null,
+        task: (ctx) => this.uploadType(type, ctx),
+        skip: (ctx) => ctx[type].length === 0,
+        enabled: (ctx) => ctx[type] != null,
       })
     }
 
@@ -100,7 +100,7 @@ export default class CopyThemes extends Command {
       host: ctx.fromHost,
     }
 
-    const perform = async observer => {
+    const perform = async (observer) => {
       try {
         let items: any[] = await this.nimbu.get(`/themes/${ctx.fromTheme}/${type}`, options)
         let nbItems = items.length
@@ -138,15 +138,15 @@ export default class CopyThemes extends Command {
       }
     }
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       perform(observer)
         .then(() => observer.complete())
-        .catch(error => observer.error(error))
+        .catch((error) => observer.error(error))
     })
   }
 
   private async uploadType(type: string, ctx: any) {
-    const perform = async observer => {
+    const perform = async (observer) => {
       let items = ctx[type]
       let nbItems = items.length
       let crntIndex = 1
@@ -189,10 +189,10 @@ export default class CopyThemes extends Command {
       ctx.currentStep++
     }
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       perform(observer)
         .then(() => observer.complete())
-        .catch(error => observer.error(error))
+        .catch((error) => observer.error(error))
     })
   }
 
