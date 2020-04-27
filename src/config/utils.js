@@ -17,13 +17,13 @@ try {
 function babelLoader(loaderOptions = {}) {
   const options = {
     cacheDirectory: true,
-    presets: ['react-app'],
     cacheIdentifier: getCacheIdentifier(loaderOptions.cachePrefix || 'app-js', [
       'babel-plugin-named-asset-import',
       'babel-preset-react-app',
       'react-dev-utils',
       'react-scripts',
     ]),
+    presets: ['react-app'],
   }
   options.plugins = [
     [
@@ -59,16 +59,16 @@ function codeLoaders(options) {
     // Process any JS outside of the app with Babel.
     // Unlike the application JS, we only compile the standard ES features.
     {
-      test: /\.(js|mjs)$/,
       exclude: /@babel(?:\/|\\{1,2})runtime/,
       loader: require.resolve('babel-loader'),
+      /* tslint:disable:object-literal-sort-keys */
       options: {
         babelrc: false,
         configFile: false,
         compact: false,
         presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
         cacheDirectory: true,
-        // See #6846 for context on why cacheCompression is disabled
+        // See create-react-app#6846 for context on why cacheCompression is disabled
         cacheCompression: false,
         cacheIdentifier: getCacheIdentifier(options.cachePrefix || 'non-app-js', [
           'babel-plugin-named-asset-import',
@@ -82,6 +82,8 @@ function codeLoaders(options) {
         sourceMaps: options.shouldUseSourceMap,
         inputSourceMap: options.shouldUseSourceMap,
       },
+      /* tslint:enable:object-literal-sort-keys */
+      test: /\.(js|mjs)$/,
     },
   ]
   if (tsLoader != null) {

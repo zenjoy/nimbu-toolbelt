@@ -12,14 +12,14 @@ const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
 const loaders = utils
   .codeLoaders({
-    shouldUseSourceMap,
     cachePrefix: 'production',
+    shouldUseSourceMap,
   })
   .concat(styleConfig.loaders)
   .concat(
     utils.fileLoaders({
-      publicPath: config.CDN_ROOT || '../',
       cachePrefix: 'production',
+      publicPath: config.CDN_ROOT || '../',
     }),
   )
 

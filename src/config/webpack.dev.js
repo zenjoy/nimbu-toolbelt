@@ -22,8 +22,8 @@ const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
 const loaders = utils
   .codeLoaders({
-    shouldUseSourceMap,
     cachePrefix: 'development',
+    shouldUseSourceMap,
   })
   .concat(styleConfig.loaders)
   .concat(
