@@ -4,6 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CssoWebpackPlugin = require('csso-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const config = require('./config')
+const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier')
 
 let tsLoader
 
@@ -13,10 +14,16 @@ try {
   // ILB
 }
 
-function babelLoader() {
+function babelLoader(loaderOptions = {}) {
   const options = {
     cacheDirectory: true,
     presets: ['react-app'],
+    cacheIdentifier: getCacheIdentifier(loaderOptions.cachePrefix || 'app-js', [
+      'babel-plugin-named-asset-import',
+      'babel-preset-react-app',
+      'react-dev-utils',
+      'react-scripts',
+    ]),
   }
   options.plugins = [
     [
@@ -40,27 +47,55 @@ function codeLoaders(options) {
     {
       exclude: /node_modules/,
       test: /\.coffee$/,
-      use: [babelLoader(), 'coffee-loader'],
+      use: [babelLoader(options), 'coffee-loader'],
     },
     {
+      // Application JS
       // exclude node modules, except our own polyfills
       exclude: /node_modules(?!.*nimbu-toolbelt\/polyfills\.js)/,
       test: /\.jsx?$/,
-      use: [babelLoader()],
+      use: [babelLoader(options)],
+    },
+    // Process any JS outside of the app with Babel.
+    // Unlike the application JS, we only compile the standard ES features.
+    {
+      test: /\.(js|mjs)$/,
+      exclude: /@babel(?:\/|\\{1,2})runtime/,
+      loader: require.resolve('babel-loader'),
+      options: {
+        babelrc: false,
+        configFile: false,
+        compact: false,
+        presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
+        cacheDirectory: true,
+        // See #6846 for context on why cacheCompression is disabled
+        cacheCompression: false,
+        cacheIdentifier: getCacheIdentifier(options.cachePrefix || 'non-app-js', [
+          'babel-plugin-named-asset-import',
+          'babel-preset-react-app',
+          'react-dev-utils',
+          'react-scripts',
+        ]),
+        // Babel sourcemaps are needed for debugging into node_modules
+        // code.  Without the options below, debuggers like VSCode
+        // show incorrect code and set breakpoints on the wrong lines.
+        sourceMaps: options.shouldUseSourceMap,
+        inputSourceMap: options.shouldUseSourceMap,
+      },
     },
   ]
   if (tsLoader != null) {
     loaders.push({
       exclude: /node_modules/,
       test: /\.tsx?$/,
-      use: [babelLoader(), tsLoader],
+      use: [babelLoader(options), tsLoader],
     })
   }
   return loaders
 }
 
 const fileloader = require.resolve('file-loader')
-const fileloaderOutputPath = name => {
+const fileloaderOutputPath = (name) => {
   let basename = name.split('?h=')[0]
   return `${basename}`
 }
@@ -94,7 +129,7 @@ function fileLoaders(options = {}) {
     loaders.splice(0, 0, {
       include: config.SVG_LOADER_INCLUDE,
       test: /\.svg$/,
-      use: [babelLoader(), require.resolve('./svg-loader.js')],
+      use: [babelLoader(options), require.resolve('./svg-loader.js')],
     })
   }
   return loaders
@@ -191,7 +226,7 @@ function styleConfig(options) {
 function htmlWebPackPlugins(entries, options = {}) {
   const template = require.resolve('../../template/webpack.liquid.ejs')
   return _.flatten(
-    entries.map(function(name) {
+    entries.map(function (name) {
       return [
         new HtmlWebpackPlugin({
           alwaysWriteToDisk: options.alwaysWriteToDisk,

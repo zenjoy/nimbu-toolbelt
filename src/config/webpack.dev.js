@@ -10,7 +10,7 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
 const shouldExtractCSS = process.env.EXTRACT_CSS === 'true'
 
 // add hot-reload related code to entry chunks
-Object.keys(baseWebpackConfig.entry).forEach(function(name) {
+Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   let extras = [require.resolve('webpack-dev-server/client') + '?/', require.resolve('webpack/hot/dev-server')]
   if (config.REACT) {
     extras.splice(0, 0, require.resolve('core-js/modules/es.symbol'))
@@ -21,9 +21,16 @@ Object.keys(baseWebpackConfig.entry).forEach(function(name) {
 const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
 const loaders = utils
-  .codeLoaders()
+  .codeLoaders({
+    shouldUseSourceMap,
+    cachePrefix: 'development',
+  })
   .concat(styleConfig.loaders)
-  .concat(utils.fileLoaders())
+  .concat(
+    utils.fileLoaders({
+      cachePrefix: 'development',
+    }),
+  )
 
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: 'cheap-module-source-map',

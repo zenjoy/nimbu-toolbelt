@@ -11,11 +11,15 @@ const shouldExtractCSS = true
 const styleConfig = utils.styleConfig({ shouldUseSourceMap, shouldExtractCSS })
 
 const loaders = utils
-  .codeLoaders()
+  .codeLoaders({
+    shouldUseSourceMap,
+    cachePrefix: 'production',
+  })
   .concat(styleConfig.loaders)
   .concat(
     utils.fileLoaders({
       publicPath: config.CDN_ROOT || '../',
+      cachePrefix: 'production',
     }),
   )
 
@@ -51,7 +55,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         polyfills: {
           chunks: 'all',
           name: 'polyfills',
-          test: function(module) {
+          test: function (module) {
             // This prevents stylesheet resources with the .css or .scss extension
             // from being moved from their original chunk to the vendor chunk
             if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
@@ -67,7 +71,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         vendor: {
           chunks: 'all',
           name: 'vendor',
-          test: function(module) {
+          test: function (module) {
             // This prevents stylesheet resources with the .css or .scss extension
             // from being moved from their original chunk to the vendor chunk
             if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
