@@ -4,6 +4,7 @@ import spawn from './process'
 
 export interface NimbuGemServerOptions {
   nocookies?: boolean
+  compass?: boolean
 }
 
 export default class NimbuGemServer {
@@ -24,9 +25,15 @@ export default class NimbuGemServer {
 
   async start(port: number, options?: NimbuGemServerOptions): Promise<void> {
     const args = ['--haml', '--host', '127.0.0.1', '--port', `${port}`]
+    let embeddedGemfile = true
 
     if (options && options.nocookies) {
       args.push('--nocookies')
+    }
+
+    if (options && options.compass) {
+      args.push('--compass')
+      embeddedGemfile = false
     }
 
     await this.nimbu.validateLogin()
@@ -34,7 +41,7 @@ export default class NimbuGemServer {
       return Promise.reject(new Error('Not authenticated'))
     }
 
-    this.process = spawn(this.nimbu.token, 'server', args, ['inherit', 'pipe', 'pipe'])
+    this.process = spawn(this.nimbu.token, 'server', args, ['inherit', 'pipe', 'pipe'], embeddedGemfile)
     this.process.stdout!.on('data', this.handleStdout)
     this.process.stderr!.on('data', this.handleStderr)
 
