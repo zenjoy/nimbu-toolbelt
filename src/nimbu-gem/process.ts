@@ -8,7 +8,7 @@ export default function (
   command: string,
   args: Array<string> = [],
   stdio: StdioOptions = 'inherit',
-  embeddedGemfile?: boolean,
+  embeddedGemfile = true,
 ): ChildProcess {
   return spawn('bundle', ['exec', 'nimbu', command].concat(args), {
     shell: true,
