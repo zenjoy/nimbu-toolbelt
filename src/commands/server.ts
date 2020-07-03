@@ -32,6 +32,10 @@ export default class Server extends Command {
     nowebpack: flags.boolean({
       description: 'Do not use webpack.',
     }),
+    noopen: flags.boolean({
+      description: `Don't open/reload browser`,
+      default: false,
+    }),
   }
 
   private readonly nimbuServer: NimbuServer = new NimbuServer(this.nimbu, this.log, this.warn)
@@ -47,9 +51,9 @@ export default class Server extends Command {
     await this.nimbuServer.stop()
   }
 
-  async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number) {
+  async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number, open: boolean) {
     this.log(chalk.cyan('Starting the development server...\n'))
-    await this.webpackServer.start(host, defaultPort, nimbuPort, 'http')
+    await this.webpackServer.start(host, defaultPort, nimbuPort, 'http', open)
   }
 
   async stopWebpackDevServer() {
@@ -62,9 +66,11 @@ export default class Server extends Command {
     await this.spawnNimbuServer(flags.nowebpack ? flags.port! : flags['nimbu-port']!, flags.nocookies, flags.compass)
 
     if (!flags.nowebpack) {
-      await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!)
+      await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!, !flags.noopen)
     }
     await this.waitForStopSignals()
+    // Explicitly exit the process to make sure all subprocesses started by webpack plugins are gone
+    process.exit(0)
   }
 
   async catch() {

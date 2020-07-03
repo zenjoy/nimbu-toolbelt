@@ -12,7 +12,7 @@ const openBrowser = require('react-dev-utils/openBrowser')
 export default class WebpackDevServer {
   private server?: any
 
-  async start(host: string, defaultPort: number, nimbuPort: number, protocol: string): Promise<void> {
+  async start(host: string, defaultPort: number, nimbuPort: number, protocol: string, open: boolean): Promise<void> {
     this.setupEnv()
     const port = await choosePort(host, defaultPort)
     if (port == null) {
@@ -42,7 +42,9 @@ export default class WebpackDevServer {
       this.server = undefined
       throw err
     }
-    openBrowser(urls.localUrlForBrowser)
+    if (open) {
+      openBrowser(urls.localUrlForBrowser)
+    }
   }
 
   async stop(): Promise<void> {
