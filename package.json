@@ -129,7 +129,8 @@
     "/Gemfile.lock",
     "/polyfills.js",
     "/template",
-    "/README.md"
+    "/README.md",
+    "/.bundle/config"
   ],
   "homepage": "https://github.com/zenjoy/nimbu-toolbelt",
   "keywords": [
