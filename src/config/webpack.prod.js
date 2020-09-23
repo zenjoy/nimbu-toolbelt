@@ -1,12 +1,13 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const baseWebpackConfig = require('./webpack.base.js')
+const getBaseWebpackConfig = require('./webpack.base.js')
 const utils = require('./utils')
 const { get: getConfig } = require('./config')
 
 const webpackConfig = () => {
   const config = getConfig()
+  const baseWebpackConfig = getBaseWebpackConfig()
   const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false'
   const shouldExtractCSS = true
 
@@ -24,7 +25,7 @@ const webpackConfig = () => {
         publicPath: config.CDN_ROOT || '../',
       }),
     )
-  return merge(baseWebpackConfig(), {
+  return merge(baseWebpackConfig, {
     mode: 'production',
     module: {
       rules: [
