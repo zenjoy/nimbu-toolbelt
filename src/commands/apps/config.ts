@@ -1,15 +1,14 @@
 import Command from '../../command'
 import * as Nimbu from '../../nimbu/types'
 import cli from 'cli-ux'
-import Config from '../../nimbu/config'
 import { pathExists } from 'fs-extra'
 
 export default class AppsList extends Command {
   static description = 'Add an app to the local configuration'
 
   removeConfigured(apps: Nimbu.App[]): Nimbu.App[] {
-    const configuredIds = Config.apps.map(a => a.id)
-    return apps.filter(a => !configuredIds.includes(a.key))
+    const configuredIds = this.nimbuConfig.apps.map((a) => a.id)
+    return apps.filter((a) => !configuredIds.includes(a.key))
   }
 
   async pickApp(apps: Nimbu.App[]): Promise<Nimbu.App> {
@@ -45,7 +44,7 @@ export default class AppsList extends Command {
     })
     const dirExists = await pathExists(dir)
     if (dirExists || (await cli.confirm("Code directory doesn't exists, are you sure want to continue?"))) {
-      await Config.addApp({
+      await this.nimbuConfig.addApp({
         name,
         id: app.key,
         dir,
@@ -54,11 +53,14 @@ export default class AppsList extends Command {
     }
   }
 
-  async run() {
+  async execute() {
     const apps = await this.nimbu.get<Array<Nimbu.App>>('/apps')
-    if (apps.length > 0) {
-      const app = await this.pickApp(this.removeConfigured(apps))
+    const unConfigured = this.removeConfigured(apps)
+    if (unConfigured.length > 0) {
+      const app = await this.pickApp(unConfigured)
       await this.configureApp(app)
+    } else if (unConfigured.length === 0) {
+      this.error("All your site's app are already configured.")
     } else {
       this.error("Your site doesn't have apps yet.")
     }

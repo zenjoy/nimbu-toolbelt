@@ -41,9 +41,9 @@ let test = base
         args = castArray(args)
         let [id, ...extra] = args
         ctx.expectation = ctx.expectation || `runs ${args.join(' ')}`
-        await ctx.config.runHook('init', { id, argv: extra })
         // hook into memory fs here
         if (ctx.fs) ctx.fs()
+        await ctx.config.runHook('init', { id, argv: extra })
         await ctx.config.runCommand(id, extra)
       },
     }

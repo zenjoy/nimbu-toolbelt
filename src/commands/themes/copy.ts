@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 import { download } from '../../utils/files'
 
 import { flags } from '@oclif/command'
@@ -24,15 +23,13 @@ export default class CopyThemes extends Command {
     }),
     toHost: flags.string({
       description: 'hostname of target Nimbu API',
-      default: Config.apiUrl,
     }),
     fromHost: flags.string({
       description: 'hostname of origin Nimbu API',
-      default: Config.apiUrl,
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags } = this.parse(CopyThemes)
 
@@ -40,8 +37,8 @@ export default class CopyThemes extends Command {
     let toTheme: string
     let fromSite: string | undefined
     let toSite: string | undefined
-    let fromHost = flags.fromHost!
-    let toHost = flags.toHost!
+    let fromHost = flags.fromHost !== undefined ? flags.fromHost! : this.nimbuConfig.apiUrl
+    let toHost = flags.toHost !== undefined ? flags.toHost! : this.nimbuConfig.apiUrl
 
     let fromParts = flags.from.split('/')
     if (fromParts.length > 1) {

@@ -22,7 +22,7 @@ export default class ProductsConfigDiff extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = this.parse(ProductsConfigDiff)
 
     let fromSite = flags.from!

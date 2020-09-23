@@ -1,9 +1,9 @@
 import { spawn, ChildProcess, StdioOptions } from 'child_process'
-import Config from '../nimbu/config'
 const paths = require('../config/paths')
 const path = require('path')
 
 export default function (
+  site: string,
   token: string,
   command: string,
   args: Array<string> = [],
@@ -17,7 +17,7 @@ export default function (
     env: Object.assign({}, process.env, {
       NIMBU_API_KEY: token,
       BUNDLE_GEMFILE: embeddedGemfile ? paths.GEMFILE : path.resolve(paths.NIMBU_DIRECTORY, 'Gemfile'),
-      NIMBU_SITE: Config.site,
+      NIMBU_SITE: site,
     }),
   })
 }

@@ -1,6 +1,5 @@
 import Command from '../../command'
 
-import Config from '../../nimbu/config'
 import { findMatchingFiles } from '../../utils/files'
 
 import { flags } from '@oclif/command'
@@ -23,11 +22,11 @@ export default class PushMails extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     await this.nimbu.validateLogin()
 
     const { flags } = this.parse(PushMails)
-    const mailsPath = Config.projectPath + '/content/notifications/'
+    const mailsPath = this.nimbuConfig.projectPath + '/content/notifications/'
 
     if (!fs.existsSync(mailsPath)) {
       ux.error('Could not find ./content/notifications directory! Aborting...')
@@ -37,7 +36,7 @@ export default class PushMails extends Command {
     let notifications = await findMatchingFiles(mailsPath, '*.txt')
     let allFiles = await findMatchingFiles(mailsPath, '**/*.txt')
 
-    let translations = allFiles.filter(function(e) {
+    let translations = allFiles.filter(function (e) {
       let i = notifications.indexOf(e)
       if (i === -1) {
         return true
@@ -93,12 +92,12 @@ export default class PushMails extends Command {
         body.html = html.toString('utf-8')
       }
 
-      let applicableTranslations = translations.filter(f => f.includes(`${slug}.txt`))
+      let applicableTranslations = translations.filter((f) => f.includes(`${slug}.txt`))
       let translationData = {}
 
       for (let translationFilename of applicableTranslations) {
         let locale = translationFilename.replace(mailsPath, '').replace(`/${slug}.txt`, '')
-        if (Config.possibleLocales.includes(locale)) {
+        if (this.nimbuConfig.possibleLocales.includes(locale)) {
           let raw = await fs.readFile(translationFilename)
           let content: any = fm(raw.toString('utf-8'))
 

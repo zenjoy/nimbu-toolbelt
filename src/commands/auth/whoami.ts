@@ -6,7 +6,7 @@ export default class Whoami extends Command {
   static description = 'display the current logged in user'
   static aliases = ['whoami']
 
-  async run() {
+  async execute() {
     if (process.env.NIMBU_API_KEY) this.warn('NIMBU_API_KEY is set')
     if (!this.nimbu.token) this.notloggedin()
     try {

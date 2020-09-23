@@ -3,8 +3,6 @@ import { pathExistsSync } from 'fs-extra'
 import { resolve as resolvePath } from 'path'
 import * as url from 'url'
 import paths = require('../config/paths')
-import projectConfig = require('../config/config')
-
 export interface ConfigApp {
   name: string
   id: string
@@ -19,10 +17,15 @@ interface ConfigFile {
   apps?: ConfigApp[]
 }
 
-class Config {
+export default class Config {
   static defaultHost = 'nimbu.io'
 
   private _config?: ConfigFile
+  private readonly _projectConfig: any
+
+  constructor(projectConfig: any) {
+    this._projectConfig = projectConfig
+  }
 
   // API Configuration
   get isDefaultHost() {
@@ -54,7 +57,7 @@ class Config {
   }
 
   get projectHost(): string | undefined {
-    return projectConfig.NIMBU_HOST
+    return this._projectConfig.NIMBU_HOST
   }
 
   get hostname() {
@@ -64,7 +67,7 @@ class Config {
   // Nimbu Cloud Code Config
   get apps(): ConfigApp[] {
     if (this.config.apps !== undefined) {
-      return this.config.apps.filter(a => a.host === this.apiHost || (!a.host && this.isDefaultHost))
+      return this.config.apps.filter((a) => a.host === this.apiHost || (!a.host && this.isDefaultHost))
     } else {
       return []
     }
@@ -82,8 +85,9 @@ class Config {
   }
 
   // Nimbu Site Configuration
-  get site() {
-    return this.envSite || this.projectSite || this.config.site
+  get site(): string | undefined {
+    const site = this.envSite || this.projectSite || this.config.site
+    return site
   }
 
   get envSite(): string | undefined {
@@ -91,7 +95,7 @@ class Config {
   }
 
   get projectSite(): string | undefined {
-    return projectConfig.NIMBU_SITE
+    return this._projectConfig.NIMBU_SITE
   }
 
   get projectPath(): string {
@@ -151,7 +155,7 @@ class Config {
   }
 
   get projectTheme(): string | undefined {
-    return projectConfig.NIMBU_THEME
+    return this._projectConfig.NIMBU_THEME
   }
 
   private get config() {
@@ -171,5 +175,3 @@ class Config {
     write(configFile, this._config)
   }
 }
-
-export default new Config()

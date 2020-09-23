@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 import { convertChangesToTree, addFieldNames, cleanUpIds } from '../../utils/diff'
 
 import { flags } from '@oclif/command'
@@ -23,7 +22,7 @@ export default class DiffChannels extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = this.parse(DiffChannels)
 
     let fromChannel: string
@@ -36,7 +35,7 @@ export default class DiffChannels extends Command {
       fromSite = fromParts[0]
       fromChannel = fromParts[1]
     } else {
-      fromSite = Config.site
+      fromSite = this.nimbuConfig.site
       fromChannel = fromParts[0]
     }
     let toParts = flags.to.split('/')
@@ -44,7 +43,7 @@ export default class DiffChannels extends Command {
       toSite = toParts[0]
       //toChannel = toParts[1]
     } else {
-      toSite = Config.site
+      toSite = this.nimbuConfig.site
       //toChannel = toParts[0]
     }
 

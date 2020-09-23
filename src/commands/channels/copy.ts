@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 
 import { flags } from '@oclif/command'
 import ux from 'cli-ux'
@@ -24,7 +23,7 @@ export default class CopyChannels extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags } = this.parse(CopyChannels)
 
@@ -38,7 +37,7 @@ export default class CopyChannels extends Command {
       fromSite = fromParts[0]
       fromChannel = fromParts[1]
     } else {
-      fromSite = Config.site
+      fromSite = this.nimbuConfig.site
       fromChannel = fromParts[0]
     }
     let toParts = flags.to.split('/')
@@ -46,7 +45,7 @@ export default class CopyChannels extends Command {
       toSite = toParts[0]
       toChannel = toParts[1]
     } else {
-      toSite = Config.site
+      toSite = this.nimbuConfig.site
       toChannel = toParts[0]
     }
 
@@ -66,11 +65,11 @@ export default class CopyChannels extends Command {
     const tasks = new Listr([
       {
         title: fetchTitle,
-        task: ctx => this.fetch(ctx),
+        task: (ctx) => this.fetch(ctx),
       },
       {
         title: upsertTitle,
-        enabled: ctx => ctx.channel != null,
+        enabled: (ctx) => ctx.channel != null,
         task: (ctx, task) => this.copy(ctx, task),
       },
     ])
@@ -161,10 +160,10 @@ export default class CopyChannels extends Command {
   }
 
   private askOverwrite(ctx: any, task: any) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       let buffer = ''
 
-      const outputStream = through(data => {
+      const outputStream = through((data) => {
         if (/\u001b\[.*?(D|C)$/.test(data)) {
           if (buffer.length > 0) {
             observer.next(buffer)
@@ -186,7 +185,7 @@ export default class CopyChannels extends Command {
         message: `channel ${chalk.bold(ctx.toChannel)} already exists. Update?`,
         default: false,
       })
-        .then(answer => {
+        .then((answer) => {
           // Clear the output
           observer.next()
 
@@ -199,7 +198,7 @@ export default class CopyChannels extends Command {
         .then(() => {
           observer.complete()
         })
-        .catch(err => {
+        .catch((err) => {
           observer.error(err)
         })
 

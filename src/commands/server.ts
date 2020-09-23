@@ -38,8 +38,15 @@ export default class Server extends Command {
     }),
   }
 
-  private readonly nimbuServer: NimbuServer = new NimbuServer(this.nimbu, this.log, this.warn)
+  private _nimbuServer?: NimbuServer
   private readonly webpackServer: WebpackDevServer = new WebpackDevServer()
+
+  private get nimbuServer() {
+    if (this._nimbuServer === undefined) {
+      throw new Error('Command not initialized yet')
+    }
+    return this._nimbuServer
+  }
 
   async spawnNimbuServer(port: number, nocookies: boolean, compass: boolean) {
     this.log(chalk.red('Starting nimbu server...'))
@@ -60,7 +67,18 @@ export default class Server extends Command {
     await this.webpackServer.stop()
   }
 
-  async run() {
+  get initialized() {
+    return super.initialized && this._nimbuServer !== undefined
+  }
+
+  async initialize() {
+    if (!this.initialized) {
+      await super.initialize()
+      this._nimbuServer = new NimbuServer(this.nimbu, this.log, this.warn)
+    }
+  }
+
+  async execute() {
     const { flags } = this.parse(Server)
 
     await this.spawnNimbuServer(flags.nowebpack ? flags.port! : flags['nimbu-port']!, flags.nocookies, flags.compass)

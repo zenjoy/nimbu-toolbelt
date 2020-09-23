@@ -1,5 +1,4 @@
 import Command from '../../../command'
-import Config from '../../../nimbu/config'
 
 import { flags } from '@oclif/command'
 import ux from 'cli-ux'
@@ -15,21 +14,19 @@ export default class CopyCustomerConfig extends Command {
     from: flags.string({
       char: 'f', // shorter flag version
       description: 'subdomain of the source site',
-      default: Config.site,
     }),
     to: flags.string({
       char: 't', // shorter flag version
       description: 'subdomain of the destination site',
-      default: Config.site,
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags } = this.parse(CopyCustomerConfig)
 
-    let fromSite = flags.from!
-    let toSite = flags.to!
+    let fromSite = flags.from !== undefined ? flags.from! : this.nimbuConfig.site!
+    let toSite = flags.to !== undefined ? flags.to! : this.nimbuConfig.site!
 
     if (fromSite === toSite) {
       ux.error('The source site needs to differ from the destination.')
@@ -42,11 +39,11 @@ export default class CopyCustomerConfig extends Command {
     const tasks = new Listr([
       {
         title: fetchTitle,
-        task: ctx => this.fetch(ctx),
+        task: (ctx) => this.fetch(ctx),
       },
       {
         title: upsertTitle,
-        enabled: ctx => ctx.customizations != null,
+        enabled: (ctx) => ctx.customizations != null,
         task: (ctx, task) => this.copy(ctx, task),
       },
     ])
@@ -113,10 +110,10 @@ export default class CopyCustomerConfig extends Command {
   }
 
   private askOverwrite(ctx: any, task: any) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       let buffer = ''
 
-      const outputStream = through(data => {
+      const outputStream = through((data) => {
         if (/\u001b\[.*?(D|C)$/.test(data)) {
           if (buffer.length > 0) {
             observer.next(buffer)
@@ -138,7 +135,7 @@ export default class CopyCustomerConfig extends Command {
         message: `Are you sure you want to overwrite the existing customizations?`,
         default: false,
       })
-        .then(answer => {
+        .then((answer) => {
           // Clear the output
           observer.next()
 
@@ -151,7 +148,7 @@ export default class CopyCustomerConfig extends Command {
         .then(() => {
           observer.complete()
         })
-        .catch(err => {
+        .catch((err) => {
           observer.error(err)
         })
 

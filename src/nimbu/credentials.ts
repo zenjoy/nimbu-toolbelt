@@ -6,7 +6,6 @@ import Netrc from 'netrc-parser'
 import Nimbu from 'nimbu-client'
 import * as os from 'os'
 
-import Config from './config'
 import { default as Client, APIError } from './client'
 
 const debug = require('debug')('nimbu-toolbelt')
@@ -39,15 +38,15 @@ export class Credentials {
   }
 
   private get credentialsFile(): string {
-    if (Config.isDefaultHost) {
+    if (this.nimbu.config.isDefaultHost) {
       return `${this.homeDirectory}/.nimbu/credentials`
     } else {
-      return `${this.homeDirectory}/.nimbu/credentials.${urlencode(Config.apiHost)}`
+      return `${this.homeDirectory}/.nimbu/credentials.${urlencode(this.nimbu.config.apiHost)}`
     }
   }
 
   get token(): string | undefined {
-    const host = Config.apiHost
+    const host = this.nimbu.config.apiHost
 
     if (!this._auth) {
       this._auth = process.env.NIMBU_API_KEY
@@ -70,7 +69,7 @@ export class Credentials {
   }
 
   async login(opts: Credentials.Options = { autoLogout: true }): Promise<void> {
-    const host = Config.apiHost
+    const host = this.nimbu.config.apiHost
     let loggedIn = false
     try {
       // timeout after 10 minutes
@@ -141,7 +140,7 @@ export class Credentials {
 
     let client = new Nimbu({
       auth,
-      host: Config.apiUrl,
+      host: this.nimbu.config.apiUrl,
       userAgent: this.config.userAgent,
     })
 
@@ -157,7 +156,7 @@ export class Credentials {
   }
 
   private async saveToken(entry: NetrcEntry) {
-    const host = Config.apiHost
+    const host = this.nimbu.config.apiHost
     if (!Netrc.machines[host]) Netrc.machines[host] = {}
 
     Netrc.machines[host].login = entry.login
@@ -189,8 +188,8 @@ export class Credentials {
       }
     }
     if (token) {
-      Netrc.machines[Config.apiHost] = {}
-      Netrc.machines[Config.apiHost].password = token
+      Netrc.machines[this.nimbu.config.apiHost] = {}
+      Netrc.machines[this.nimbu.config.apiHost].password = token
       Netrc.saveSync()
       return token
     }

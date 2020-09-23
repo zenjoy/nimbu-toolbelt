@@ -11,7 +11,7 @@ export default class Login extends Command {
     'expires-in': flags.integer({ char: 'e', description: 'duration of token in seconds (default 1 year)' }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = await this.parse(Login)
 
     await this.nimbu.login({ expiresIn: flags['expires-in'] })

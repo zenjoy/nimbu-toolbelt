@@ -1,6 +1,5 @@
 const paths = require('./paths.js')
 const path = require('path')
-const fs = require('fs')
 
 const defaultConfig = {
   CDN_ROOT: '../',
@@ -19,6 +18,28 @@ try {
   // do nothing, we are probably running the nimbu command in global context, i.e. to initialize a project
 }
 
-const projectConfig = fs.existsSync(projectConfigPath) ? require(projectConfigPath) : {}
+let projectConfig = {}
+try {
+  projectConfig = require(projectConfigPath)
+} catch (error) {
+  if (error.code !== 'MODULE_NOT_FOUND') {
+    throw error
+  }
+}
 
-module.exports = Object.assign({}, defaultConfig, projectConfig)
+let config = defaultConfig
+
+async function initialize() {
+  const prC = await Promise.resolve(projectConfig)
+  config = Object.assign({}, defaultConfig, prC)
+  return config
+}
+
+function get() {
+  return config
+}
+
+module.exports = {
+  get,
+  initialize,
+}

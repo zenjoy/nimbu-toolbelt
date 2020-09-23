@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 
 import { flags } from '@oclif/command'
 import ux from 'cli-ux'
@@ -24,21 +23,19 @@ export default class CopyMenus extends Command {
     from: flags.string({
       char: 'f', // shorter flag version
       description: 'subdomain of the source site',
-      default: Config.site,
     }),
     to: flags.string({
       char: 't', // shorter flag version
       description: 'subdomain of the destination site',
-      default: Config.site,
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags, args } = this.parse(CopyMenus)
 
-    let fromSite = flags.from!
-    let toSite = flags.to!
+    let fromSite = flags.from !== undefined ? flags.from! : this.nimbuConfig.site!
+    let toSite = flags.to !== undefined ? flags.to! : this.nimbuConfig.site!
     let slug = args.slug
 
     if (fromSite === toSite) {
@@ -52,11 +49,11 @@ export default class CopyMenus extends Command {
     const tasks = new Listr([
       {
         title: fetchTitle,
-        task: ctx => this.fetchMenus(ctx),
+        task: (ctx) => this.fetchMenus(ctx),
       },
       {
         title: updateTitle,
-        task: ctx => this.uploadMenus(ctx),
+        task: (ctx) => this.uploadMenus(ctx),
       },
     ])
 
@@ -96,7 +93,7 @@ export default class CopyMenus extends Command {
   }
 
   private async uploadMenus(ctx: any) {
-    const perform = async observer => {
+    const perform = async (observer) => {
       let options: any = {}
       if (ctx.toSite != null) {
         options.site = ctx.toSite
@@ -121,10 +118,10 @@ export default class CopyMenus extends Command {
         }
       }
     }
-    return new Observable(observer => {
+    return new Observable((observer) => {
       perform(observer)
         .then(() => observer.complete())
-        .catch(error => observer.error(error))
+        .catch((error) => observer.error(error))
     })
   }
 
@@ -165,7 +162,7 @@ export default class CopyMenus extends Command {
   private askOverwrite(menu: any, ctx: any, observer: any) {
     let buffer = ''
 
-    const outputStream = through(data => {
+    const outputStream = through((data) => {
       if (/\u001b\[.*?(D|C)$/.test(data)) {
         if (buffer.length > 0) {
           observer.next(buffer)
@@ -187,7 +184,7 @@ export default class CopyMenus extends Command {
       message: `menu ${chalk.bold(menu.slug)} already exists. Update?`,
       default: false,
     })
-      .then(answer => {
+      .then((answer) => {
         // Clear the output
         observer.next()
 
@@ -198,7 +195,7 @@ export default class CopyMenus extends Command {
       .then(() => {
         observer.complete()
       })
-      .catch(err => {
+      .catch((err) => {
         observer.error(err)
       })
 
@@ -208,7 +205,7 @@ export default class CopyMenus extends Command {
   private cleanupMenu(original) {
     let menu = clonedeep(original)
 
-    const cleanupItems = items => {
+    const cleanupItems = (items) => {
       for (let item of items) {
         delete item.target_page
 

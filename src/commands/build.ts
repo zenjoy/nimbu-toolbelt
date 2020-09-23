@@ -20,11 +20,11 @@ export default class Build extends Command {
     })
   }
 
-  async run() {
+  async execute() {
     process.env.NODE_ENV = 'production'
 
     cli.action.start('building for production')
-    const webpackConfig = projectWebpack.customize(defaultWebpackConfig)
+    const webpackConfig = projectWebpack.customize(defaultWebpackConfig())
     const stats = await this.webpack(webpackConfig)
     cli.action.stop()
     this.log(

@@ -1,6 +1,5 @@
 import Command from '../../command'
 import * as Nimbu from '../../nimbu/types'
-import Config from '../../nimbu/config'
 
 import fs from 'fs-extra'
 import ux from 'cli-ux'
@@ -9,21 +8,21 @@ import yaml from 'js-yaml'
 export default class PullMails extends Command {
   static description = 'download all notification templates'
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
 
     const tasks = new Listr([
       {
         title: 'Fetching notifications',
-        task: ctx => this.fetchAll(ctx),
+        task: (ctx) => this.fetchAll(ctx),
       },
       {
         title: 'Writing all templates to disk',
-        task: ctx => this.writeAll(ctx),
+        task: (ctx) => this.writeAll(ctx),
       },
     ])
 
-    tasks.run().catch(err => {
+    tasks.run().catch((err) => {
       ux.error(err)
     })
   }
@@ -35,12 +34,12 @@ export default class PullMails extends Command {
   private async writeAll(ctx: any) {
     const { Observable } = require('rxjs')
     const notifications: Nimbu.Notification[] = ctx.notifications
-    const mailsPath = Config.projectPath + '/content/notifications/'
+    const mailsPath = this.nimbuConfig.projectPath + '/content/notifications/'
 
     await fs.mkdirp(mailsPath)
 
-    return new Observable(observer => {
-      notifications.forEach(notification => {
+    return new Observable((observer) => {
+      notifications.forEach((notification) => {
         let filename = `${notification.slug}.txt`
         observer.next(filename)
 
@@ -59,7 +58,7 @@ export default class PullMails extends Command {
         }
 
         if (notification.translations !== undefined) {
-          Object.keys(notification.translations).forEach(function(locale) {
+          Object.keys(notification.translations).forEach(function (locale) {
             let translation = notification.translations![locale]
 
             if (

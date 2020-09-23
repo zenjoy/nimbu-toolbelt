@@ -1,5 +1,4 @@
 import Command from '../../../command'
-import Config from '../../../nimbu/config'
 import * as Nimbu from '../../../nimbu/types'
 import { download, generateRandom } from '../../../utils/files'
 
@@ -38,7 +37,7 @@ export default class CopyChannels extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags } = this.parse(CopyChannels)
 
@@ -52,7 +51,7 @@ export default class CopyChannels extends Command {
       fromSite = fromParts[0]
       fromChannel = fromParts[1]
     } else {
-      fromSite = Config.site
+      fromSite = this.nimbuConfig.site
       fromChannel = fromParts[0]
     }
     let toParts = flags.to.split('/')
@@ -60,7 +59,7 @@ export default class CopyChannels extends Command {
       toSite = toParts[0]
       toChannel = toParts[1]
     } else {
-      toSite = Config.site
+      toSite = this.nimbuConfig.site
       toChannel = toParts[0]
     }
 
@@ -83,7 +82,7 @@ export default class CopyChannels extends Command {
     const tasks = new Listr([
       {
         title: fetchTitle,
-        task: ctx => this.fetchChannel(ctx),
+        task: (ctx) => this.fetchChannel(ctx),
       },
       {
         title: queryTitle,
@@ -91,19 +90,19 @@ export default class CopyChannels extends Command {
       },
       {
         title: downloadTitle,
-        enabled: ctx =>
+        enabled: (ctx) =>
           (ctx.fileFields && ctx.fileFields.length > 0) || (ctx.galleryFields && ctx.galleryFields.length > 0),
-        task: ctx => this.downloadAttachments(ctx),
+        task: (ctx) => this.downloadAttachments(ctx),
       },
       {
         title: createTitle,
-        skip: ctx => ctx.entries.length === 0,
-        task: ctx => this.createEntries(ctx),
+        skip: (ctx) => ctx.entries.length === 0,
+        task: (ctx) => this.createEntries(ctx),
       },
       {
         title: updateTitle,
-        enabled: ctx => ctx.selfReferences && ctx.selfReferences.length > 0,
-        task: ctx => this.updateEntries(ctx),
+        enabled: (ctx) => ctx.selfReferences && ctx.selfReferences.length > 0,
+        task: (ctx) => this.updateEntries(ctx),
       },
     ])
 
@@ -127,12 +126,12 @@ export default class CopyChannels extends Command {
     }
     try {
       ctx.channel = await this.nimbu.get(`/channels/${ctx.fromChannel}`, options)
-      ctx.fileFields = ctx.channel.customizations.filter(f => f.type === 'file')
-      ctx.galleryFields = ctx.channel.customizations.filter(f => f.type === 'gallery')
-      ctx.selectFields = ctx.channel.customizations.filter(f => f.type === 'select')
-      ctx.multiSelectFields = ctx.channel.customizations.filter(f => f.type === 'multi_select')
+      ctx.fileFields = ctx.channel.customizations.filter((f) => f.type === 'file')
+      ctx.galleryFields = ctx.channel.customizations.filter((f) => f.type === 'gallery')
+      ctx.selectFields = ctx.channel.customizations.filter((f) => f.type === 'select')
+      ctx.multiSelectFields = ctx.channel.customizations.filter((f) => f.type === 'multi_select')
       ctx.selfReferences = ctx.channel.customizations.filter(
-        f => (f.type === 'belongs_to' || f.type === 'belongs_to_many') && f.reference === ctx.channel.slug,
+        (f) => (f.type === 'belongs_to' || f.type === 'belongs_to_many') && f.reference === ctx.channel.slug,
       )
     } catch (error) {
       if (error.body != null && error.body.code === 101) {
@@ -173,7 +172,7 @@ export default class CopyChannels extends Command {
     }
     ctx.entries = []
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       url = `${baseUrl}${query}`
       observer.next(`Fetching entries (page ${1} / ${nbPages})`)
 
@@ -183,13 +182,13 @@ export default class CopyChannels extends Command {
 
       this.nimbu
         .get<any>(url, options)
-        .then(function(results) {
+        .then(function (results) {
           task.title = `Got ${results.length} entries from ${chalk.bold(ctx.fromChannel)}`
           ctx.entries = results
           ctx.nbEntries = results.length
         })
         .then(() => observer.complete())
-        .catch(error => {
+        .catch((error) => {
           if (error.body != null && error.body.code === 101) {
             throw new Error(`could not find channel ${chalk.bold(ctx.fromChannel)}`)
           } else {
@@ -200,7 +199,7 @@ export default class CopyChannels extends Command {
   }
 
   private async downloadAttachments(ctx: any) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       ;(async (observer, ctx) => {
         let i = 1
         ctx.files = {}
@@ -227,7 +226,7 @@ export default class CopyChannels extends Command {
         }
 
         observer.complete()
-      })(observer, ctx).catch(error => {
+      })(observer, ctx).catch((error) => {
         throw error
       })
     })
@@ -260,7 +259,7 @@ export default class CopyChannels extends Command {
   }
 
   private async createEntries(ctx: any) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       ;(async (observer, ctx) => {
         let i = 1
         let nbEntries = ctx.entries.length
@@ -340,14 +339,14 @@ export default class CopyChannels extends Command {
         }
 
         observer.complete()
-      })(observer, ctx).catch(error => {
+      })(observer, ctx).catch((error) => {
         throw error
       })
     })
   }
 
   private async updateEntries(ctx: any) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       ;(async (observer, ctx) => {
         let i = 1
         let nbEntries = ctx.entries.length
@@ -389,7 +388,7 @@ export default class CopyChannels extends Command {
         }
 
         observer.complete()
-      })(observer, ctx).catch(error => {
+      })(observer, ctx).catch((error) => {
         throw error
       })
     })

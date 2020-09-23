@@ -1,7 +1,6 @@
 import Command from '../../command'
 import * as Nimbu from '../../nimbu/types'
 import { color } from '../../nimbu/color'
-import Config from '../../nimbu/config'
 
 import cli from 'cli-ux'
 import { flags } from '@oclif/command'
@@ -15,12 +14,12 @@ export default class SitesList extends Command {
     subdomain: flags.boolean({ char: 's', description: 'show Nimbu subdomain for each site' }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = this.parse(SitesList)
     const supports = require('supports-hyperlinks')
     const hyperlinker = require('hyperlinker')
-    const protocol = Config.secureHost ? 'https://' : 'http://'
-    const adminDomain = Config.apiHost.replace(/^api\./, '')
+    const protocol = this.nimbuConfig.secureHost ? 'https://' : 'http://'
+    const adminDomain = this.nimbuConfig.apiHost.replace(/^api\./, '')
 
     cli.action.start('Please wait while we get the list of sites...')
     let sites = await this.nimbu.get<Nimbu.Site[]>('/sites', { fetchAll: true })
@@ -29,15 +28,15 @@ export default class SitesList extends Command {
     if (sites && sites.length > 0) {
       this.log('\nYou have access to following sites:\n')
 
-      sites = orderBy(sites, [site => site.name.toLowerCase()], ['asc'])
+      sites = orderBy(sites, [(site) => site.name.toLowerCase()], ['asc'])
       let columns: table.Columns<Nimbu.Site> = {
         name: {
           header: 'Site Name',
-          get: row => (row.name.length > 30 ? row.name.substring(0, 40).trim() + '...' : row.name),
+          get: (row) => (row.name.length > 30 ? row.name.substring(0, 40).trim() + '...' : row.name),
         },
         url: {
           header: 'Primary Domain',
-          get: row => {
+          get: (row) => {
             if (supports.stdout) {
               return hyperlinker(color.dim(row.domain), row.domain_url)
             } else {
@@ -50,7 +49,7 @@ export default class SitesList extends Command {
       if (flags.subdomain) {
         columns.subdomain = {
           header: 'Admin Subdomain',
-          get: row => {
+          get: (row) => {
             if (supports.stdout) {
               return hyperlinker(color.dim(row.subdomain), protocol + row.subdomain + '.' + adminDomain + '/admin')
             } else {

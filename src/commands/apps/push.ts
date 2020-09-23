@@ -1,6 +1,6 @@
 import Command from '../../command'
 import { flags } from '@oclif/command'
-import Config, { ConfigApp } from '../../nimbu/config'
+import { ConfigApp } from '../../nimbu/config'
 import * as Nimbu from '../../nimbu/types'
 import { findMatchingFiles } from '../../utils/files'
 
@@ -36,16 +36,16 @@ export default class AppsPush extends Command {
     if (!this._app) {
       const { flags } = this.parse(AppsPush)
       if (flags.app) {
-        const app = Config.apps.find(a => a.name === flags.app)
+        const app = this.nimbuConfig.apps.find((a) => a.name === flags.app)
         if (app) {
           this._app = app
         } else {
           throw new Error('Requested application not found.')
         }
-      } else if (Config.apps.length === 1) {
+      } else if (this.nimbuConfig.apps.length === 1) {
         // If there is only 1 app, we allow flags.app to be empty
-        this._app = Config.apps[0]
-      } else if (Config.apps.length === 0) {
+        this._app = this.nimbuConfig.apps[0]
+      } else if (this.nimbuConfig.apps.length === 0) {
         throw new Error('No applications configured, please execute apps:config first.')
       } else {
         throw new Error("More than 1 application is configured, but you didn't pass the --app flag.")
@@ -73,7 +73,7 @@ export default class AppsPush extends Command {
     return this._code
   }
 
-  async run() {
+  async execute() {
     try {
       const files = await this.files()
       this.log(`Pushing code for app ${this.app.name}:`)
@@ -123,7 +123,7 @@ export default class AppsPush extends Command {
 
   private async pushFile(filename: string) {
     const code = await this.code()
-    const existing = code.find(f => `${this.app.dir}/${f.name}` === filename)
+    const existing = code.find((f) => `${this.app.dir}/${f.name}` === filename)
     cli.action.start(`  - ${filename}${existing ? '' : ' (new)'}`)
     if (existing) {
       return this.pushExistingFile(filename)

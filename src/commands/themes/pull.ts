@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 import { download } from '../../utils/files'
 
 import { flags } from '@oclif/command'
@@ -20,19 +19,18 @@ export default class PullThemes extends Command {
     site: flags.string({
       char: 's',
       description: 'the site of the theme',
-      default: Config.site,
     }),
     'liquid-only': flags.boolean({
       description: 'only download template files',
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags } = this.parse(PullThemes)
 
     let fromTheme = flags.theme
-    let fromSite = flags.site!
+    let fromSite = flags.site !== undefined ? flags.site! : this.nimbuConfig.site!
 
     let types = ['layouts', 'templates', 'snippets']
     if (!flags['liquid-only']) {
@@ -85,13 +83,13 @@ export default class PullThemes extends Command {
           let itemWithCode: any = await this.nimbu.get(`/themes/${ctx.fromTheme}/${type}/${name}`, options)
           if (itemWithCode.public_url != null) {
             let { path, cleanup } = await this.downloadFile(observer, prefix, itemWithCode)
-            let targetFile = Config.projectPath + item.path
+            let targetFile = this.nimbuConfig.projectPath + item.path
             let targetPath = pathFinder.dirname(targetFile)
             await fs.mkdirp(targetPath)
             await fs.copyFile(path, targetFile)
             cleanup()
           } else {
-            let targetFile = Config.projectPath + '/' + type + '/' + itemWithCode.name
+            let targetFile = this.nimbuConfig.projectPath + '/' + type + '/' + itemWithCode.name
             let targetPath = pathFinder.dirname(targetFile)
             await fs.mkdirp(targetPath)
             await fs.writeFile(targetFile, itemWithCode.code)

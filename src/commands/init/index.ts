@@ -32,7 +32,7 @@ export default class Init extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = this.parse(Init)
 
     let subdomain
@@ -64,8 +64,8 @@ export default class Init extends Command {
     }
 
     if (sites.length > 1) {
-      sites = orderBy(sites, [site => site.name.toLowerCase()], ['asc'])
-      let choices = sites.map(s => `${s.name} ${color.dim(`(${s.subdomain})`)}`)
+      sites = orderBy(sites, [(site) => site.name.toLowerCase()], ['asc'])
+      let choices = sites.map((s) => `${s.name} ${color.dim(`(${s.subdomain})`)}`)
       let fuzzy = require('fuzzy')
       let autocompletePrompt = require('inquirer-autocomplete-prompt')
 
@@ -76,7 +76,7 @@ export default class Init extends Command {
         message: 'On which site would you like to work?',
         source: async (_, input) => {
           input = input || ''
-          return fuzzy.filter(input, choices).map(el => el.original)
+          return fuzzy.filter(input, choices).map((el) => el.original)
         },
       })
       return sites[choices.indexOf(answer.site)]
@@ -119,7 +119,7 @@ export default class Init extends Command {
     let dirs = [...templates, ...assets]
 
     if (useHaml) {
-      templates.forEach(t => {
+      templates.forEach((t) => {
         dirs.push(`haml/${t}`)
       })
     }
@@ -130,7 +130,7 @@ export default class Init extends Command {
 
     this.log('\nInitializing directories:')
     const currentDir = process.cwd()
-    dirs.sort().forEach(async d => {
+    dirs.sort().forEach(async (d) => {
       this.log(`- ${d}`)
       try {
         await fs.mkdirp(currentDir + '/' + d)

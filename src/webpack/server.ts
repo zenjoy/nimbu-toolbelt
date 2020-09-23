@@ -21,7 +21,7 @@ export default class WebpackDevServer {
     }
     const appName = require(path.resolve(paths.PROJECT_DIRECTORY, 'package.json')).name
     const urls = prepareUrls(protocol, host, port)
-    const config = projectWebpack.customize(defaultConfig)
+    const config = projectWebpack.customize(defaultConfig())
     const compiler = createCompiler({
       webpack,
       config,

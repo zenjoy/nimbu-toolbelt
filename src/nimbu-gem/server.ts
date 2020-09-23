@@ -41,7 +41,14 @@ export default class NimbuGemServer {
       return Promise.reject(new Error('Not authenticated'))
     }
 
-    this.process = spawn(this.nimbu.token, 'server', args, ['inherit', 'pipe', 'pipe'], embeddedGemfile)
+    this.process = spawn(
+      this.nimbu.config.site!,
+      this.nimbu.token,
+      'server',
+      args,
+      ['inherit', 'pipe', 'pipe'],
+      embeddedGemfile,
+    )
     this.process.stdout!.on('data', this.handleStdout)
     this.process.stderr!.on('data', this.handleStderr)
 

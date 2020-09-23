@@ -22,7 +22,7 @@ export default class CustomerConfigDiff extends Command {
     }),
   }
 
-  async run() {
+  async execute() {
     const { flags } = this.parse(CustomerConfigDiff)
 
     let fromSite = flags.from!

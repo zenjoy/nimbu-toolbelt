@@ -3,7 +3,7 @@ const _ = require('lodash')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CssoWebpackPlugin = require('csso-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const config = require('./config')
+const { get: getConfig } = require('./config')
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier')
 
 let tsLoader
@@ -15,6 +15,7 @@ try {
 }
 
 function babelLoader(loaderOptions = {}) {
+  const config = getConfig()
   const options = {
     cacheDirectory: true,
     cacheIdentifier: getCacheIdentifier(loaderOptions.cachePrefix || 'app-js', [
@@ -103,6 +104,7 @@ const fileloaderOutputPath = (name) => {
 }
 
 function fileLoaders(options = {}) {
+  const config = getConfig()
   const loaders = [
     {
       loader: fileloader,

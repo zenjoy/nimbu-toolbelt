@@ -66,12 +66,14 @@ export class APIError extends CLIError {
 }
 
 export default class Client {
+  public readonly config: Config
   private readonly credentials: Credentials
   private client: typeof Nimbu
 
-  constructor(protected config: IConfig) {
+  constructor(protected oclifConfig: IConfig, config: Config) {
+    this.oclifConfig = oclifConfig
     this.config = config
-    this.credentials = new Credentials(config, this)
+    this.credentials = new Credentials(oclifConfig, this)
     this.client = this.createClient()
   }
 
@@ -105,7 +107,7 @@ export default class Client {
     } catch (err) {
       ux.warn(err)
     }
-    delete Netrc.machines[Config.apiHost]
+    delete Netrc.machines[this.config.apiHost]
     await Netrc.save()
   }
 
@@ -157,10 +159,10 @@ export default class Client {
   private createClient(): Nimbu {
     return new Nimbu({
       token: this.credentials.token,
-      host: Config.apiUrl,
-      site: Config.site,
-      userAgent: this.config.userAgent,
-      clientVersion: this.config.version,
+      host: this.config.apiUrl,
+      site: this.config.site,
+      userAgent: this.oclifConfig.userAgent,
+      clientVersion: this.oclifConfig.version,
     })
   }
 }

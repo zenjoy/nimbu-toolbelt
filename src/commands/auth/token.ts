@@ -13,7 +13,7 @@ By default, the CLI auth token is only valid for 1 year. To generate a long-live
     help: flags.help({ char: 'h' }),
   }
 
-  async run() {
+  async execute() {
     this.parse(Token)
 
     if (!this.nimbu.token) this.error('not logged in')

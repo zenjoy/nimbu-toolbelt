@@ -1,5 +1,4 @@
 import Command from '../../command'
-import Config from '../../nimbu/config'
 import { download, generateRandom } from '../../utils/files'
 
 import { flags } from '@oclif/command'
@@ -25,31 +24,27 @@ export default class CopyPages extends Command {
     from: flags.string({
       char: 'f', // shorter flag version
       description: 'subdomain of the source site',
-      default: Config.site,
     }),
     to: flags.string({
       char: 't', // shorter flag version
       description: 'subdomain of the destination site',
-      default: Config.site,
     }),
     toHost: flags.string({
       description: 'hostname of target Nimbu API',
-      default: Config.apiUrl,
     }),
     fromHost: flags.string({
       description: 'hostname of origin Nimbu API',
-      default: Config.apiUrl,
     }),
   }
 
-  async run() {
+  async execute() {
     const Listr = require('listr')
     const { flags, args } = this.parse(CopyPages)
 
-    let fromSite = flags.from!
-    let toSite = flags.to!
-    let fromHost = flags.fromHost!
-    let toHost = flags.toHost!
+    let fromSite = flags.from !== undefined ? flags.from! : this.nimbuConfig.site!
+    let toSite = flags.to !== undefined ? flags.to! : this.nimbuConfig.site!
+    let fromHost = flags.fromHost !== undefined ? flags.fromHost! : this.nimbuConfig.apiUrl
+    let toHost = flags.toHost !== undefined ? flags.toHost! : this.nimbuConfig.apiUrl
 
     if (fromSite === toSite) {
       ux.error('The source site needs to differ from the destination.')
@@ -63,17 +58,17 @@ export default class CopyPages extends Command {
     const tasks = new Listr([
       {
         title: fetchTitle,
-        task: ctx => this.fetchPages(ctx),
+        task: (ctx) => this.fetchPages(ctx),
       },
       {
         title: downloadTitle,
-        skip: ctx => ctx.pages.length === 0,
-        task: ctx => this.downloadAttachments(ctx),
+        skip: (ctx) => ctx.pages.length === 0,
+        task: (ctx) => this.downloadAttachments(ctx),
       },
       {
         title: createTitle,
-        task: ctx => this.createPages(ctx),
-        skip: ctx => ctx.pages.length === 0,
+        task: (ctx) => this.createPages(ctx),
+        skip: (ctx) => ctx.pages.length === 0,
       },
     ])
 
@@ -118,7 +113,7 @@ export default class CopyPages extends Command {
   }
 
   private async createPages(ctx: any) {
-    const perform = async observer => {
+    const perform = async (observer) => {
       let maxDepth = 0
       let crntIndex = 1
 
@@ -129,7 +124,7 @@ export default class CopyPages extends Command {
         }
       }
       for (let i = 0; i <= maxDepth; i++) {
-        for (let page of ctx.pages.filter(p => p.depth === i)) {
+        for (let page of ctx.pages.filter((p) => p.depth === i)) {
           let targetPage: any
           ctx.currentPage = page
 
@@ -169,10 +164,10 @@ export default class CopyPages extends Command {
       }
     }
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       perform(observer)
         .then(() => observer.complete())
-        .catch(error => observer.error(error))
+        .catch((error) => observer.error(error))
     })
   }
 
@@ -193,7 +188,7 @@ export default class CopyPages extends Command {
         }
       }
     }
-    const perform = async observer => {
+    const perform = async (observer) => {
       let i = 1
       for (let page of ctx.pages) {
         await scanEditables(i, page.items, observer)
@@ -201,10 +196,10 @@ export default class CopyPages extends Command {
       }
     }
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       perform(observer)
         .then(() => observer.complete())
-        .catch(error => observer.error(error))
+        .catch((error) => observer.error(error))
     })
   }
 

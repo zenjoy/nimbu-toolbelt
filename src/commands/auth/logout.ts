@@ -6,7 +6,7 @@ export default class Logout extends Command {
   static description = 'clears local login credentials and invalidates API session'
   static aliases = ['logout']
 
-  async run() {
+  async execute() {
     ux.action.start('Logging out')
     await this.nimbu.logout()
   }
