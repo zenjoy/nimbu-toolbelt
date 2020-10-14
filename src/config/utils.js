@@ -1,6 +1,6 @@
 const autoprefixer = require('autoprefixer')
 const _ = require('lodash')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssoWebpackPlugin = require('csso-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { get: getConfig } = require('./config')
@@ -177,27 +177,18 @@ function styleConfigWithExtraction(options) {
   return {
     loaders: [
       {
-        loader: ExtractTextPlugin.extract(
-          Object.assign(
-            {
-              fallback: {
-                loader: require.resolve('style-loader'),
-                options: {
-                  hmr: false,
-                },
-              },
-              use: styleLoaders(options),
-            },
-            extractTextPluginOptions,
-          ),
-        ),
-        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
         test: /\.(css|scss)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: extractTextPluginOptions,
+          },
+        ].concat(styleLoaders(options)),
       },
     ],
     plugins: [
       // extract css into its own file
-      new ExtractTextPlugin({
+      new MiniCssExtractPlugin({
         filename: 'stylesheets/[name].css',
       }),
       new CssoWebpackPlugin({

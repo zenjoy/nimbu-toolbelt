@@ -26,6 +26,7 @@ const webpackConfig = () => {
       }),
     )
   return merge(baseWebpackConfig, {
+    devtool: shouldUseSourceMap ? 'source-map' : undefined,
     mode: 'production',
     module: {
       rules: [
@@ -35,6 +36,7 @@ const webpackConfig = () => {
       ],
     },
     optimization: {
+      removeEmptyChunks: true,
       minimizer: [
         new UglifyJsPlugin({
           sourceMap: shouldUseSourceMap,
@@ -55,39 +57,29 @@ const webpackConfig = () => {
       splitChunks: {
         cacheGroups: {
           polyfills: {
-            chunks: 'all',
+            chunks: 'initial',
             name: 'polyfills',
             test: function (module) {
-              // This prevents stylesheet resources with the .css or .scss extension
-              // from being moved from their original chunk to the vendor chunk
-              if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
-                return false
-              }
               return (
+                /css/.test(module.type) === false &&
                 module.context &&
                 (module.context.includes('node_modules/core-js') ||
                   module.context.includes('node_modules/regenerator-runtime'))
               )
             },
+            priority: 10,
           },
           vendor: {
-            chunks: 'all',
+            chunks: 'initial',
             name: 'vendor',
             test: function (module) {
-              // This prevents stylesheet resources with the .css or .scss extension
-              // from being moved from their original chunk to the vendor chunk
-              if (module.resource && /^.*\.(css|scss)$/.test(module.resource)) {
-                return false
-              }
               return (
+                /css/.test(module.type) === false &&
                 module.context &&
-                (module.context.includes('node_modules') || module.context.includes('src/vendor')) &&
-                !(
-                  module.context.includes('node_modules/core-js') ||
-                  module.context.includes('node_modules/regenerator-runtime')
-                )
+                (module.context.includes('node_modules') || module.context.includes('src/vendor'))
               )
             },
+            priority: 0,
           },
         },
       },
