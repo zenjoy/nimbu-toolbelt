@@ -36,7 +36,6 @@ const webpackConfig = () => {
       ],
     },
     optimization: {
-      removeEmptyChunks: true,
       minimizer: [
         new UglifyJsPlugin({
           sourceMap: shouldUseSourceMap,
@@ -54,11 +53,13 @@ const webpackConfig = () => {
           },
         }),
       ],
+      removeEmptyChunks: true,
       splitChunks: {
         cacheGroups: {
           polyfills: {
             chunks: 'initial',
             name: 'polyfills',
+            priority: 10,
             test: function (module) {
               return (
                 /css/.test(module.type) === false &&
@@ -67,11 +68,11 @@ const webpackConfig = () => {
                   module.context.includes('node_modules/regenerator-runtime'))
               )
             },
-            priority: 10,
           },
           vendor: {
             chunks: 'initial',
             name: 'vendor',
+            priority: 0,
             test: function (module) {
               return (
                 /css/.test(module.type) === false &&
@@ -79,7 +80,6 @@ const webpackConfig = () => {
                 (module.context.includes('node_modules') || module.context.includes('src/vendor'))
               )
             },
-            priority: 0,
           },
         },
       },
