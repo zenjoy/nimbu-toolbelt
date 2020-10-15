@@ -1,6 +1,7 @@
 import Command from '../command'
 import webpack = require('webpack')
 import defaultWebpackConfig = require('../config/webpack.prod')
+const { get: getConfig } = require('../config/config')
 import projectWebpack = require('../config/webpack.project')
 import cli from 'cli-ux'
 import chalk from 'chalk'
@@ -24,7 +25,7 @@ export default class Build extends Command {
     process.env.NODE_ENV = 'production'
 
     cli.action.start('building for production')
-    const webpackConfig = projectWebpack.customize(defaultWebpackConfig())
+    const webpackConfig = projectWebpack.customize(defaultWebpackConfig(), getConfig())
     const stats = await this.webpack(webpackConfig)
     cli.action.stop()
     this.log(

@@ -4,7 +4,7 @@ const fs = require('fs')
 
 let projectWebpackPath
 const defaultWebpack = {
-  customize: defaultConfig => defaultConfig,
+  customize: (defaultConfig, _) => defaultConfig,
 }
 
 try {
