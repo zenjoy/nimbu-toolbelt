@@ -1,7 +1,7 @@
-{% assign webpack_build_timestamp = "<%= (new Date()).getTime() %>" %}
-{% assign webpack_chunks = "<%= Object.keys(htmlWebpackPlugin.files.chunks) %>" | split: "," %}
-<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-{% set webpack_js, "<%= chunk %>", "<%= htmlWebpackPlugin.files.chunks[chunk].entry.replace('/javascripts/', '') %>" %}
-{% assign temp = "<%= htmlWebpackPlugin.files.chunks[chunk].css.map((e) => e.replace('/stylesheets/', '')) %>" | split: "," %}
-{% set webpack_css, "<%= chunk %>", temp %}
-<% } %>
+{% assign <%= prefix %>webpack_build_timestamp = "<%= (new Date()).getTime() %>" %}
+
+<% const js_files = htmlWebpackPlugin.files.js.map((f) => f.replace('/javascripts/', '')) %>
+{% assign <%= prefix %>webpack_js = '<%= JSON.stringify(js_files) %>' | from_json %}
+
+<% const css_files = htmlWebpackPlugin.files.css.map((f) => f.replace('/stylesheets/', '')) %>
+{% assign <%= prefix %>webpack_css = '<%= JSON.stringify(css_files) %>' | from_json %}

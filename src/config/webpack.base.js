@@ -6,15 +6,19 @@ const { get: getProjectConfig } = require('./config')
 // the order for entries is important: first load javascript, next load the css - as you probably want to cascadingly override stuff from libraries
 const config = () => {
   const projectConfig = getProjectConfig()
-  const cssEntry = projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss'
-  const jsEntry = projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js'
-  return {
-    entry: {
+  let entry = projectConfig.WEBPACK_ENTRY;
+  if(entry == null) {
+    const cssEntry = projectConfig.CSS_ENTRY != null ? projectConfig.CSS_ENTRY : 'index.scss'
+    const jsEntry = projectConfig.JS_ENTRY != null ? projectConfig.JS_ENTRY : 'index.js'
+    entry = {
       app: [
         path.resolve(paths.NIMBU_DIRECTORY, `src/${jsEntry}`),
         path.resolve(paths.NIMBU_DIRECTORY, `src/${cssEntry}`),
       ],
-    },
+    }
+  }
+  return {
+    entry,
     module: {
       strictExportPresence: true,
     },

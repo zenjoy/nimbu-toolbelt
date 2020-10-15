@@ -220,19 +220,20 @@ function styleConfig(options) {
 
 function htmlWebPackPlugins(entries, options = {}) {
   const template = require.resolve('../../template/webpack.liquid.ejs')
-  return _.flatten(
-    entries.map(function (name) {
-      return [
-        new HtmlWebpackPlugin({
-          alwaysWriteToDisk: options.alwaysWriteToDisk,
-          chunksSortMode: 'dependency',
-          filename: `snippets/webpack.liquid`,
-          inject: false,
-          template: template,
-        }),
-      ]
-    }),
-  )
+  return entries.map((entry) => {
+    const name = entry.toLowerCase()
+    return new HtmlWebpackPlugin({
+      alwaysWriteToDisk: options.alwaysWriteToDisk,
+      chunks: [entry],
+      chunksSortMode: 'auto',
+      filename: `snippets/webpack_${name}.liquid`,
+      inject: false,
+      template: template,
+      templateParameters: {
+        prefix: `${name}_`
+      },
+    })
+  })
 }
 
 module.exports = {
