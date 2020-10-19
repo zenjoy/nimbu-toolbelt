@@ -6,6 +6,14 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 const { get: getConfig } = require('./config')
 
+let ReactRefreshWebpackPlugin
+
+try {
+  ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+} catch (error) {
+  // ILB
+}
+
 const webpackConfig = () => {
   const baseWebpackConfig = getBaseWebpackConfig()
   const config = getConfig()
@@ -26,6 +34,7 @@ const webpackConfig = () => {
   const loaders = utils
     .codeLoaders({
       cachePrefix: 'development',
+      enableReactRefresh: true,
       shouldUseSourceMap,
     })
     .concat(styleConfig.loaders)
@@ -35,6 +44,24 @@ const webpackConfig = () => {
       }),
     )
 
+  const plugins = [
+    new webpack.DefinePlugin({
+      DEBUG: 'true',
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+      },
+    }),
+    ...styleConfig.plugins,
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new FriendlyErrorsPlugin(),
+    ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry), { alwaysWriteToDisk: true }),
+    new HtmlWebpackHarddiskPlugin(),
+  ]
+
+  if (ReactRefreshWebpackPlugin != null) {
+    plugins.push(new ReactRefreshWebpackPlugin())
+  }
   return merge(baseWebpackConfig, {
     devtool: 'cheap-module-source-map',
     mode: 'development',
@@ -45,20 +72,7 @@ const webpackConfig = () => {
         },
       ],
     },
-    plugins: [
-      new webpack.DefinePlugin({
-        DEBUG: 'true',
-        'process.env': {
-          NODE_ENV: JSON.stringify('development'),
-        },
-      }),
-      ...styleConfig.plugins,
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin(),
-      new FriendlyErrorsPlugin(),
-      ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry), { alwaysWriteToDisk: true }),
-      new HtmlWebpackHarddiskPlugin(),
-    ],
+    plugins,
   })
 }
 

@@ -6,6 +6,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { get: getConfig } = require('./config')
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier')
 
+const optionals = {}
+
+function resolveOptional(moduleName) {
+  try {
+    optionals[moduleName] = require.resolve(moduleName)
+  } catch (error) {
+    optionals[moduleName] = false
+  }
+}
+
+function getOptional(moduleName) {
+  if (optionals[moduleName] == null) {
+    resolveOptional(moduleName)
+  }
+  return optionals[moduleName]
+}
+
+function hasOptional(moduleName) {
+  return getOptional(moduleName) !== false
+}
+
 let tsLoader
 
 try {
@@ -34,8 +55,11 @@ function babelLoader(loaderOptions = {}) {
       },
     ],
   ]
-  if (config.REACT) {
+  if (config.REACT && hasOptional('react-hot-loader/babel')) {
     options.plugins.push('react-hot-loader/babel')
+  }
+  if (options.enableReactRefresh && config.REACT && hasOptional('react-refresh/babel')) {
+    options.plugins.push('react-refresh/babel')
   }
   return {
     loader: 'babel-loader',
@@ -87,11 +111,11 @@ function codeLoaders(options) {
       test: /\.(js|mjs)$/,
     },
   ]
-  if (tsLoader != null) {
+  if (hasOptional('ts-loader')) {
     loaders.push({
       exclude: /node_modules/,
       test: /\.tsx?$/,
-      use: [babelLoader(options), tsLoader],
+      use: [babelLoader(options), getOptional('ts-loader')],
     })
   }
   return loaders
@@ -230,7 +254,7 @@ function htmlWebPackPlugins(entries, options = {}) {
       inject: false,
       template: template,
       templateParameters: {
-        prefix: `${name}_`
+        prefix: `${name}_`,
       },
     })
   })
@@ -239,6 +263,8 @@ function htmlWebPackPlugins(entries, options = {}) {
 module.exports = {
   codeLoaders,
   fileLoaders,
+  getOptional,
+  hasOptional,
   htmlWebPackPlugins,
   styleConfig,
   styleLoaders,

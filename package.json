@@ -115,9 +115,6 @@
     "typescript": "^3.8",
     "unionfs": "^4.2.0"
   },
-  "optionalDependencies": {
-    "ts-loader": "^6.2.2"
-  },
   "engines": {
     "node": ">=10.0.0"
   },
