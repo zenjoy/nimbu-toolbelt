@@ -27,14 +27,6 @@ function hasOptional(moduleName) {
   return getOptional(moduleName) !== false
 }
 
-let tsLoader
-
-try {
-  tsLoader = require.resolve('ts-loader')
-} catch (err) {
-  // ILB
-}
-
 function babelLoader(loaderOptions = {}) {
   const config = getConfig()
   const options = {
@@ -144,7 +136,7 @@ function fileLoaders(options = {}) {
       // it's runtime that would otherwise processed through "file" loader.
       // Also exclude `html` and `json` extensions so they get processed
       // by webpacks internal loaders.
-      exclude: [/\.js$/, /\.html$/, /\.json$/, /\.ejs$/],
+      exclude: [/\.jsx?$/, /\.html$/, /\.json$/, /\.ejs$/, /\.tsx?$/],
       loader: fileloader,
       options: {
         name: 'images/[name].[ext]?h=[hash:8]',
