@@ -107,7 +107,17 @@ function codeLoaders(options) {
     loaders.push({
       exclude: /node_modules/,
       test: /\.tsx?$/,
-      use: [babelLoader(options), getOptional('ts-loader')],
+      use: [
+        babelLoader(options),
+        {
+          loader: getOptional('ts-loader'),
+          options: {
+            compilerOptions: {
+              noEmit: false,
+            },
+          },
+        },
+      ],
     })
   }
   return loaders
