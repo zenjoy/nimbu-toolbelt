@@ -159,7 +159,13 @@ function fileLoaders(options = {}) {
     loaders.splice(0, 0, {
       include: config.SVG_LOADER_INCLUDE,
       test: /\.svg$/,
-      use: [babelLoader(options), require.resolve('./svg-loader.js')],
+      use: [
+        babelLoader(options),
+        {
+          loader: require.resolve('./svg-loader.js'),
+          options: config.SVG_LOADER_OPTIONS || {},
+        },
+      ],
     })
   }
   return loaders
