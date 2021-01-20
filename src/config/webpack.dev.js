@@ -52,6 +52,7 @@ const webpackConfig = () => {
       },
     }),
     ...styleConfig.plugins,
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new FriendlyErrorsPlugin(),
     ...utils.htmlWebPackPlugins(Object.keys(baseWebpackConfig.entry), { alwaysWriteToDisk: true }),
@@ -60,8 +61,6 @@ const webpackConfig = () => {
 
   if (ReactRefreshWebpackPlugin != null) {
     plugins.push(new ReactRefreshWebpackPlugin())
-  } else {
-    plugins.push(new webpack.HotModuleReplacementPlugin())
   }
   return merge(baseWebpackConfig, {
     devtool: 'cheap-module-source-map',
