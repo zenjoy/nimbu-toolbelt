@@ -36,6 +36,10 @@ export default class Server extends Command {
       description: `Don't open/reload browser`,
       default: false,
     }),
+    poll: flags.boolean({
+      description: `Tell webpack dev server to use polling`,
+      default: false,
+    }),
   }
 
   private _nimbuServer?: NimbuServer
@@ -58,9 +62,15 @@ export default class Server extends Command {
     await this.nimbuServer.stop()
   }
 
-  async startWebpackDevServer(host: string, defaultPort: number, nimbuPort: number, open: boolean) {
+  async startWebpackDevServer(
+    host: string,
+    defaultPort: number,
+    nimbuPort: number,
+    open: boolean,
+    options?: { poll?: boolean },
+  ) {
     this.log(chalk.cyan('Starting the development server...\n'))
-    await this.webpackServer.start(host, defaultPort, nimbuPort, 'http', open)
+    await this.webpackServer.start(host, defaultPort, nimbuPort, 'http', open, options)
   }
 
   async stopWebpackDevServer() {
@@ -84,7 +94,9 @@ export default class Server extends Command {
     await this.spawnNimbuServer(flags.nowebpack ? flags.port! : flags['nimbu-port']!, flags.nocookies, flags.compass)
 
     if (!flags.nowebpack) {
-      await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!, !flags.noopen)
+      await this.startWebpackDevServer(flags.host!, flags.port!, flags['nimbu-port']!, !flags.noopen, {
+        poll: flags.poll,
+      })
     }
     await this.waitForStopSignals()
     // Explicitly exit the process to make sure all subprocesses started by webpack plugins are gone

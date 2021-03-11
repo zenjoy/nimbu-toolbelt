@@ -7,8 +7,8 @@ const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMi
 const path = require('path')
 
 // This configuration is inspired by the one from create-react-app (after ejecting)
-module.exports = function (proxy, allowedHost, host, protocol) {
-  return {
+module.exports = function (proxy, allowedHost, host, protocol, options = {}) {
+  const result = {
     allowedHosts: ['localhost', '.localhost'],
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.
@@ -40,4 +40,8 @@ module.exports = function (proxy, allowedHost, host, protocol) {
       app.use(noopServiceWorkerMiddleware())
     },
   }
+  if (options.poll) {
+    result.watchOptions.poll = true
+  }
+  return result
 }
