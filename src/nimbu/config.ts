@@ -1,7 +1,6 @@
 const { readSync, write } = require('node-yaml')
 import { pathExistsSync } from 'fs-extra'
 import { resolve as resolvePath } from 'path'
-import * as url from 'url'
 import paths = require('../config/paths')
 export interface ConfigApp {
   name: string
@@ -46,7 +45,7 @@ export default class Config {
 
   get apiHost(): string {
     if (this.host.startsWith('http')) {
-      const u = url.parse(this.host)
+      const u = new URL(this.host)
       if (u.host) return u.host
     }
     return `api.${this.host}`
